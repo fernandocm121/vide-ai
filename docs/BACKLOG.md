@@ -34,14 +34,14 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 - [ ] SEO: `sitemap.xml`, imagem OG real, dados estruturados — **S**
 - [ ] `CONTRIBUTING` / convenção de commits + branch (opcional) — **S**
 
-## Fase 1 — Infra base do app  · `M`
+## Fase 1 — Infra base do app  · `M`  ✅
 
-- [ ] `docker-compose.yml` local: PostgreSQL + Redis + MinIO — **S**
-- [ ] Validação de env com `zod` (`server/utils/env.ts`) — **S**
-- [ ] Drizzle + conexão + primeira migration — **M**
-- [ ] Schema inicial: `users`, `sessions`, `videos`, `transcripts`, `transcript_segments`, `jobs`, `usage` — **M**
-- [ ] Seed de desenvolvimento — **S**
-- [ ] Healthcheck estendido (DB + Redis + storage) — **S**
+- [x] `docker-compose.yml` local: PostgreSQL + Redis + MinIO — **S**
+- [x] Validação de env com `zod` (`server/utils/env.ts`) — **S**
+- [x] Drizzle + conexão + primeira migration — **M**
+- [x] Schema inicial: `users`, `sessions`, `videos`, `transcripts`, `transcript_segments`, `jobs`, `usage` — **M**
+- [x] Seed de desenvolvimento — **S**
+- [x] Healthcheck estendido (DB + Redis + storage) — **S**
 
 ## Fase 2 — Autenticação e contas  · `M`
 

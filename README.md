@@ -9,29 +9,45 @@
 
 ## Estado atual
 
-Este repositório contém a **primeira entrega: a Home (landing page)** e a estrutura base do frontend.
+- ✅ **Home (landing page)** + estrutura do frontend
+- ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
 
-- Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**
-- Fontes self-hosted via `@nuxt/fonts` (Inter)
-- Ícones SVG inline (`app/components/AppIcon.vue`) — sem dependências externas
+Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage).
 
 ## Rodando o projeto
 
+Pré-requisitos: **Node 20.12+** (ver `.nvmrc`) e **Docker**.
+
 ```bash
 npm install
-npm run dev      # http://localhost:3000
+cp .env.example .env        # valores padrão já batem com o docker-compose
+
+npm run services:up         # sobe Postgres + Redis + MinIO
+npm run db:setup            # aplica migrations + popula dados de dev
+npm run dev                 # http://localhost:3000
 ```
 
-Outros scripts:
+Verifique a saúde da infra: `curl http://localhost:3000/api/health` → deve retornar
+`status: "ok"` com `database`, `redis` e `storage` todos `up`.
 
-```bash
-npm run build      # build de produção (Nitro)
-npm run preview    # sobe o build localmente
-npm run generate   # versão estática da landing
-npm run typecheck  # checagem de tipos
-```
+Login de desenvolvimento (após o seed): `dev@videai.local` / `password`.
 
-Node 20.11+ (recomendado: 24 — ver `.nvmrc`).
+### Scripts
+
+| Script | Descrição |
+| --- | --- |
+| `npm run dev` | ambiente de desenvolvimento |
+| `npm run build` / `preview` | build de produção / preview local |
+| `npm run typecheck` | checagem de tipos |
+| `npm run services:up` / `services:down` | sobe / derruba a infra Docker |
+| `npm run services:reset` | derruba a infra **e apaga os volumes** |
+| `npm run db:generate` | gera migration a partir de `server/db/schema.ts` |
+| `npm run db:migrate` | aplica migrations pendentes |
+| `npm run db:seed` | popula dados de desenvolvimento (idempotente) |
+| `npm run db:setup` | `db:migrate` + `db:seed` |
+| `npm run db:studio` | abre o Drizzle Studio (GUI do banco) |
+
+Serviços locais: Postgres `:5432` · Redis `:6379` · MinIO API `:9000` · MinIO console `:9001` (`videai` / `videai_secret`).
 
 ## Estrutura
 
@@ -58,7 +74,23 @@ app/
   layouts/default.vue
   pages/index.vue           # monta as seções da Home
 server/
-  api/health.get.ts         # healthcheck
+  api/health.get.ts         # healthcheck (DB + Redis + storage)
+  db/
+    schema.ts               # tabelas Drizzle (users, videos, transcripts, jobs, usage...)
+    migrations/              # SQL gerado pelo drizzle-kit
+    migrate.ts               # runner de migrations
+    seed.ts                  # dados de desenvolvimento
+  utils/
+    env.ts                  # validação das variáveis de ambiente (zod)
+    drizzle.ts              # conexão Postgres (useDrizzle)
+    redis.ts                # conexão Redis (useRedis)
+    storage.ts              # cliente S3 (useS3)
+    password.ts             # hash de senha (scrypt)
+  plugins/
+    0.env.ts                # valida env no boot
+    1.shutdown.ts           # fecha conexões no encerramento
+docker-compose.yml          # Postgres + Redis + MinIO (dev local)
+drizzle.config.ts
 public/                     # favicon, robots.txt
 ```
 

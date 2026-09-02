@@ -1,0 +1,74 @@
+name: vide-ai
+
+# Ambiente de desenvolvimento local.
+# `docker compose up -d` sobe Postgres + Redis + MinIO e cria o bucket.
+# As credenciais abaixo são fixas de desenvolvimento (não são segredo) e
+# batem com o .env.example.
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    # Fase 7 (busca semântica): trocar por pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: videai
+      POSTGRES_PASSWORD: videai
+      POSTGRES_DB: videai
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U videai -d videai']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes', '--loglevel', 'warning']
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: videai
+      MINIO_ROOT_PASSWORD: videai_secret
+    ports:
+      - '9000:9000' # API S3
+      - '9001:9001' # Console web (http://localhost:9001)
+    volumes:
+      - minio-data:/data
+
+  # Cria o bucket assim que o MinIO estiver de pé e encerra.
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    restart: 'no'
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        until mc alias set local http://minio:9000 videai videai_secret; do
+          echo 'aguardando o minio...'; sleep 2;
+        done
+        mc mb --ignore-existing local/videai-media
+        mc anonymous set none local/videai-media
+        echo 'minio: bucket "videai-media" pronto'
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
