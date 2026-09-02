@@ -1,0 +1,28 @@
+{
+  "name": "vide-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vide AI — Video Intelligence. Transforme vídeos em texto, conhecimento e conteúdo pronto para publicar.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "nuxt": "4.5.2",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.2",
+    "vue-tsc": "2.2.10"
+  },
+  "dependencies": {
+    "@nuxt/fonts": "0.14.0"
+  }
+}

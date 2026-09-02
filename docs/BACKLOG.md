@@ -1,0 +1,144 @@
+# Backlog — Vide AI
+
+Ordem de desenvolvimento, do estado atual até o MVP e além.
+Tamanho: **S** (~1 dia) · **M** (~2–4 dias) · **L** (~1 semana+).
+
+Estado atual: ✅ Landing page (Home) + estrutura do frontend.
+
+---
+
+## Decisões a tomar antes da Fase 1
+
+Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
+
+| Tema | Opções | Sugestão |
+| --- | --- | --- |
+| Speech-to-Text | OpenAI Whisper API · Deepgram · AssemblyAI · faster-whisper self-hosted | **Whisper API** para o MVP (barato, sem infra); migrar para self-hosted se o custo escalar |
+| LLM (resumo, Q&A, geração) | Claude (Anthropic) · GPT · Gemini | **Claude** (`claude-sonnet-5` para qualidade, `claude-haiku-4-5` para tarefas simples) |
+| ORM / DB toolkit | Drizzle · Prisma | **Drizzle** (leve, SQL-first, bom com Nitro) |
+| Autenticação | nuxt-auth-utils · Lucia · Supabase Auth · Clerk | **nuxt-auth-utils** (simples, self-hosted) ou **Supabase** se quiser DB+Auth+Storage juntos |
+| Object storage | Cloudflare R2 · AWS S3 · MinIO (local) | **R2** em produção (sem custo de egress), **MinIO** no docker local |
+| Fila | BullMQ (Redis) | **BullMQ** |
+| Hosting do worker | precisa de FFmpeg e CPU dedicada | VPS (Hetzner/Fly.io) — **não** serverless para o worker |
+| Hosting do frontend/API | Vercel · Cloudflare · Node no mesmo VPS | Vercel/Cloudflare para a landing; API pode ficar junto do worker |
+
+---
+
+## Fase 0 — Fundação do repositório  · `M`
+
+- [ ] ESLint + Prettier (`@nuxt/eslint`) — **S**
+- [ ] CI no GitHub Actions: `lint` + `typecheck` + `build` — **S**
+- [ ] Deploy da landing (Vercel ou Cloudflare Pages) com domínio — **S**
+- [ ] Analytics de produto (PostHog ou Plausible) — **S**
+- [ ] Conectar CTAs da Home a `/signup` (hoje apontam para âncoras) — **S**
+- [ ] SEO: `sitemap.xml`, imagem OG real, dados estruturados — **S**
+- [ ] `CONTRIBUTING` / convenção de commits + branch (opcional) — **S**
+
+## Fase 1 — Infra base do app  · `M`
+
+- [ ] `docker-compose.yml` local: PostgreSQL + Redis + MinIO — **S**
+- [ ] Validação de env com `zod` (`server/utils/env.ts`) — **S**
+- [ ] Drizzle + conexão + primeira migration — **M**
+- [ ] Schema inicial: `users`, `sessions`, `videos`, `transcripts`, `transcript_segments`, `jobs`, `usage` — **M**
+- [ ] Seed de desenvolvimento — **S**
+- [ ] Healthcheck estendido (DB + Redis + storage) — **S**
+
+## Fase 2 — Autenticação e contas  · `M`
+
+- [ ] Integrar solução de auth escolhida — **M**
+- [ ] Fluxo signup / login / logout + verificação de e-mail — **M**
+- [ ] Middleware de rota protegida + layout `app` — **S**
+- [ ] Páginas `/login`, `/signup`, `/app` (dashboard vazio) — **S**
+- [ ] Registro de usuário cria plano `free` por padrão — **S**
+- [ ] Página `/app/conta` (perfil, trocar senha) — **S**
+
+## Fase 3 — Upload de vídeo (V1)  · `M`
+
+- [ ] Endpoint de URL pré-assinada para upload direto no storage — **M**
+- [ ] Componente de upload: drag-and-drop, progresso, validação de formato (MP4/MOV/MP3/WAV/WEBM) e tamanho — **M**
+- [ ] Criar registro `videos` (status `queued`) ao concluir upload — **S**
+- [ ] Dashboard: lista de vídeos com status e thumbnail — **M**
+- [ ] Página `/app/videos/[id]` (esqueleto, mostra status) — **S**
+- [ ] Excluir vídeo (remove do storage + DB) — **S**
+
+## Fase 4 — Pipeline de transcrição (V1)  · `L`
+
+- [ ] Setup BullMQ + processo `worker` separado (`worker/` ou `apps/worker`) — **M**
+- [ ] Job `audio.extract`: FFmpeg extrai áudio normalizado (16kHz mono wav) — **M**
+- [ ] Job `transcribe`: chama o provider de STT, recebe texto + segmentos — **M**
+- [ ] Persistir `transcripts` + `transcript_segments` (start, end, texto) — **S**
+- [ ] Máquina de estados do vídeo: `queued → extracting → transcribing → ready | failed` — **S**
+- [ ] Retry com backoff + dead-letter para falhas — **S**
+- [ ] Atualização de status em tempo real no frontend (SSE ou polling) — **M**
+- [ ] Registrar consumo em `usage` (minutos processados) — **S**
+
+## Fase 5 — Visualização e export (V1)  · `M`  → **fecha o MVP V1**
+
+- [ ] Player de vídeo/áudio + transcrição sincronizada (highlight no trecho atual) — **L**
+- [ ] Clicar em um trecho da transcrição → seek no player — **S**
+- [ ] Busca dentro da transcrição (destaca ocorrências) — **S**
+- [ ] Export TXT — **S**
+- [ ] Export SRT e VTT — **S**
+- [ ] Edição inline da transcrição + salvar — **M** (pode ir para V1.1)
+- [ ] Compartilhar transcrição por link público (opcional) — **M**
+
+## Fase 6 — Inteligência (V2)  · `L`
+
+- [ ] Job `analyze`: resumo automático (LLM) — **M**
+- [ ] Job `analyze`: capítulos com timestamps — **M**
+- [ ] Job `analyze`: palavras-chave / tópicos — **S**
+- [ ] UI: abas Resumo / Capítulos / Keywords na página do vídeo — **M**
+- [ ] Q&A sobre um vídeo (chat com contexto da transcrição) — **M**
+- [ ] Reprocessar análise sob demanda — **S**
+
+## Fase 7 — Base de conhecimento (V3)  · `L`
+
+- [ ] `pgvector` + geração de embeddings por segmento (job `embed`) — **M**
+- [ ] **Ask Your Video**: pergunta → resposta + vídeo + timestamp + deep link — **L**
+- [ ] **Biblioteca inteligente**: busca semântica entre todos os vídeos do usuário — **L**
+- [ ] UI de busca global no dashboard — **M**
+- [ ] Filtros (por vídeo, data, tipo) — **S**
+
+## Fase 8 — Geração de conteúdo (V4 / premium)  · `L`
+
+- [ ] Gerar títulos (variações A/B) e descrições — **M**
+- [ ] Sugestão de melhores momentos por potencial de retenção — **M**
+- [ ] Roteiro de Shorts / cortes sugeridos (lista de timestamps + motivo) — **M**
+- [ ] Render de cortes de vídeo com FFmpeg (download do clipe) — **L**
+- [ ] Show notes / thread / newsletter a partir do vídeo — **M**
+- [ ] Templates de saída editáveis — **M**
+- [ ] Integrações YouTube / TikTok / Instagram (publicação) — **L** (pós-lançamento)
+
+## Fase 9 — Billing e planos  · `M`
+
+- [ ] Stripe: checkout, webhooks, customer portal — **M**
+- [ ] Planos Starter / Pro / Agency no Stripe + mapeamento no DB — **S**
+- [ ] Enforcement de limite de horas/mês por plano — **M**
+- [ ] Paywall nas features Pro (Ask Video, geração, busca global) — **S**
+- [ ] Tela de uso/consumo no `/app/conta` — **S**
+- [ ] E-mails transacionais (upload pronto, limite atingido) — **M**
+
+## Fase 10 — Produção e escala  · `L`
+
+- [ ] Observabilidade: Sentry (erros) + logs estruturados + métricas de fila — **M**
+- [ ] Rate limiting nas rotas de API e upload — **S**
+- [ ] Lifecycle de storage: apagar arquivos temporários, política de retenção — **S**
+- [ ] Otimização de custo de STT/LLM (cache, modelo menor para tarefas simples) — **M**
+- [ ] Testes E2E com Playwright nos fluxos críticos — **M**
+- [ ] LGPD: política de privacidade, termos, exclusão de conta e dados — **M**
+- [ ] Load test do pipeline (fila sob carga) — **S**
+
+---
+
+## Caminho crítico até o primeiro usuário pagante
+
+```
+Fase 0 → 1 → 2 → 3 → 4 → 5   (MVP V1: upload → transcrição → player + export)
+                              ↓
+                         Fase 9 (billing) + Fase 6 (resumo/capítulos)
+                              ↓
+                         Lançamento pago
+```
+
+Fases 7 e 8 são o diferencial de marketing ("Pergunte ao seu vídeo", geração de
+conteúdo) — priorizar logo após o lançamento para justificar o plano Pro.
