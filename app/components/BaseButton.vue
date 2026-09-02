@@ -6,8 +6,11 @@ const props = withDefaults(
     to?: string
     href?: string
     block?: boolean
+    disabled?: boolean
+    loading?: boolean
+    type?: 'button' | 'submit' | 'reset'
   }>(),
-  { variant: 'primary', size: 'md', block: false },
+  { variant: 'primary', size: 'md', block: false, disabled: false, loading: false },
 )
 
 const component = computed(() => {
@@ -15,6 +18,8 @@ const component = computed(() => {
   if (props.href) return 'a'
   return 'button'
 })
+
+const isDisabled = computed(() => props.disabled || props.loading)
 
 const variants: Record<string, string> = {
   primary:
@@ -35,13 +40,22 @@ const sizes: Record<string, string> = {
     :is="component"
     :to="to"
     :href="href"
+    :type="component === 'button' ? type ?? 'button' : undefined"
+    :disabled="component === 'button' ? isDisabled : undefined"
+    :aria-disabled="isDisabled || undefined"
     :class="[
       'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500',
       variants[variant],
       sizes[size],
       block ? 'w-full' : '',
+      isDisabled ? 'pointer-events-none opacity-55' : '',
     ]"
   >
+    <span
+      v-if="loading"
+      class="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+      aria-hidden="true"
+    />
     <slot />
   </component>
 </template>

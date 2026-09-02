@@ -30,7 +30,7 @@ watch(() => route.hash, () => (open.value = false))
       </nav>
 
       <div class="hidden items-center gap-2 md:flex">
-        <BaseButton variant="ghost" size="md" href="#planos">Entrar</BaseButton>
+        <BaseButton variant="ghost" size="md" to="/app">Entrar</BaseButton>
         <BaseButton variant="primary" size="md" href="#cta">
           Começar gratuitamente
         </BaseButton>
@@ -62,7 +62,7 @@ watch(() => route.hash, () => (open.value = false))
         </a>
       </nav>
       <div class="mt-3 flex flex-col gap-2">
-        <BaseButton variant="outline" size="md" href="#planos" block>Entrar</BaseButton>
+        <BaseButton variant="outline" size="md" to="/app" block>Entrar</BaseButton>
         <BaseButton variant="primary" size="md" href="#cta" block>
           Começar gratuitamente
         </BaseButton>

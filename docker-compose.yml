@@ -45,6 +45,8 @@ services:
     environment:
       MINIO_ROOT_USER: videai
       MINIO_ROOT_PASSWORD: videai_secret
+      # libera o PUT pré-assinado a partir do frontend em dev
+      MINIO_API_CORS_ALLOW_ORIGIN: '*'
     ports:
       - '9000:9000' # API S3
       - '9001:9001' # Console web (http://localhost:9001)

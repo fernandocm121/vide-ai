@@ -1,9 +1,16 @@
-import { HeadBucketCommand, S3Client } from '@aws-sdk/client-s3'
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  HeadBucketCommand,
+  HeadObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { useEnv } from './env'
 
 /**
  * Cliente S3-compatível (MinIO no local, Cloudflare R2 / AWS S3 em produção).
- * A Fase 3 adiciona helpers de upload (URLs pré-assinadas) aqui.
  */
 let s3: S3Client | null = null
 
@@ -30,4 +37,52 @@ export function storageBucket(): string {
 /** Confirma que o bucket existe e está acessível. Lança em caso de falha. */
 export async function checkStorage(): Promise<void> {
   await useS3().send(new HeadBucketCommand({ Bucket: storageBucket() }))
+}
+
+/** URL pré-assinada para o cliente enviar o arquivo (PUT direto no storage). */
+export function presignPut(
+  key: string,
+  contentType: string,
+  expiresIn = 600,
+): Promise<string> {
+  return getSignedUrl(
+    useS3(),
+    new PutObjectCommand({
+      Bucket: storageBucket(),
+      Key: key,
+      ContentType: contentType,
+    }),
+    { expiresIn },
+  )
+}
+
+/** URL pré-assinada para o cliente baixar/tocar o arquivo (GET). */
+export function presignGet(key: string, expiresIn = 3600): Promise<string> {
+  return getSignedUrl(
+    useS3(),
+    new GetObjectCommand({ Bucket: storageBucket(), Key: key }),
+    { expiresIn },
+  )
+}
+
+/** Metadados do objeto (usado para confirmar que o upload chegou). */
+export function headObject(key: string) {
+  return useS3().send(
+    new HeadObjectCommand({ Bucket: storageBucket(), Key: key }),
+  )
+}
+
+/** Baixa o objeto inteiro para memória. */
+export async function getObjectBuffer(key: string): Promise<Buffer> {
+  const res = await useS3().send(
+    new GetObjectCommand({ Bucket: storageBucket(), Key: key }),
+  )
+  const bytes = await res.Body!.transformToByteArray()
+  return Buffer.from(bytes)
+}
+
+export function deleteObject(key: string) {
+  return useS3().send(
+    new DeleteObjectCommand({ Bucket: storageBucket(), Key: key }),
+  )
 }

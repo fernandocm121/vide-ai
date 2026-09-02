@@ -52,25 +52,42 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 - [ ] Registro de usuário cria plano `free` por padrão — **S**
 - [ ] Página `/app/conta` (perfil, trocar senha) — **S**
 
-## Fase 3 — Upload de vídeo (V1)  · `M`
+## Fase 3 — Áudio: upload de MP3 + transcrição (Whisper)  · `M`  🔨
 
-- [ ] Endpoint de URL pré-assinada para upload direto no storage — **M**
-- [ ] Componente de upload: drag-and-drop, progresso, validação de formato (MP4/MOV/MP3/WAV/WEBM) e tamanho — **M**
-- [ ] Criar registro `videos` (status `queued`) ao concluir upload — **S**
-- [ ] Dashboard: lista de vídeos com status e thumbnail — **M**
-- [ ] Página `/app/videos/[id]` (esqueleto, mostra status) — **S**
-- [ ] Excluir vídeo (remove do storage + DB) — **S**
+Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + chave OpenAI reais.
 
-## Fase 4 — Pipeline de transcrição (V1)  · `L`
+- [x] Migration: status `uploaded` + coluna `media_kind` — **S**
+- [x] `env.ts`: `OPENAI_API_KEY` + `MAX_UPLOAD_BYTES` — **S**
+- [x] `POST /api/videos` — cria registro + URL pré-assinada (PUT) — **M**
+- [x] Helpers de storage: `presignPut` / `presignGet` / `headObject` / `getObjectBuffer` / `deleteObject` — **S**
+- [x] `POST /api/videos/:id/complete` — confirma upload, status → `uploaded` — **S**
+- [x] `<AudioUploader>`: drag-and-drop, validação, PUT com barra de progresso (XHR) — **M**
+- [x] Botão "Transcrever" + `POST /api/videos/:id/transcribe` (202, background) — **S**
+- [x] `server/transcription/provider.ts` — interface + `openaiWhisper` (`verbose_json`) — **M**
+- [x] `runTranscription()` — download → Whisper → `transcripts` + `transcript_segments` → `ready` + `usage` — **M**
+- [x] Erro → status `failed` + mensagem; sweep no boot recupera presos — **S**
+- [x] `/app` (dashboard): lista com status; `/app/videos/[id]`: player + polling + transcrição + "Tentar de novo" — **M**
+- [x] `DELETE /api/videos/:id` — storage + DB (cascade) — **S**
+- [ ] **Verificar o fluxo completo** com `services:up` + `OPENAI_API_KEY` real
 
-- [ ] Setup BullMQ + processo `worker` separado (`worker/` ou `apps/worker`) — **M**
-- [ ] Job `audio.extract`: FFmpeg extrai áudio normalizado (16kHz mono wav) — **M**
-- [ ] Job `transcribe`: chama o provider de STT, recebe texto + segmentos — **M**
-- [ ] Persistir `transcripts` + `transcript_segments` (start, end, texto) — **S**
-- [ ] Máquina de estados do vídeo: `queued → extracting → transcribing → ready | failed` — **S**
+## Fase 3B — Upload e extração de áudio de vídeo  · `M`
+
+- [ ] Upload de MP4 / MOV / WEBM (mesmo fluxo pré-assinado, validar mimetypes)
+- [ ] Job de extração de áudio com ffmpeg (`extracting` → `transcribing`)
+- [ ] Thumbnail do vídeo
+- [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao Whisper
+
+## Fase 4 — Pipeline de transcrição escalável  · `L`
+
+Substitui o processamento em background simples da Fase 3.
+
+- [ ] Setup BullMQ + processo `worker` separado (`worker/`, `npm run worker`) — **M**
+- [ ] Mover `runTranscription` para um job da fila `transcribe` — **M**
 - [ ] Retry com backoff + dead-letter para falhas — **S**
-- [ ] Atualização de status em tempo real no frontend (SSE ou polling) — **M**
-- [ ] Registrar consumo em `usage` (minutos processados) — **S**
+- [ ] Concorrência configurável / rate limit por provider — **S**
+- [ ] Substituir o sweep de boot pela reentrega automática do BullMQ — **S**
+- [ ] Painel de filas (Bull Board) em dev — **S**
+- [ ] Atualização de status em tempo real (SSE) no lugar do polling — **M**
 
 ## Fase 5 — Visualização e export (V1)  · `M`  → **fecha o MVP V1**
 

@@ -17,14 +17,17 @@ import {
 export const planEnum = pgEnum('plan', ['free', 'starter', 'pro', 'agency'])
 
 export const videoStatusEnum = pgEnum('video_status', [
-  'uploading',
-  'queued',
-  'extracting',
+  'uploading', // criado, aguardando o PUT no storage
+  'uploaded', // arquivo no storage, aguardando o usuário confirmar
+  'queued', // transcrição solicitada, aguardando processamento
+  'extracting', // (Fase 3B) extraindo áudio de vídeo com ffmpeg
   'transcribing',
-  'analyzing',
+  'analyzing', // (Fase 6) resumo / capítulos
   'ready',
   'failed',
 ])
+
+export const mediaKindEnum = pgEnum('media_kind', ['audio', 'video'])
 
 export const jobTypeEnum = pgEnum('job_type', [
   'audio_extract',
@@ -93,6 +96,7 @@ export const videos = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
     title: text().notNull(),
+    mediaKind: mediaKindEnum().notNull().default('audio'),
     originalFilename: text(),
     storageKey: text(), // chave do objeto original no bucket
     mimeType: text(),

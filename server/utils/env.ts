@@ -28,8 +28,13 @@ const EnvSchema = z.object({
     .optional()
     .transform((v) => v !== 'false'),
 
-  // Integrações de IA — opcionais até a Fase 4
-  OPENAI_API_KEY: z.string().optional(),
+  // Upload — limite de 25 MB (restrição da API de transcrição da OpenAI)
+  MAX_UPLOAD_BYTES: z.coerce.number().int().positive().default(26_214_400),
+
+  // Transcrição (Fase 3) — OpenAI Whisper
+  OPENAI_API_KEY: z.string().min(1, 'obrigatório para a transcrição (Fase 3)'),
+
+  // Integrações de IA — opcionais até a Fase 6
   ANTHROPIC_API_KEY: z.string().optional(),
 })
 
