@@ -18,8 +18,8 @@ export const planEnum = pgEnum('plan', ['free', 'starter', 'pro', 'agency'])
 
 export const videoStatusEnum = pgEnum('video_status', [
   'uploading', // criado, aguardando o PUT no storage
-  'uploaded', // arquivo no storage, aguardando o usuário confirmar
-  'queued', // transcrição solicitada, aguardando processamento
+  'uploaded', // não usado no fluxo atual — mantido pela migration já aplicada
+  'queued', // upload confirmado; vídeo sem pipeline fica aqui, áudio aguarda o usuário mandar transcrever
   'extracting', // (Fase 3B) extraindo áudio de vídeo com ffmpeg
   'transcribing',
   'analyzing', // (Fase 6) resumo / capítulos

@@ -1,7 +1,7 @@
 import { and, asc, eq } from 'drizzle-orm'
 import { transcriptSegments, transcripts, videos } from '../../../db/schema'
 
-/** Detalhe de um áudio + transcrição (quando pronta) + URL para tocar. */
+/** Detalhe de um vídeo/áudio + transcrição (quando pronta) + URL para tocar. */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
   const id = getRouterParam(event, 'id')!
@@ -14,9 +14,9 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: 'Não encontrado' })
   }
 
-  // só oferece a URL de áudio depois que o upload foi confirmado
+  // só oferece a URL de mídia depois que o upload foi confirmado
   const hasFile = video.storageKey && video.status !== 'uploading'
-  const audioUrl = hasFile
+  const mediaUrl = hasFile
     ? await presignGet(video.storageKey!, 3600).catch(() => null)
     : null
 
@@ -46,5 +46,5 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  return { ...video, audioUrl, transcript }
+  return { ...video, mediaUrl, transcript }
 })

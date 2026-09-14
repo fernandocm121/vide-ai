@@ -11,7 +11,8 @@
 
 - ✅ **Home (landing page)** + estrutura do frontend
 - ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
-- 🔨 **Áudio: upload de MP3 + transcrição** (Fase 3): upload pré-assinado, `/app`, transcrição com OpenAI Whisper
+- ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
+- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao Whisper; vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/issues/fase4-worker-dedicado.md` para a versão de produção)
 
 Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **OpenAI Whisper** (transcrição).
 
@@ -34,15 +35,26 @@ Verifique a saúde da infra: `curl http://localhost:3000/api/health` → deve re
 
 Login de desenvolvimento (após o seed): `dev@videai.local` / `password`.
 
-### Testar a transcrição
+### Testar o upload
 
 1. Abra `http://localhost:3000/app`
-2. Envie um arquivo **.mp3** (até 25 MB)
-3. Na página do áudio, clique em **Transcrever**
-4. O status vai de `Na fila` → `Transcrevendo` → `Pronto` (polling a cada 3 s)
-5. O texto aparece com timestamps por segmento; clicar num segmento posiciona o player
+2. Arraste um MP4/MOV/WEBM (até 2 GB) ou MP3/WAV (até 25 MB) — a barra de progresso mostra o envio
+3. Ao concluir, o item aparece na lista com status `Na fila`
 
-> Sem chave da OpenAI o app sobe, mas a transcrição termina em `failed` com a mensagem de erro da API.
+### Testar a transcrição (áudio ou vídeo)
+
+1. Envie um arquivo de áudio (**.mp3**/**.wav**) ou vídeo (**.mp4**/**.mov**/**.webm**)
+2. Na página do vídeo, clique em **Transcrever áudio** (áudio) ou **Processar vídeo** (vídeo)
+3. Áudio: `Na fila` → `Transcrevendo` → `Pronto`. Vídeo: `Na fila` → `Extraindo áudio` →
+   `Transcrevendo` → `Pronto` (polling a cada 3 s)
+4. O texto aparece com timestamps por segmento; clicar num segmento posiciona o player
+
+> A extração de vídeo roda com FFmpeg **inline no processo do Nitro** (`server/transcription/extract.ts`,
+> binário via `ffmpeg-static`) — funciona bem local/VPS; em produção na Vercel só é confiável para
+> vídeos curtos (função serverless pode ser encerrada antes de terminar um vídeo longo, e `/tmp` tem
+> pouco espaço). O caminho de produção (fila + worker dedicado) está detalhado em
+> [`docs/issues/fase4-worker-dedicado.md`](docs/issues/fase4-worker-dedicado.md).
+> Sem chave da OpenAI, a transcrição termina em `failed` com a mensagem de erro da API.
 
 ### Scripts
 
@@ -83,7 +95,7 @@ app/
       PricingSection.vue
       FinalCtaSection.vue
     app/                    # área logada (/app)
-      AudioUploader.vue     # upload de MP3 (drag-and-drop + progresso)
+      MediaUploader.vue     # upload de vídeo/áudio (drag-and-drop + progresso)
       StatusBadge.vue
       TranscriptView.vue    # segmentos com timestamps + texto corrido
   data/home.ts              # conteúdo das seções (passos, públicos, planos)
@@ -93,19 +105,21 @@ app/
     app.vue                 # layout da área logada
   pages/
     index.vue               # Home
-    app/index.vue           # dashboard: lista de áudios + uploader
+    app/index.vue           # dashboard: lista de vídeos + uploader
     app/videos/[id].vue     # detalhe: player + transcrição + ações
 server/
   api/
     health.get.ts           # healthcheck (DB + Redis + storage)
-    videos/                 # CRUD de áudios + upload + transcrição
+    videos/                 # CRUD de vídeos/áudios + upload + transcrição
       index.get.ts · index.post.ts
       [id]/index.get.ts · [id]/index.delete.ts
       [id]/complete.post.ts · [id]/transcribe.post.ts
   transcription/
     provider.ts             # interface + openaiWhisper (whisper-1, verbose_json)
     run.ts                  # runTranscription(): download -> Whisper -> DB
-    sweep.ts                # recupera transcrições presas por restart
+    extract.ts              # runExtraction(): vídeo -> ffmpeg -> áudio -> encadeia run.ts
+    ffmpeg.ts               # wrapper do binário (ffmpeg-static) — extractAudio()
+    sweep.ts                # recupera processamentos presos por restart
   db/
     schema.ts               # tabelas Drizzle (users, videos, transcripts, jobs, usage...)
     migrations/              # SQL gerado pelo drizzle-kit
@@ -114,7 +128,7 @@ server/
     env.ts                  # validação das variáveis de ambiente (zod)
     drizzle.ts              # conexão Postgres (useDrizzle)
     redis.ts                # conexão Redis (useRedis)
-    storage.ts              # cliente S3 + URLs pré-assinadas (useS3, presignPut...)
+    storage.ts              # cliente S3 + URLs pré-assinadas (useS3, presignPut, downloadToFile...)
     auth.ts                 # getCurrentUser() — stub do usuário de dev até a Fase 2
     password.ts             # hash de senha (scrypt)
   plugins/

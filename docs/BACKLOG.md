@@ -70,16 +70,27 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
 - [x] `DELETE /api/videos/:id` — storage + DB (cascade) — **S**
 - [ ] **Verificar o fluxo completo** com `services:up` + `OPENAI_API_KEY` real
 
-## Fase 3B — Upload e extração de áudio de vídeo  · `M`
+## Fase 3B — Upload e extração de áudio de vídeo  · `M`  🔨
 
-- [ ] Upload de MP4 / MOV / WEBM (mesmo fluxo pré-assinado, validar mimetypes)
-- [ ] Job de extração de áudio com ffmpeg (`extracting` → `transcribing`)
-- [ ] Thumbnail do vídeo
+- [x] Upload de MP4 / MOV / WEBM (mesmo fluxo pré-assinado, validando mimetype + tamanho por tipo) — **M**
+- [x] Registro `videos` vai direto para `queued` ao confirmar o upload — **S**
+- [x] Job de extração de áudio com ffmpeg (`extracting` → `transcribing`) — **Opção A: inline no Nitro**
+      (`server/transcription/extract.ts` + `ffmpeg.ts`, binário via `ffmpeg-static`). Baixa o vídeo em
+      stream para um arquivo temp, extrai o áudio (mono/16kHz/mp3), sobe `media/{id}/extracted-audio.mp3`
+      e encadeia `runTranscription()` reaproveitando o pipeline do Whisper que já existia para áudio.
+      Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
+      `docs/issues/fase4-worker-dedicado.md` para a versão de produção (Opção B, BullMQ + worker).
+- [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
 - [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao Whisper
 
 ## Fase 4 — Pipeline de transcrição escalável  · `L`
 
-Substitui o processamento em background simples da Fase 3.
+Substitui o processamento em background simples da Fase 3/3B (que hoje roda
+inline no processo do Nitro — sem fila real, sem retry automático, e sem
+garantia de sobreviver a um restart ou a um limite de tempo de função
+serverless). Spec completa (motivação, arquitetura, plano de migração,
+critérios de aceite) em
+[`docs/issues/fase4-worker-dedicado.md`](issues/fase4-worker-dedicado.md).
 
 - [ ] Setup BullMQ + processo `worker` separado (`worker/`, `npm run worker`) — **M**
 - [ ] Mover `runTranscription` para um job da fila `transcribe` — **M**

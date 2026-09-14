@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { IN_PROGRESS, formatDuration, type VideoStatus } from '~/utils/media'
+import {
+  IN_PROGRESS,
+  STATUS_META,
+  formatDuration,
+  type VideoStatus,
+} from '~/utils/media'
 
 definePageMeta({ layout: 'app' })
 
@@ -14,7 +19,7 @@ interface VideoDetail {
   language: string | null
   error: string | null
   createdAt: string
-  audioUrl: string | null
+  mediaUrl: string | null
   transcript: {
     text: string
     language: string | null
@@ -33,7 +38,7 @@ const {
   error,
 } = await useFetch<VideoDetail>(() => `/api/videos/${id}`)
 
-useHead(() => ({ title: `${video.value?.title ?? 'Áudio'} — Vide AI` }))
+useHead(() => ({ title: `${video.value?.title ?? 'Vídeo'} — Vide AI` }))
 
 /* polling enquanto está processando ------------------------------------ */
 let timer: ReturnType<typeof setInterval> | undefined
@@ -47,19 +52,23 @@ onBeforeUnmount(() => timer && clearInterval(timer))
 /* ações --------------------------------------------------------------- */
 const busy = ref(false)
 const actionError = ref<string | null>(null)
+// evita reexibir o botão de processar enquanto o job já foi solicitado
+// mas o status ainda não saiu de `queued` (curta janela de corrida)
+const requested = ref(false)
 
 async function transcribe() {
   busy.value = true
   actionError.value = null
   try {
     await $fetch(`/api/videos/${id}/transcribe`, { method: 'POST' })
+    requested.value = true
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { statusMessage?: string }; message?: string }
     actionError.value =
       err?.data?.statusMessage ??
       err?.message ??
-      'Falha ao iniciar a transcrição.'
+      'Falha ao iniciar o processamento.'
   } finally {
     busy.value = false
   }
@@ -68,7 +77,7 @@ async function transcribe() {
 async function remove() {
   if (
     !confirm(
-      'Excluir este áudio e a transcrição? Esta ação não pode ser desfeita.',
+      'Excluir este vídeo e a transcrição? Esta ação não pode ser desfeita.',
     )
   )
     return
@@ -82,16 +91,16 @@ async function remove() {
 }
 
 /* player <-> transcrição --------------------------------------------- */
-const audioEl = ref<HTMLAudioElement>()
+const mediaEl = ref<HTMLMediaElement>()
 const currentMs = ref(0)
 
 function seek(ms: number) {
-  if (!audioEl.value) return
-  audioEl.value.currentTime = ms / 1000
-  void audioEl.value.play()
+  if (!mediaEl.value) return
+  mediaEl.value.currentTime = ms / 1000
+  void mediaEl.value.play()
 }
 function onTimeUpdate() {
-  currentMs.value = (audioEl.value?.currentTime ?? 0) * 1000
+  currentMs.value = (mediaEl.value?.currentTime ?? 0) * 1000
 }
 </script>
 
@@ -100,7 +109,7 @@ function onTimeUpdate() {
     v-if="error"
     class="rounded-xl border border-line bg-paper p-6 text-sm text-ink-soft"
   >
-    Não foi possível carregar este áudio.
+    Não foi possível carregar este vídeo.
     <NuxtLink to="/app" class="font-medium text-brand-600">Voltar</NuxtLink>
   </div>
 
@@ -111,7 +120,7 @@ function onTimeUpdate() {
           to="/app"
           class="text-xs font-medium text-ink-soft hover:text-ink"
         >
-          ← Meus áudios
+          ← Meus vídeos
         </NuxtLink>
         <h1
           class="mt-1 truncate text-2xl font-extrabold tracking-tight text-ink"
@@ -130,10 +139,19 @@ function onTimeUpdate() {
     </div>
 
     <!-- player -->
+    <video
+      v-if="video.mediaKind === 'video' && video.mediaUrl"
+      ref="mediaEl"
+      :src="video.mediaUrl"
+      controls
+      preload="metadata"
+      class="w-full rounded-xl bg-black"
+      @timeupdate="onTimeUpdate"
+    />
     <audio
-      v-if="video.audioUrl"
-      ref="audioEl"
-      :src="video.audioUrl"
+      v-else-if="video.mediaUrl"
+      ref="mediaEl"
+      :src="video.mediaUrl"
       controls
       preload="metadata"
       class="w-full"
@@ -142,32 +160,42 @@ function onTimeUpdate() {
 
     <!-- ações por status -->
     <div class="rounded-xl border border-line bg-paper p-5">
-      <template v-if="video.status === 'uploaded'">
+      <template v-if="video.status === 'queued' && !requested">
         <p class="text-sm text-ink">
-          O áudio está pronto para transcrever. Custo estimado:
-          <span class="font-medium">US$ 0,006 / minuto</span>.
+          {{
+            video.mediaKind === 'audio'
+              ? 'O áudio está pronto para transcrever.'
+              : 'O vídeo está pronto para processar (extração de áudio + transcrição).'
+          }}
+          Custo estimado: <span class="font-medium">US$ 0,006 / minuto</span>.
         </p>
         <BaseButton class="mt-3" :loading="busy" @click="transcribe">
-          Transcrever áudio
+          {{
+            video.mediaKind === 'audio'
+              ? 'Transcrever áudio'
+              : 'Processar vídeo'
+          }}
         </BaseButton>
       </template>
 
       <template
-        v-else-if="video.status === 'queued' || video.status === 'transcribing'"
+        v-else-if="
+          (video.status === 'queued' && requested) ||
+          video.status === 'extracting' ||
+          video.status === 'transcribing'
+        "
       >
         <div class="flex items-center gap-3 text-sm text-ink">
           <span class="size-2 animate-pulse rounded-full bg-amber-500" />
-          {{
-            video.status === 'queued'
-              ? 'Na fila para transcrever…'
-              : 'Transcrevendo o áudio…'
-          }}
+          {{ STATUS_META[video.status].label }}…
           <span class="text-ink-soft">— isso pode levar alguns minutos.</span>
         </div>
       </template>
 
       <template v-else-if="video.status === 'failed'">
-        <p class="text-sm font-medium text-brand-600">A transcrição falhou.</p>
+        <p class="text-sm font-medium text-brand-600">
+          O processamento falhou.
+        </p>
         <p v-if="video.error" class="mt-1 text-xs text-ink-soft">
           {{ video.error }}
         </p>
@@ -213,7 +241,7 @@ function onTimeUpdate() {
         :disabled="busy"
         @click="remove"
       >
-        Excluir áudio
+        Excluir vídeo
       </button>
     </div>
   </div>

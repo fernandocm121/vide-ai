@@ -1,6 +1,30 @@
 <script setup lang="ts">
-const MAX_BYTES = 26_214_400 // sincronizado com MAX_UPLOAD_BYTES no servidor
-const MAX_MB = Math.floor(MAX_BYTES / 1024 / 1024)
+// sincronizado com ACCEPTED_TYPES + MAX_UPLOAD_BYTES/MAX_VIDEO_UPLOAD_BYTES no servidor
+type Kind = 'audio' | 'video'
+
+const ACCEPTED: Record<string, { ext: string; kind: Kind; label: string }> = {
+  'video/mp4': { ext: 'mp4', kind: 'video', label: 'MP4' },
+  'video/quicktime': { ext: 'mov', kind: 'video', label: 'MOV' },
+  'video/webm': { ext: 'webm', kind: 'video', label: 'WEBM' },
+  'audio/mpeg': { ext: 'mp3', kind: 'audio', label: 'MP3' },
+  'audio/wav': { ext: 'wav', kind: 'audio', label: 'WAV' },
+  'audio/x-wav': { ext: 'wav', kind: 'audio', label: 'WAV' },
+  'audio/wave': { ext: 'wav', kind: 'audio', label: 'WAV' },
+}
+
+// alguns navegadores/SOs não preenchem file.type para .mov/.wav — cai para a extensão
+const EXT_FALLBACK: Record<string, string> = {
+  mp4: 'video/mp4',
+  mov: 'video/quicktime',
+  webm: 'video/webm',
+  mp3: 'audio/mpeg',
+  wav: 'audio/wav',
+}
+
+const MAX_BYTES: Record<Kind, number> = {
+  audio: 26_214_400, // 25 MB
+  video: 2_147_483_648, // 2 GB
+}
 
 const emit = defineEmits<{ uploaded: [id: string] }>()
 const router = useRouter()
@@ -11,21 +35,41 @@ const uploading = ref(false)
 const progress = ref(0)
 const error = ref<string | null>(null)
 
-function validate(file: File): string | null {
-  const isMp3 =
-    file.type === 'audio/mpeg' || file.name.toLowerCase().endsWith('.mp3')
-  if (!isMp3) return 'Nesta versão só aceitamos arquivos .mp3.'
-  if (file.size === 0) return 'O arquivo está vazio.'
-  if (file.size > MAX_BYTES)
-    return `Arquivo muito grande (máx. ${MAX_MB} MB nesta versão).`
-  return null
+function detectType(file: File): string | null {
+  if (ACCEPTED[file.type]) return file.type
+  const ext = file.name.toLowerCase().split('.').pop() ?? ''
+  return EXT_FALLBACK[ext] ?? null
 }
 
-function putWithProgress(url: string, file: File): Promise<void> {
+function validate(
+  file: File,
+): { contentType: string; kind: Kind } | { error: string } {
+  const contentType = detectType(file)
+  if (!contentType) {
+    return {
+      error: 'Formato não suportado. Aceitamos MP4, MOV, WEBM, MP3 ou WAV.',
+    }
+  }
+  const { kind } = ACCEPTED[contentType]!
+  if (file.size === 0) return { error: 'O arquivo está vazio.' }
+  const max = MAX_BYTES[kind]
+  if (file.size > max) {
+    return {
+      error: `Arquivo muito grande (máx. ${Math.floor(max / 1024 / 1024)} MB para ${kind === 'video' ? 'vídeo' : 'áudio'}).`,
+    }
+  }
+  return { contentType, kind }
+}
+
+function putWithProgress(
+  url: string,
+  file: File,
+  contentType: string,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
     xhr.open('PUT', url)
-    xhr.setRequestHeader('Content-Type', 'audio/mpeg')
+    xhr.setRequestHeader('Content-Type', contentType)
     xhr.upload.onprogress = (ev) => {
       if (ev.lengthComputable) {
         progress.value = Math.round((ev.loaded / ev.total) * 100)
@@ -41,8 +85,13 @@ function putWithProgress(url: string, file: File): Promise<void> {
 }
 
 async function handleFile(file: File) {
-  error.value = validate(file)
-  if (error.value) return
+  const result = validate(file)
+  if ('error' in result) {
+    error.value = result.error
+    return
+  }
+  error.value = null
+  const { contentType } = result
 
   uploading.value = true
   progress.value = 0
@@ -51,15 +100,11 @@ async function handleFile(file: File) {
       '/api/videos',
       {
         method: 'POST',
-        body: {
-          filename: file.name,
-          contentType: 'audio/mpeg',
-          sizeBytes: file.size,
-        },
+        body: { filename: file.name, contentType, sizeBytes: file.size },
       },
     )
 
-    await putWithProgress(uploadUrl, file)
+    await putWithProgress(uploadUrl, file, contentType)
     await $fetch(`/api/videos/${id}/complete`, { method: 'POST' })
 
     emit('uploaded', id)
@@ -108,7 +153,7 @@ function onDrop(e: DragEvent) {
     <input
       ref="inputEl"
       type="file"
-      accept="audio/mpeg,.mp3"
+      accept="video/mp4,.mp4,video/quicktime,.mov,video/webm,.webm,audio/mpeg,.mp3,audio/wav,.wav"
       class="hidden"
       @change="onInput"
     />
@@ -129,7 +174,7 @@ function onDrop(e: DragEvent) {
     <template v-else>
       <AppIcon name="upload" class="mx-auto size-8 text-ink-soft" />
       <p class="mt-3 text-sm font-medium text-ink">
-        Arraste um arquivo <span class="font-semibold">.mp3</span> aqui
+        Arraste um vídeo ou áudio aqui
       </p>
       <p class="mt-1 text-xs text-ink-soft">ou</p>
       <BaseButton
@@ -140,7 +185,9 @@ function onDrop(e: DragEvent) {
       >
         Escolher arquivo
       </BaseButton>
-      <p class="mt-3 text-xs text-ink-soft">MP3 · até {{ MAX_MB }} MB</p>
+      <p class="mt-3 text-xs text-ink-soft">
+        MP4 · MOV · WEBM (até 2 GB) · MP3 · WAV (até 25 MB)
+      </p>
     </template>
 
     <p v-if="error" class="mt-4 text-sm font-medium text-brand-600">

@@ -7,6 +7,8 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { createReadStream, createWriteStream } from 'node:fs'
+import { pipeline } from 'node:stream/promises'
 import { useEnv } from './env'
 
 /**
@@ -72,13 +74,43 @@ export function headObject(key: string) {
   )
 }
 
-/** Baixa o objeto inteiro para memória. */
+/** Baixa o objeto inteiro para memória. Só para arquivos pequenos (áudio). */
 export async function getObjectBuffer(key: string): Promise<Buffer> {
   const res = await useS3().send(
     new GetObjectCommand({ Bucket: storageBucket(), Key: key }),
   )
   const bytes = await res.Body!.transformToByteArray()
   return Buffer.from(bytes)
+}
+
+/**
+ * Baixa o objeto direto para um arquivo em disco (stream) — usado para vídeo,
+ * que pode ter até 2 GB e não deve ser bufferizado inteiro em memória.
+ */
+export async function downloadToFile(
+  key: string,
+  destPath: string,
+): Promise<void> {
+  const res = await useS3().send(
+    new GetObjectCommand({ Bucket: storageBucket(), Key: key }),
+  )
+  await pipeline(res.Body as NodeJS.ReadableStream, createWriteStream(destPath))
+}
+
+/** Sobe o conteúdo de um arquivo em disco (stream) para o storage. */
+export async function putObjectFile(
+  key: string,
+  filePath: string,
+  contentType: string,
+): Promise<void> {
+  await useS3().send(
+    new PutObjectCommand({
+      Bucket: storageBucket(),
+      Key: key,
+      Body: createReadStream(filePath),
+      ContentType: contentType,
+    }),
+  )
 }
 
 export function deleteObject(key: string) {

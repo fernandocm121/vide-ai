@@ -30,8 +30,14 @@ const EnvSchema = z.object({
     .optional()
     .transform((v) => v !== 'false'),
 
-  // Upload — limite de 25 MB (restrição da API de transcrição da OpenAI)
+  // Upload de áudio — limite de 25 MB (restrição da API de transcrição da OpenAI)
   MAX_UPLOAD_BYTES: z.coerce.number().int().positive().default(26_214_400),
+  // Upload de vídeo (MP4/MOV/WEBM) — sem limite do Whisper, mas precisa de teto
+  MAX_VIDEO_UPLOAD_BYTES: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(2_147_483_648), // 2 GB
 
   // Transcrição (Fase 3) — OpenAI Whisper
   OPENAI_API_KEY: z.string().min(1, 'obrigatório para a transcrição (Fase 3)'),
