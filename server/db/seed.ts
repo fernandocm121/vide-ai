@@ -16,7 +16,9 @@ try {
 
 const url = process.env.DATABASE_URL
 if (!url) {
-  console.error('[db:seed] DATABASE_URL não definido. Rode: cp .env.example .env')
+  console.error(
+    '[db:seed] DATABASE_URL não definido. Rode: cp .env.example .env',
+  )
   process.exit(1)
 }
 
@@ -70,9 +72,30 @@ try {
       .returning()
 
     await db.insert(schema.transcriptSegments).values([
-      { transcriptId: transcript!.id, videoId: video!.id, idx: 0, startMs: 0, endMs: 4200, text: 'Fala pessoal, bem-vindos a mais um episódio.' },
-      { transcriptId: transcript!.id, videoId: video!.id, idx: 1, startMs: 4200, endMs: 9800, text: 'Hoje a gente vai falar sobre autenticação OAuth.' },
-      { transcriptId: transcript!.id, videoId: video!.id, idx: 2, startMs: 9800, endMs: 15400, text: 'E também um pouco sobre o novo trailer de GTA 6.' },
+      {
+        transcriptId: transcript!.id,
+        videoId: video!.id,
+        idx: 0,
+        startMs: 0,
+        endMs: 4200,
+        text: 'Fala pessoal, bem-vindos a mais um episódio.',
+      },
+      {
+        transcriptId: transcript!.id,
+        videoId: video!.id,
+        idx: 1,
+        startMs: 4200,
+        endMs: 9800,
+        text: 'Hoje a gente vai falar sobre autenticação OAuth.',
+      },
+      {
+        transcriptId: transcript!.id,
+        videoId: video!.id,
+        idx: 2,
+        startMs: 9800,
+        endMs: 15400,
+        text: 'E também um pouco sobre o novo trailer de GTA 6.',
+      },
     ])
 
     await db.insert(schema.usage).values({

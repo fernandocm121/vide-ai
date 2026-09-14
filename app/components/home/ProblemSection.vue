@@ -23,8 +23,12 @@ const derived = [
       />
 
       <div class="grid gap-4 sm:grid-cols-2">
-        <div class="flex flex-col justify-between rounded-2xl border border-line bg-paper-2 p-6">
-          <p class="text-xs font-semibold uppercase tracking-wider text-ink-soft">
+        <div
+          class="flex flex-col justify-between rounded-2xl border border-line bg-paper-2 p-6"
+        >
+          <p
+            class="text-xs font-semibold uppercase tracking-wider text-ink-soft"
+          >
             Antes
           </p>
           <div class="mt-6">
@@ -35,8 +39,12 @@ const derived = [
           </div>
         </div>
 
-        <div class="flex flex-col justify-between rounded-2xl border border-brand-200 bg-brand-50 p-6">
-          <p class="text-xs font-semibold uppercase tracking-wider text-brand-600">
+        <div
+          class="flex flex-col justify-between rounded-2xl border border-brand-200 bg-brand-50 p-6"
+        >
+          <p
+            class="text-xs font-semibold uppercase tracking-wider text-brand-600"
+          >
             Depois
           </p>
           <div class="mt-6">
@@ -48,7 +56,9 @@ const derived = [
         </div>
 
         <div class="rounded-2xl border border-line bg-paper p-6 sm:col-span-2">
-          <p class="text-xs font-semibold uppercase tracking-wider text-ink-soft">
+          <p
+            class="text-xs font-semibold uppercase tracking-wider text-ink-soft"
+          >
             Um vídeo vira
           </p>
           <ul class="mt-4 flex flex-wrap gap-2">

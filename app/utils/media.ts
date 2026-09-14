@@ -8,7 +8,10 @@ export type VideoStatus =
   | 'ready'
   | 'failed'
 
-type StatusMeta = { label: string; tone: 'neutral' | 'progress' | 'success' | 'error' }
+type StatusMeta = {
+  label: string
+  tone: 'neutral' | 'progress' | 'success' | 'error'
+}
 
 export const STATUS_META: Record<VideoStatus, StatusMeta> = {
   uploading: { label: 'Enviando', tone: 'neutral' },
@@ -21,7 +24,12 @@ export const STATUS_META: Record<VideoStatus, StatusMeta> = {
   failed: { label: 'Falhou', tone: 'error' },
 }
 
-export const IN_PROGRESS: VideoStatus[] = ['queued', 'extracting', 'transcribing', 'analyzing']
+export const IN_PROGRESS: VideoStatus[] = [
+  'queued',
+  'extracting',
+  'transcribing',
+  'analyzing',
+]
 
 /** milissegundos -> "m:ss" ou "h:mm:ss" */
 export function formatTimestamp(ms: number): string {

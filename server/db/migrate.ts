@@ -13,7 +13,9 @@ try {
 
 const url = process.env.DATABASE_URL
 if (!url) {
-  console.error('[db:migrate] DATABASE_URL não definido. Rode: cp .env.example .env')
+  console.error(
+    '[db:migrate] DATABASE_URL não definido. Rode: cp .env.example .env',
+  )
   process.exit(1)
 }
 

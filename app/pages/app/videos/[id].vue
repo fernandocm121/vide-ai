@@ -27,9 +27,11 @@ const route = useRoute()
 const router = useRouter()
 const id = route.params.id as string
 
-const { data: video, refresh, error } = await useFetch<VideoDetail>(
-  () => `/api/videos/${id}`,
-)
+const {
+  data: video,
+  refresh,
+  error,
+} = await useFetch<VideoDetail>(() => `/api/videos/${id}`)
 
 useHead(() => ({ title: `${video.value?.title ?? 'Áudio'} — Vide AI` }))
 
@@ -54,14 +56,22 @@ async function transcribe() {
     await refresh()
   } catch (e: unknown) {
     const err = e as { data?: { statusMessage?: string }; message?: string }
-    actionError.value = err?.data?.statusMessage ?? err?.message ?? 'Falha ao iniciar a transcrição.'
+    actionError.value =
+      err?.data?.statusMessage ??
+      err?.message ??
+      'Falha ao iniciar a transcrição.'
   } finally {
     busy.value = false
   }
 }
 
 async function remove() {
-  if (!confirm('Excluir este áudio e a transcrição? Esta ação não pode ser desfeita.')) return
+  if (
+    !confirm(
+      'Excluir este áudio e a transcrição? Esta ação não pode ser desfeita.',
+    )
+  )
+    return
   busy.value = true
   try {
     await $fetch(`/api/videos/${id}`, { method: 'DELETE' })
@@ -86,7 +96,10 @@ function onTimeUpdate() {
 </script>
 
 <template>
-  <div v-if="error" class="rounded-xl border border-line bg-paper p-6 text-sm text-ink-soft">
+  <div
+    v-if="error"
+    class="rounded-xl border border-line bg-paper p-6 text-sm text-ink-soft"
+  >
     Não foi possível carregar este áudio.
     <NuxtLink to="/app" class="font-medium text-brand-600">Voltar</NuxtLink>
   </div>
@@ -94,15 +107,22 @@ function onTimeUpdate() {
   <div v-else-if="video" class="flex flex-col gap-6">
     <div class="flex items-start justify-between gap-4">
       <div class="min-w-0">
-        <NuxtLink to="/app" class="text-xs font-medium text-ink-soft hover:text-ink">
+        <NuxtLink
+          to="/app"
+          class="text-xs font-medium text-ink-soft hover:text-ink"
+        >
           ← Meus áudios
         </NuxtLink>
-        <h1 class="mt-1 truncate text-2xl font-extrabold tracking-tight text-ink">
+        <h1
+          class="mt-1 truncate text-2xl font-extrabold tracking-tight text-ink"
+        >
           {{ video.title }}
         </h1>
         <p class="mt-1 text-xs text-ink-soft">
           {{ video.originalFilename }}
-          <span v-if="video.durationSeconds"> · {{ formatDuration(video.durationSeconds) }}</span>
+          <span v-if="video.durationSeconds">
+            · {{ formatDuration(video.durationSeconds) }}</span
+          >
           <span v-if="video.language"> · {{ video.language }}</span>
         </p>
       </div>
@@ -132,25 +152,39 @@ function onTimeUpdate() {
         </BaseButton>
       </template>
 
-      <template v-else-if="video.status === 'queued' || video.status === 'transcribing'">
+      <template
+        v-else-if="video.status === 'queued' || video.status === 'transcribing'"
+      >
         <div class="flex items-center gap-3 text-sm text-ink">
           <span class="size-2 animate-pulse rounded-full bg-amber-500" />
-          {{ video.status === 'queued' ? 'Na fila para transcrever…' : 'Transcrevendo o áudio…' }}
+          {{
+            video.status === 'queued'
+              ? 'Na fila para transcrever…'
+              : 'Transcrevendo o áudio…'
+          }}
           <span class="text-ink-soft">— isso pode levar alguns minutos.</span>
         </div>
       </template>
 
       <template v-else-if="video.status === 'failed'">
         <p class="text-sm font-medium text-brand-600">A transcrição falhou.</p>
-        <p v-if="video.error" class="mt-1 text-xs text-ink-soft">{{ video.error }}</p>
-        <BaseButton variant="outline" class="mt-3" :loading="busy" @click="transcribe">
+        <p v-if="video.error" class="mt-1 text-xs text-ink-soft">
+          {{ video.error }}
+        </p>
+        <BaseButton
+          variant="outline"
+          class="mt-3"
+          :loading="busy"
+          @click="transcribe"
+        >
           Tentar de novo
         </BaseButton>
       </template>
 
       <template v-else-if="video.status === 'ready'">
         <p class="text-sm text-ink">
-          Transcrição pronta — {{ video.transcript?.segments.length ?? 0 }} segmentos.
+          Transcrição pronta —
+          {{ video.transcript?.segments.length ?? 0 }} segmentos.
         </p>
       </template>
 
@@ -158,7 +192,9 @@ function onTimeUpdate() {
         <p class="text-sm text-ink-soft">Processando o upload…</p>
       </template>
 
-      <p v-if="actionError" class="mt-3 text-sm text-brand-600">{{ actionError }}</p>
+      <p v-if="actionError" class="mt-3 text-sm text-brand-600">
+        {{ actionError }}
+      </p>
     </div>
 
     <!-- transcrição -->

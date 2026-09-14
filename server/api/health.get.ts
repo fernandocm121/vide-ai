@@ -6,7 +6,10 @@ type ServiceCheck = {
   error?: string
 }
 
-async function check(fn: () => Promise<unknown>, timeoutMs = 3000): Promise<ServiceCheck> {
+async function check(
+  fn: () => Promise<unknown>,
+  timeoutMs = 3000,
+): Promise<ServiceCheck> {
   const start = performance.now()
   try {
     await Promise.race([

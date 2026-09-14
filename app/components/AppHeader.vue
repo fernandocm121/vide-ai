@@ -6,9 +6,14 @@ const links = [
   { label: 'Preços', href: '#planos' },
 ]
 
+const { track } = useAnalytics()
+
 const open = ref(false)
 const route = useRoute()
-watch(() => route.hash, () => (open.value = false))
+watch(
+  () => route.hash,
+  () => (open.value = false),
+)
 </script>
 
 <template>
@@ -31,7 +36,12 @@ watch(() => route.hash, () => (open.value = false))
 
       <div class="hidden items-center gap-2 md:flex">
         <BaseButton variant="ghost" size="md" to="/app">Entrar</BaseButton>
-        <BaseButton variant="primary" size="md" href="#cta">
+        <BaseButton
+          variant="primary"
+          size="md"
+          to="/signup"
+          @click="track('cta_click', { location: 'header' })"
+        >
           Começar gratuitamente
         </BaseButton>
       </div>
@@ -46,10 +56,7 @@ watch(() => route.hash, () => (open.value = false))
       </button>
     </div>
 
-    <div
-      v-if="open"
-      class="border-t border-line bg-paper px-6 py-4 md:hidden"
-    >
+    <div v-if="open" class="border-t border-line bg-paper px-6 py-4 md:hidden">
       <nav class="flex flex-col gap-1">
         <a
           v-for="link in links"
@@ -62,8 +69,16 @@ watch(() => route.hash, () => (open.value = false))
         </a>
       </nav>
       <div class="mt-3 flex flex-col gap-2">
-        <BaseButton variant="outline" size="md" to="/app" block>Entrar</BaseButton>
-        <BaseButton variant="primary" size="md" href="#cta" block>
+        <BaseButton variant="outline" size="md" to="/app" block
+          >Entrar</BaseButton
+        >
+        <BaseButton
+          variant="primary"
+          size="md"
+          to="/signup"
+          block
+          @click="track('cta_click', { location: 'header_mobile' })"
+        >
           Começar gratuitamente
         </BaseButton>
       </div>

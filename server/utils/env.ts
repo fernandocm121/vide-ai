@@ -11,7 +11,9 @@ const EnvSchema = z.object({
     .default('development'),
 
   // PostgreSQL
-  DATABASE_URL: z.string().min(1, 'obrigatório (ex.: postgresql://user:pass@host:5432/db)'),
+  DATABASE_URL: z
+    .string()
+    .min(1, 'obrigatório (ex.: postgresql://user:pass@host:5432/db)'),
 
   // Redis
   REDIS_URL: z.string().min(1, 'obrigatório (ex.: redis://localhost:6379)'),

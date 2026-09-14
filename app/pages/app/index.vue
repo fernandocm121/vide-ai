@@ -15,9 +15,12 @@ interface VideoRow {
   createdAt: string
 }
 
-const { data: videos, refresh, pending, error } = await useFetch<VideoRow[]>(
-  '/api/videos',
-)
+const {
+  data: videos,
+  refresh,
+  pending,
+  error,
+} = await useFetch<VideoRow[]>('/api/videos')
 
 const dateFmt = new Intl.DateTimeFormat('pt-BR', {
   day: '2-digit',
@@ -30,7 +33,9 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
 <template>
   <div class="flex flex-col gap-8">
     <div>
-      <h1 class="text-2xl font-extrabold tracking-tight text-ink">Meus áudios</h1>
+      <h1 class="text-2xl font-extrabold tracking-tight text-ink">
+        Meus áudios
+      </h1>
       <p class="mt-1 text-sm text-ink-soft">
         Envie um MP3 e transforme em texto com timestamps.
       </p>
@@ -40,7 +45,9 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
 
     <div class="flex flex-col gap-3">
       <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold uppercase tracking-wider text-ink-soft">
+        <h2
+          class="text-sm font-semibold uppercase tracking-wider text-ink-soft"
+        >
           Enviados
         </h2>
         <button
@@ -55,8 +62,10 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
         v-if="error"
         class="rounded-2xl border border-line bg-paper px-6 py-12 text-center text-sm text-brand-600"
       >
-        Não foi possível carregar seus áudios. A infra local está de pé?
-        (<code class="text-xs">npm run services:up</code>)
+        Não foi possível carregar seus áudios. A infra local está de pé? (<code
+          class="text-xs"
+          >npm run services:up</code
+        >)
       </div>
 
       <div
@@ -78,10 +87,14 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
           >
             <AppIcon name="mic" class="size-5 shrink-0 text-ink-soft" />
             <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-semibold text-ink">{{ v.title }}</p>
+              <p class="truncate text-sm font-semibold text-ink">
+                {{ v.title }}
+              </p>
               <p class="mt-0.5 text-xs text-ink-soft">
                 {{ dateFmt.format(new Date(v.createdAt)) }}
-                <span v-if="v.durationSeconds"> · {{ formatDuration(v.durationSeconds) }}</span>
+                <span v-if="v.durationSeconds">
+                  · {{ formatDuration(v.durationSeconds) }}</span
+                >
               </p>
             </div>
             <AppStatusBadge :status="v.status" />

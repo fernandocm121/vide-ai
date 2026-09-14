@@ -207,7 +207,10 @@ export const videosRelations = relations(videos, ({ one, many }) => ({
 }))
 
 export const transcriptsRelations = relations(transcripts, ({ one, many }) => ({
-  video: one(videos, { fields: [transcripts.videoId], references: [videos.id] }),
+  video: one(videos, {
+    fields: [transcripts.videoId],
+    references: [videos.id],
+  }),
   segments: many(transcriptSegments),
 }))
 

@@ -17,10 +17,14 @@ import { audiences } from '~/data/home'
           :key="a.tag"
           class="flex flex-col gap-4 rounded-2xl border border-line bg-paper p-6"
         >
-          <span class="grid size-11 place-items-center rounded-xl bg-brand-50 text-brand-600">
+          <span
+            class="grid size-11 place-items-center rounded-xl bg-brand-50 text-brand-600"
+          >
             <AppIcon :name="a.icon" class="size-5" />
           </span>
-          <span class="text-xs font-semibold uppercase tracking-wider text-brand-600">
+          <span
+            class="text-xs font-semibold uppercase tracking-wider text-brand-600"
+          >
             {{ a.tag }}
           </span>
           <h3 class="text-lg font-bold leading-snug text-ink">{{ a.title }}</h3>

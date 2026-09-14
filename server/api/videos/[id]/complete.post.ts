@@ -24,7 +24,8 @@ export default defineEventHandler(async (event) => {
   } catch {
     throw createError({
       statusCode: 409,
-      statusMessage: 'Arquivo não encontrado no storage — o upload não foi concluído',
+      statusMessage:
+        'Arquivo não encontrado no storage — o upload não foi concluído',
     })
   }
 

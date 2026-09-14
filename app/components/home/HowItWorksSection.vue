@@ -11,7 +11,9 @@ import { steps } from '~/data/home'
         subtitle="Quatro etapas automáticas. Você envia a gravação, a plataforma faz o resto."
       />
 
-      <ol class="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+      <ol
+        class="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4"
+      >
         <li
           v-for="step in steps"
           :key="step.id"

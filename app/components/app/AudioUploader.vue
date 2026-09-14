@@ -100,9 +100,7 @@ function onDrop(e: DragEvent) {
 <template>
   <div
     class="rounded-2xl border-2 border-dashed bg-paper p-8 text-center transition-colors"
-    :class="
-      dragging ? 'border-brand-400 bg-brand-50/40' : 'border-line'
-    "
+    :class="dragging ? 'border-brand-400 bg-brand-50/40' : 'border-line'"
     @dragover.prevent="dragging = true"
     @dragleave.prevent="dragging = false"
     @drop.prevent="onDrop"
@@ -117,7 +115,9 @@ function onDrop(e: DragEvent) {
 
     <template v-if="uploading">
       <p class="text-sm font-medium text-ink">Enviando… {{ progress }}%</p>
-      <div class="mx-auto mt-3 h-2 w-full max-w-sm overflow-hidden rounded-full bg-paper-3">
+      <div
+        class="mx-auto mt-3 h-2 w-full max-w-sm overflow-hidden rounded-full bg-paper-3"
+      >
         <div
           class="h-full rounded-full bg-brand-500 transition-[width] duration-200"
           :style="{ width: `${progress}%` }"
@@ -143,6 +143,8 @@ function onDrop(e: DragEvent) {
       <p class="mt-3 text-xs text-ink-soft">MP3 · até {{ MAX_MB }} MB</p>
     </template>
 
-    <p v-if="error" class="mt-4 text-sm font-medium text-brand-600">{{ error }}</p>
+    <p v-if="error" class="mt-4 text-sm font-medium text-brand-600">
+      {{ error }}
+    </p>
   </div>
 </template>

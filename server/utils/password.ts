@@ -24,5 +24,7 @@ export async function verifyPassword(
 
   const derived = (await scryptAsync(password, salt, KEYLEN)) as Buffer
   const expected = Buffer.from(hash, 'hex')
-  return expected.length === derived.length && timingSafeEqual(expected, derived)
+  return (
+    expected.length === derived.length && timingSafeEqual(expected, derived)
+  )
 }

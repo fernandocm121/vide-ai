@@ -10,7 +10,13 @@ const props = withDefaults(
     loading?: boolean
     type?: 'button' | 'submit' | 'reset'
   }>(),
-  { variant: 'primary', size: 'md', block: false, disabled: false, loading: false },
+  {
+    variant: 'primary',
+    size: 'md',
+    block: false,
+    disabled: false,
+    loading: false,
+  },
 )
 
 const component = computed(() => {
@@ -40,7 +46,7 @@ const sizes: Record<string, string> = {
     :is="component"
     :to="to"
     :href="href"
-    :type="component === 'button' ? type ?? 'button' : undefined"
+    :type="component === 'button' ? (type ?? 'button') : undefined"
     :disabled="component === 'button' ? isDisabled : undefined"
     :aria-disabled="isDisabled || undefined"
     :class="[

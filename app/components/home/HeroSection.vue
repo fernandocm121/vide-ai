@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { track } = useAnalytics()
+
 const bullets = [
   'Transcrição com timestamps',
   'Legendas SRT e VTT',
@@ -38,7 +40,12 @@ const outputs = [
         </p>
 
         <div class="flex flex-col gap-3 sm:flex-row">
-          <BaseButton variant="primary" size="lg" href="#cta">
+          <BaseButton
+            variant="primary"
+            size="lg"
+            to="/signup"
+            @click="track('cta_click', { location: 'hero' })"
+          >
             Começar gratuitamente
             <AppIcon name="arrow-right" class="size-4" />
           </BaseButton>
@@ -64,10 +71,14 @@ const outputs = [
           class="rounded-2xl border border-line bg-paper p-5 shadow-xl shadow-ink/5"
         >
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-ink-soft">
+            <span
+              class="text-xs font-semibold uppercase tracking-wider text-ink-soft"
+            >
               Novo processamento
             </span>
-            <span class="flex items-center gap-1.5 text-xs font-medium text-brand-600">
+            <span
+              class="flex items-center gap-1.5 text-xs font-medium text-brand-600"
+            >
               <span class="size-1.5 animate-pulse rounded-full bg-brand-500" />
               processando
             </span>
@@ -77,7 +88,9 @@ const outputs = [
             class="mt-4 grid place-items-center gap-2 rounded-xl border border-dashed border-line bg-paper-2 px-6 py-10 text-center"
           >
             <AppIcon name="upload" class="size-7 text-ink-soft" />
-            <p class="text-sm font-medium text-ink">entrevista-podcast-42.mp4</p>
+            <p class="text-sm font-medium text-ink">
+              entrevista-podcast-42.mp4
+            </p>
             <p class="text-xs text-ink-soft">MP4 · 1080p · 52:14</p>
           </div>
 
@@ -87,7 +100,9 @@ const outputs = [
               :key="o"
               class="flex items-center gap-2.5 rounded-lg bg-paper-2 px-3 py-2.5 text-sm text-ink"
             >
-              <span class="grid size-5 place-items-center rounded-full bg-brand-500 text-white">
+              <span
+                class="grid size-5 place-items-center rounded-full bg-brand-500 text-white"
+              >
                 <AppIcon name="check" class="size-3" />
               </span>
               {{ o }}

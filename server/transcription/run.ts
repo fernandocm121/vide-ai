@@ -1,5 +1,11 @@
 import { eq, sql } from 'drizzle-orm'
-import { jobs, transcripts, transcriptSegments, usage, videos } from '../db/schema'
+import {
+  jobs,
+  transcripts,
+  transcriptSegments,
+  usage,
+  videos,
+} from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
 import { getObjectBuffer } from '../utils/storage'
 import { transcriptionProvider } from './provider'
@@ -19,7 +25,9 @@ export async function runTranscription(
 ): Promise<void> {
   const db = useDrizzle()
 
-  const video = await db.query.videos.findFirst({ where: eq(videos.id, videoId) })
+  const video = await db.query.videos.findFirst({
+    where: eq(videos.id, videoId),
+  })
   if (!video?.storageKey) {
     await db
       .update(jobs)
@@ -121,7 +129,9 @@ export async function runTranscription(
         .where(eq(jobs.id, jobId))
     })
 
-    console.log(`[transcription] vídeo ${videoId} pronto (${result.segments.length} segmentos)`)
+    console.log(
+      `[transcription] vídeo ${videoId} pronto (${result.segments.length} segmentos)`,
+    )
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     await Promise.allSettled([

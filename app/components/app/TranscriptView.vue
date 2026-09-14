@@ -36,18 +36,26 @@ async function copyText() {
 
 <template>
   <div class="rounded-2xl border border-line bg-paper">
-    <div class="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+    <div
+      class="flex items-center justify-between gap-3 border-b border-line px-4 py-3"
+    >
       <div class="flex gap-1 rounded-lg bg-paper-2 p-1">
         <button
           class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
-          :class="mode === 'segments' ? 'bg-paper text-ink shadow-sm' : 'text-ink-soft'"
+          :class="
+            mode === 'segments'
+              ? 'bg-paper text-ink shadow-sm'
+              : 'text-ink-soft'
+          "
           @click="mode = 'segments'"
         >
           Segmentos
         </button>
         <button
           class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
-          :class="mode === 'full' ? 'bg-paper text-ink shadow-sm' : 'text-ink-soft'"
+          :class="
+            mode === 'full' ? 'bg-paper text-ink shadow-sm' : 'text-ink-soft'
+          "
           @click="mode = 'full'"
         >
           Texto corrido
@@ -61,7 +69,10 @@ async function copyText() {
       </button>
     </div>
 
-    <div v-if="mode === 'segments'" class="max-h-128 divide-y divide-line overflow-y-auto">
+    <div
+      v-if="mode === 'segments'"
+      class="max-h-128 divide-y divide-line overflow-y-auto"
+    >
       <button
         v-for="seg in segments"
         :key="seg.idx"

@@ -20,7 +20,9 @@ const outputs = [
         subtitle="A mesma gravação alimenta todo o seu calendário editorial."
       />
 
-      <div class="mt-12 flex flex-col items-stretch gap-6 lg:flex-row lg:items-center">
+      <div
+        class="mt-12 flex flex-col items-stretch gap-6 lg:flex-row lg:items-center"
+      >
         <div
           class="flex shrink-0 flex-col items-center justify-center gap-1 rounded-2xl bg-ink px-8 py-6 text-center text-white lg:w-56"
         >

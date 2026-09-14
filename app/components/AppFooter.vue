@@ -33,7 +33,9 @@ const groups = [
 
 <template>
   <footer class="border-t border-line bg-paper">
-    <div class="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+    <div
+      class="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]"
+    >
       <div class="flex flex-col gap-4">
         <AppLogo />
         <p class="max-w-xs text-sm leading-relaxed text-ink-soft">
@@ -42,7 +44,11 @@ const groups = [
         </p>
       </div>
 
-      <div v-for="group in groups" :key="group.title" class="flex flex-col gap-3">
+      <div
+        v-for="group in groups"
+        :key="group.title"
+        class="flex flex-col gap-3"
+      >
         <p class="text-xs font-semibold uppercase tracking-wider text-ink">
           {{ group.title }}
         </p>

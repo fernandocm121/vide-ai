@@ -15,7 +15,9 @@
         </div>
         <div class="flex items-center gap-4 text-sm text-ink-soft">
           <span class="hidden sm:inline">dev@videai.local</span>
-          <NuxtLink to="/" class="transition-colors hover:text-ink">Sair</NuxtLink>
+          <NuxtLink to="/" class="transition-colors hover:text-ink"
+            >Sair</NuxtLink
+          >
         </div>
       </div>
     </header>

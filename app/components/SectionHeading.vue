@@ -14,7 +14,9 @@ withDefaults(
   <div
     :class="[
       'flex flex-col gap-4',
-      align === 'center' ? 'items-center text-center mx-auto max-w-2xl' : 'max-w-2xl',
+      align === 'center'
+        ? 'items-center text-center mx-auto max-w-2xl'
+        : 'max-w-2xl',
     ]"
   >
     <span v-if="eyebrow" class="eyebrow">

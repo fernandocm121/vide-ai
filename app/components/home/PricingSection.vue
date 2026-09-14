@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { plans } from '~/data/home'
+
+const { track } = useAnalytics()
+
+const planSlug = (name: string) => name.toLowerCase()
 </script>
 
 <template>
@@ -46,9 +50,15 @@ import { plans } from '~/data/home'
           <BaseButton
             :variant="plan.highlight ? 'primary' : 'outline'"
             size="md"
-            href="#cta"
+            :to="`/signup?plan=${planSlug(plan.name)}`"
             block
             class="mt-6"
+            @click="
+              track('cta_click', {
+                location: 'pricing',
+                plan: planSlug(plan.name),
+              })
+            "
           >
             {{ plan.cta }}
           </BaseButton>
@@ -59,7 +69,10 @@ import { plans } from '~/data/home'
               :key="f"
               class="flex items-start gap-2.5 text-sm text-ink"
             >
-              <AppIcon name="check" class="mt-0.5 size-4 shrink-0 text-brand-500" />
+              <AppIcon
+                name="check"
+                class="mt-0.5 size-4 shrink-0 text-brand-500"
+              />
               {{ f }}
             </li>
           </ul>
@@ -67,7 +80,8 @@ import { plans } from '~/data/home'
       </div>
 
       <p class="mt-8 text-center text-sm text-ink-soft">
-        Precisa de mais? O plano <span class="font-semibold text-ink">Enterprise</span>
+        Precisa de mais? O plano
+        <span class="font-semibold text-ink">Enterprise</span>
         atende empresas com volume alto e necessidades específicas.
       </p>
     </div>

@@ -1,7 +1,15 @@
+<script setup lang="ts">
+const { track } = useAnalytics()
+</script>
+
 <template>
   <section id="cta" class="bg-brand-500">
-    <div class="container-page flex flex-col items-center gap-6 py-20 text-center">
-      <h2 class="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+    <div
+      class="container-page flex flex-col items-center gap-6 py-20 text-center"
+    >
+      <h2
+        class="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
+      >
         Seu próximo vídeo pode criar muito mais.
       </h2>
       <p class="max-w-xl text-lg text-white/85">
@@ -9,7 +17,12 @@
         cartão de crédito.
       </p>
       <div class="flex flex-col gap-3 sm:flex-row">
-        <BaseButton variant="dark" size="lg" href="#">
+        <BaseButton
+          variant="dark"
+          size="lg"
+          to="/signup"
+          @click="track('cta_click', { location: 'final_cta' })"
+        >
           Começar agora
           <AppIcon name="arrow-right" class="size-4" />
         </BaseButton>
