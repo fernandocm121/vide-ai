@@ -51,6 +51,11 @@ export const usageKindEnum = pgEnum('usage_kind', [
   'storage_bytes',
 ])
 
+export const verificationTokenKindEnum = pgEnum('verification_token_kind', [
+  'email_verify',
+  'password_reset',
+])
+
 /* ------------------------------------------------------------------ *
  * Helpers
  * ------------------------------------------------------------------ */
@@ -86,6 +91,22 @@ export const sessions = pgTable(
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('sessions_user_id_idx').on(t.userId)],
+)
+
+export const verificationTokens = pgTable(
+  'verification_tokens',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    userId: uuid()
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    token: text().notNull().unique(),
+    kind: verificationTokenKindEnum().notNull(),
+    expiresAt: timestamp({ withTimezone: true }).notNull(),
+    usedAt: timestamp({ withTimezone: true }),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('verification_tokens_user_idx').on(t.userId)],
 )
 
 export const videos = pgTable(
@@ -193,11 +214,22 @@ export const usage = pgTable(
 export const usersRelations = relations(users, ({ many }) => ({
   videos: many(videos),
   sessions: many(sessions),
+  verificationTokens: many(verificationTokens),
 }))
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }))
+
+export const verificationTokensRelations = relations(
+  verificationTokens,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [verificationTokens.userId],
+      references: [users.id],
+    }),
+  }),
+)
 
 export const videosRelations = relations(videos, ({ one, many }) => ({
   user: one(users, { fields: [videos.userId], references: [users.id] }),
@@ -238,6 +270,7 @@ export const jobsRelations = relations(jobs, ({ one }) => ({
 export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
 export type Session = typeof sessions.$inferSelect
+export type VerificationToken = typeof verificationTokens.$inferSelect
 export type Video = typeof videos.$inferSelect
 export type NewVideo = typeof videos.$inferInsert
 export type Transcript = typeof transcripts.$inferSelect

@@ -43,14 +43,14 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 - [x] Seed de desenvolvimento — **S**
 - [x] Healthcheck estendido (DB + Redis + storage) — **S**
 
-## Fase 2 — Autenticação e contas  · `M`
+## Fase 2 — Autenticação e contas  · `M`  ✅
 
-- [ ] Integrar solução de auth escolhida — **M**
-- [ ] Fluxo signup / login / logout + verificação de e-mail — **M**
-- [ ] Middleware de rota protegida + layout `app` — **S**
-- [ ] Páginas `/login`, `/signup`, `/app` (dashboard vazio) — **S**
-- [ ] Registro de usuário cria plano `free` por padrão — **S**
-- [ ] Página `/app/conta` (perfil, trocar senha) — **S**
+- [x] Integrar solução de auth escolhida — **M** (sessão própria por token opaco, sobre o schema `users`/`sessions` já existente)
+- [x] Fluxo signup / login / logout + verificação de e-mail — **M**
+- [x] Middleware de rota protegida + layout `app` — **S**
+- [x] Páginas `/login`, `/signup`, `/app` (dashboard vazio) — **S**
+- [x] Registro de usuário cria plano `free` por padrão — **S**
+- [x] Página `/app/conta` (perfil, trocar senha) — **S**
 
 ## Fase 3 — Áudio: upload de MP3 + transcrição (Whisper)  · `M`  🔨
 

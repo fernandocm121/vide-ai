@@ -46,6 +46,12 @@
     background-color: var(--color-brand-500);
     color: #fff;
   }
+
+  /* O Preflight do Tailwind zera o cursor dos botões pra `default` — todo
+     botão clicável do app deve parecer clicável. */
+  button:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 @layer components {

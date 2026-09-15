@@ -15,6 +15,13 @@
       "when": 1788327913625,
       "tag": "0001_clever_the_captain",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789490727178,
+      "tag": "0002_daffy_the_fury",
+      "breakpoints": true
     }
   ]
 }
