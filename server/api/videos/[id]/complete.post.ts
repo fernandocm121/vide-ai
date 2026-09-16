@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
 import { videos } from '../../../db/schema'
 
-/** Confirma que o PUT no storage foi concluído; move o status para `uploaded`. */
+/** Confirma que o PUT no storage foi concluído; move o status para `queued`. */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
   const id = getRouterParam(event, 'id')!
@@ -32,10 +32,10 @@ export default defineEventHandler(async (event) => {
   await db
     .update(videos)
     .set({
-      status: 'uploaded',
+      status: 'queued',
       sizeBytes: Number(contentLength ?? video.sizeBytes),
     })
     .where(eq(videos.id, id))
 
-  return { status: 'uploaded' }
+  return { status: 'queued' }
 })

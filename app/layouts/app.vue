@@ -23,7 +23,7 @@ async function onLogout() {
               to="/app"
               class="text-sm font-medium text-ink-soft transition-colors hover:text-ink"
             >
-              Meus áudios
+              Meus vídeos
             </NuxtLink>
             <NuxtLink
               to="/app/conta"

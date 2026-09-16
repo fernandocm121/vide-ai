@@ -2,7 +2,7 @@
 import { formatDuration, type VideoStatus } from '~/utils/media'
 
 definePageMeta({ layout: 'app' })
-useHead({ title: 'Meus áudios — Vide AI' })
+useHead({ title: 'Meus vídeos — Vide AI' })
 
 interface VideoRow {
   id: string
@@ -69,14 +69,14 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
 
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight text-ink">
-        Meus áudios
+        Meus vídeos
       </h1>
       <p class="mt-1 text-sm text-ink-soft">
-        Envie um MP3 e transforme em texto com timestamps.
+        Envie um vídeo ou áudio e transforme em texto com timestamps.
       </p>
     </div>
 
-    <AppAudioUploader @uploaded="refresh()" />
+    <AppMediaUploader @uploaded="refresh()" />
 
     <div class="flex flex-col gap-3">
       <div class="flex items-center justify-between">
@@ -97,7 +97,7 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
         v-if="error"
         class="rounded-2xl border border-line bg-paper px-6 py-12 text-center text-sm text-brand-600"
       >
-        Não foi possível carregar seus áudios. A infra local está de pé? (<code
+        Não foi possível carregar seus vídeos. A infra local está de pé? (<code
           class="text-xs"
           >npm run services:up</code
         >)
@@ -107,7 +107,7 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
         v-else-if="!videos?.length"
         class="rounded-2xl border border-line bg-paper px-6 py-12 text-center text-sm text-ink-soft"
       >
-        {{ pending ? 'Carregando…' : 'Nenhum áudio enviado ainda.' }}
+        {{ pending ? 'Carregando…' : 'Nenhum vídeo enviado ainda.' }}
       </div>
 
       <ul v-else class="flex flex-col gap-2">
@@ -120,7 +120,14 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
             :to="`/app/videos/${v.id}`"
             class="flex items-center gap-4 px-4 py-3.5"
           >
-            <AppIcon name="mic" class="size-5 shrink-0 text-ink-soft" />
+            <div
+              class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-ink text-white"
+            >
+              <AppIcon
+                :name="v.mediaKind === 'video' ? 'video' : 'mic'"
+                class="size-5"
+              />
+            </div>
             <div class="min-w-0 flex-1">
               <p class="truncate text-sm font-semibold text-ink">
                 {{ v.title }}

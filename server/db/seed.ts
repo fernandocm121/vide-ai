@@ -52,6 +52,7 @@ try {
       .values({
         userId: user!.id,
         title: 'Exemplo — Podcast #42',
+        mediaKind: 'video',
         originalFilename: 'podcast-42.mp4',
         mimeType: 'video/mp4',
         sizeBytes: 734_003_200,

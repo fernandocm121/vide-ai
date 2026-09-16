@@ -8,27 +8,28 @@ import {
 } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
 import { getObjectBuffer } from '../utils/storage'
+import { currentPeriodMonth } from '../utils/usage'
 import { transcriptionProvider } from './provider'
-
-function currentPeriodMonth(d = new Date()): string {
-  return d.toISOString().slice(0, 7) // 'YYYY-MM'
-}
 
 /**
  * Processa a transcrição de um áudio, do começo ao fim.
- * Chamado em background (sem await) pela rota POST /api/videos/:id/transcribe.
- * Trata os próprios erros — nunca lança.
+ * Chamado em background: direto pela rota POST /api/videos/:id/transcribe
+ * (áudio) ou encadeado por runExtraction() depois de extrair o áudio de um
+ * vídeo — nesse caso `sourceKeyOverride` aponta para o áudio extraído, não
+ * para o arquivo original. Trata os próprios erros — nunca lança.
  */
 export async function runTranscription(
   videoId: string,
   jobId: string,
+  sourceKeyOverride?: string,
 ): Promise<void> {
   const db = useDrizzle()
 
   const video = await db.query.videos.findFirst({
     where: eq(videos.id, videoId),
   })
-  if (!video?.storageKey) {
+  const sourceKey = sourceKeyOverride ?? video?.storageKey
+  if (!video || !sourceKey) {
     await db
       .update(jobs)
       .set({
@@ -56,7 +57,7 @@ export async function runTranscription(
   ])
 
   try {
-    const buffer = await getObjectBuffer(video.storageKey)
+    const buffer = await getObjectBuffer(sourceKey)
     const provider = transcriptionProvider()
     const result = await provider.transcribeAudio({
       buffer,
