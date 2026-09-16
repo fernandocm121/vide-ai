@@ -126,7 +126,7 @@ function onTimeUpdate() {
           to="/app"
           class="text-xs font-medium text-ink-soft hover:text-ink"
         >
-          ← Meus vídeos
+          ← Minhas transcrições
         </NuxtLink>
         <h1
           class="mt-1 truncate text-2xl font-extrabold tracking-tight text-ink"

@@ -9,7 +9,7 @@
               to="/app"
               class="text-sm font-medium text-ink-soft transition-colors hover:text-ink"
             >
-              Meus vídeos
+              Minhas transcrições
             </NuxtLink>
           </nav>
         </div>
