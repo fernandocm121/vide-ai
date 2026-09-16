@@ -18,7 +18,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ seek: [ms: number] }>()
 
-const mode = ref<'segments' | 'full'>('segments')
+const mode = ref<'segments' | 'full'>('full')
 const query = ref('')
 
 /**
@@ -196,6 +196,15 @@ function retry(segmentId: string) {
         <button
           class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
           :class="
+            mode === 'full' ? 'bg-paper text-ink shadow-sm' : 'text-ink-soft'
+          "
+          @click="mode = 'full'"
+        >
+          Texto corrido
+        </button>
+        <button
+          class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
+          :class="
             mode === 'segments'
               ? 'bg-paper text-ink shadow-sm'
               : 'text-ink-soft'
@@ -203,15 +212,6 @@ function retry(segmentId: string) {
           @click="mode = 'segments'"
         >
           Segmentos
-        </button>
-        <button
-          class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
-          :class="
-            mode === 'full' ? 'bg-paper text-ink shadow-sm' : 'text-ink-soft'
-          "
-          @click="mode = 'full'"
-        >
-          Texto corrido
         </button>
       </div>
 
