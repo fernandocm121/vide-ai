@@ -32,6 +32,8 @@ const paths: Record<string, string> = {
   menu: '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>',
   x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
   bolt: '<path d="M13 2 3 14h7l-1 8 10-12h-7z"/>',
+  pencil:
+    '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',
 }
 
 const inner = paths[props.name] ?? ''

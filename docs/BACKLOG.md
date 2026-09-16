@@ -110,8 +110,10 @@ critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
 - [x] Busca dentro da transcrição (destaca ocorrências, navega entre elas) — **S**
 - [x] Export TXT — **S**
 - [x] Export SRT e VTT — **S**
-- [ ] Edição inline da transcrição + salvar — **M** — spec em
-      `docs/backlog-issues.pdf` (seção 2)
+- [x] Edição inline da transcrição por segmento — `PATCH /api/videos/:id/segments/:segmentId`
+      atualiza o segmento e resincroniza `transcripts.text` (join dos segmentos por `idx`) na
+      mesma transaction; edição fica restrita ao modo Segmentos (Texto corrido continua só
+      leitura) — **M**
 - [ ] Identificação de falantes (diarização) — **M** — spec em
       `docs/backlog-issues.pdf` (seção 3)
 - [ ] Compartilhar transcrição por link público (opcional) — **M**

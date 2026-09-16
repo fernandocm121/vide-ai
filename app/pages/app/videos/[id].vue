@@ -24,7 +24,13 @@ interface VideoDetail {
     text: string
     language: string | null
     provider: string | null
-    segments: { idx: number; startMs: number; endMs: number; text: string }[]
+    segments: {
+      id: string
+      idx: number
+      startMs: number
+      endMs: number
+      text: string
+    }[]
   } | null
 }
 
@@ -239,6 +245,7 @@ function onTimeUpdate() {
     <!-- transcrição -->
     <AppTranscriptView
       v-if="video.status === 'ready' && video.transcript"
+      :video-id="id"
       :text="video.transcript.text"
       :segments="video.transcript.segments"
       :active-ms="currentMs"
