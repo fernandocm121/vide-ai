@@ -37,3 +37,24 @@ feat(transcricao): edição de transcrição por segmento
 > Commits anteriores a 2026-09-16 usam o estilo antigo ("Fase N —
 > descrição", sem prefixo de tipo) e não foram reescritos — a convenção
 > vale a partir daqui pra frente.
+
+## Branches
+
+Prefixo pelo mesmo tipo usado nos commits, kebab-case, sem escopo:
+
+```
+<tipo>/<descrição-curta-em-kebab-case>
+```
+
+Exemplos: `feat/editor-transcricao-por-segmento`,
+`fix/upload-timeout`, `docs/convencao-commits`, `chore/atualiza-deps`.
+
+- Tipo igual ao do commit predominante da branch (`feat`, `fix`, `docs`,
+  `refactor`, `chore`, etc.).
+- Descrição em português, kebab-case, sem acento (compatibilidade com
+  URLs/terminal).
+
+> `fase-3b-video-upload-extracao-audio` e `editor-transcricao-por-segmento`
+> foram criadas antes desta convenção — não foram renomeadas
+> retroativamente se já estiverem mescladas; a branch de trabalho atual foi
+> renomeada para seguir o padrão daqui pra frente.
