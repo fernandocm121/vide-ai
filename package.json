@@ -52,6 +52,9 @@
     "openai": "7.9.0",
     "postgres": "3.4.9",
     "posthog-js": "1.425.1",
+    "primeicons": "^8.0.1",
+    "primevue": "^3.53.1",
+    "resend": "^6.28.1",
     "zod": "4.5.4"
   }
 }

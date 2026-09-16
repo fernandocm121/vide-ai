@@ -9,6 +9,7 @@ useSeoMeta({
 
 const { signup } = useAuth()
 const { track, identify } = useAnalytics()
+const notify = useNotify()
 
 const name = ref('')
 const email = ref('')
@@ -16,22 +17,22 @@ const password = ref('')
 const acceptedTerms = ref(false)
 const showPassword = ref(false)
 const pending = ref(false)
-const errorMsg = ref('')
-const googleNotice = ref(false)
 
 onMounted(() => {
   track('signup_view')
 })
 
 function onGoogleClick() {
-  googleNotice.value = true
+  notify.info(
+    'Login com Google ainda não está disponível — crie sua conta com e-mail e senha.',
+  )
 }
 
 async function submit() {
-  errorMsg.value = ''
   if (!acceptedTerms.value) {
-    errorMsg.value =
-      'É preciso concordar com os Termos de Uso e a Política de Privacidade.'
+    notify.error(
+      'É preciso concordar com os Termos de Uso e a Política de Privacidade.',
+    )
     return
   }
   pending.value = true
@@ -45,9 +46,9 @@ async function submit() {
     track('signup_completed')
     await navigateTo('/app')
   } catch (err: unknown) {
-    const data = (err as { data?: { statusMessage?: string } }).data
-    errorMsg.value =
-      data?.statusMessage ?? 'Não foi possível criar sua conta. Tente de novo.'
+    notify.error(
+      apiErrorMessage(err, 'Não foi possível criar sua conta. Tente de novo.'),
+    )
   } finally {
     pending.value = false
   }
@@ -79,10 +80,6 @@ async function submit() {
       <IconGoogle />
       Continuar com Google
     </button>
-    <p v-if="googleNotice" class="mt-2 text-xs text-ink-soft">
-      Login com Google ainda não está disponível — crie sua conta com e-mail e
-      senha.
-    </p>
 
     <div class="my-5 flex items-center gap-3">
       <span class="h-px flex-1 bg-line" />
@@ -130,14 +127,15 @@ async function submit() {
             minlength="8"
             autocomplete="new-password"
             placeholder="Mínimo 8 caracteres"
-            class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-20 text-sm text-ink outline-none transition-colors focus:border-brand-500"
+            class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
           />
           <button
             type="button"
-            class="absolute inset-y-0 right-3 text-xs font-semibold uppercase tracking-wide text-ink-soft hover:text-ink"
+            class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
+            :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
             @click="showPassword = !showPassword"
           >
-            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            <AppIcon :name="showPassword ? 'eye' : 'eye-off'" class="size-4" />
           </button>
         </div>
       </div>
@@ -157,8 +155,6 @@ async function submit() {
           >
         </span>
       </label>
-
-      <p v-if="errorMsg" class="text-sm text-brand-600">{{ errorMsg }}</p>
 
       <BaseButton
         type="submit"

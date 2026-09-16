@@ -11,7 +11,12 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxtjs/seo'],
 
-  css: ['~/assets/css/main.css'],
+  css: [
+    'primevue/resources/themes/lara-light-indigo/theme.css',
+    'primevue/resources/primevue.css',
+    'primeicons/primeicons.css',
+    '~/assets/css/main.css',
+  ],
 
   vite: {
     plugins: [tailwindcss()],

@@ -29,6 +29,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // compara contra o hash salvo (não a string `currentPassword` recebida) —
+  // é a forma correta de saber se a "nova" senha é igual à que já está lá.
+  if (await verifyPassword(user.passwordHash, newPassword)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'A nova senha deve ser diferente da senha atual',
+    })
+  }
+
   const db = useDrizzle()
   await db
     .update(users)

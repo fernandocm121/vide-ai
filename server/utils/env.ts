@@ -47,6 +47,11 @@ const EnvSchema = z.object({
 
   // Integrações de IA — opcionais até a Fase 6
   ANTHROPIC_API_KEY: z.string().optional(),
+
+  // E-mail transacional (verificação de conta, redefinição de senha) — Resend.
+  // Sem a chave, os e-mails só ficam no log do servidor (dev).
+  RESEND_API_KEY: z.string().optional(),
+  MAIL_FROM: z.string().min(1).default('Vide AI <onboarding@resend.dev>'),
 })
 
 export type Env = z.infer<typeof EnvSchema>

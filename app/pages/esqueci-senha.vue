@@ -2,6 +2,8 @@
 definePageMeta({ layout: 'auth' })
 useSeoMeta({ title: 'Esqueci minha senha', robots: 'noindex' })
 
+const notify = useNotify()
+
 const email = ref('')
 const pending = ref(false)
 const done = ref(false)
@@ -16,6 +18,10 @@ async function submit() {
     )
     devResetUrl.value = res.devResetUrl ?? ''
     done.value = true
+  } catch (err: unknown) {
+    notify.error(
+      apiErrorMessage(err, 'Não foi possível enviar o e-mail. Tente de novo.'),
+    )
   } finally {
     pending.value = false
   }
@@ -80,9 +86,9 @@ async function submit() {
       </span>
       <h1 class="mt-4 text-xl font-bold text-ink">Verifique seu e-mail</h1>
       <p class="mt-2 text-sm text-ink-soft">
-        Se houver uma conta com o e-mail
+        Enviamos um link para redefinir a senha para
         <span class="font-medium text-ink">{{ email }}</span
-        >, enviamos um link para redefinir a senha.
+        >.
       </p>
       <p v-if="devResetUrl" class="mt-3 text-xs text-ink-soft">
         (dev, sem provedor de e-mail configurado)

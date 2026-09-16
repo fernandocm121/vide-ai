@@ -3,6 +3,7 @@ definePageMeta({ layout: 'app' })
 useHead({ title: 'Minha conta — Vide AI' })
 
 const { user, fetchUser } = useAuth()
+const notify = useNotify()
 
 const planLabels: Record<string, string> = {
   free: 'Free',
@@ -16,10 +17,8 @@ const name = ref(user.value?.name ?? '')
 watch(user, (u) => (name.value = u?.name ?? ''), { immediate: true })
 
 const savingProfile = ref(false)
-const profileMsg = ref('')
 
 async function saveProfile() {
-  profileMsg.value = ''
   savingProfile.value = true
   try {
     await $fetch('/api/auth/profile', {
@@ -27,9 +26,9 @@ async function saveProfile() {
       body: { name: name.value },
     })
     await fetchUser()
-    profileMsg.value = 'Perfil atualizado.'
+    notify.success('Perfil atualizado.')
   } catch {
-    profileMsg.value = 'Não foi possível salvar. Tente de novo.'
+    notify.error('Não foi possível salvar. Tente de novo.')
   } finally {
     savingProfile.value = false
   }
@@ -37,19 +36,24 @@ async function saveProfile() {
 
 /* ─── Confirmação de e-mail ─────────────────────────────────────── */
 const resendPending = ref(false)
-const resendMsg = ref('')
+const resendDevUrl = ref('')
 
 async function resendVerification() {
   resendPending.value = true
-  resendMsg.value = ''
   try {
     const res = await $fetch<{ ok: boolean; devVerifyUrl?: string }>(
       '/api/auth/resend-verification',
       { method: 'POST' },
     )
-    resendMsg.value = res.devVerifyUrl
-      ? `E-mail reenviado. (dev) ${res.devVerifyUrl}`
-      : 'E-mail de confirmação reenviado.'
+    notify.success('E-mail de confirmação reenviado.')
+    resendDevUrl.value = res.devVerifyUrl ?? ''
+  } catch (err: unknown) {
+    notify.error(
+      apiErrorMessage(
+        err,
+        'Não foi possível reenviar o e-mail. Tente de novo.',
+      ),
+    )
   } finally {
     resendPending.value = false
   }
@@ -60,14 +64,17 @@ const currentPassword = ref('')
 const newPassword = ref('')
 const confirmPassword = ref('')
 const savingPassword = ref(false)
-const passwordMsg = ref('')
-const passwordError = ref('')
+const showCurrentPassword = ref(false)
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
 
 async function changePassword() {
-  passwordMsg.value = ''
-  passwordError.value = ''
   if (newPassword.value !== confirmPassword.value) {
-    passwordError.value = 'As senhas não coincidem.'
+    notify.error('As senhas não coincidem.')
+    return
+  }
+  if (newPassword.value === currentPassword.value) {
+    notify.error('A nova senha deve ser diferente da senha atual.')
     return
   }
   savingPassword.value = true
@@ -82,11 +89,9 @@ async function changePassword() {
     currentPassword.value = ''
     newPassword.value = ''
     confirmPassword.value = ''
-    passwordMsg.value = 'Senha alterada com sucesso.'
+    notify.success('Senha alterada com sucesso.')
   } catch (err: unknown) {
-    const data = (err as { data?: { statusMessage?: string } }).data
-    passwordError.value =
-      data?.statusMessage ?? 'Não foi possível trocar a senha.'
+    notify.error(apiErrorMessage(err, 'Não foi possível trocar a senha.'))
   } finally {
     savingPassword.value = false
   }
@@ -144,7 +149,12 @@ async function changePassword() {
           >
             Reenviar e-mail de confirmação
           </button>
-          <p v-if="resendMsg" class="text-xs text-ink-soft">{{ resendMsg }}</p>
+          <p v-if="resendDevUrl" class="text-xs text-ink-soft">
+            (dev, sem provedor de e-mail configurado)
+            <NuxtLink :to="resendDevUrl" class="font-medium text-brand-600">
+              abrir link de confirmação
+            </NuxtLink>
+          </p>
         </div>
 
         <div class="flex flex-col gap-1.5">
@@ -153,8 +163,6 @@ async function changePassword() {
             {{ planLabels[user?.plan ?? 'free'] }}
           </span>
         </div>
-
-        <p v-if="profileMsg" class="text-sm text-ink-soft">{{ profileMsg }}</p>
 
         <BaseButton
           variant="primary"
@@ -181,52 +189,88 @@ async function changePassword() {
           <label for="current" class="text-sm font-medium text-ink"
             >Senha atual</label
           >
-          <input
-            id="current"
-            v-model="currentPassword"
-            type="password"
-            required
-            autocomplete="current-password"
-            class="h-11 rounded-lg border border-line bg-paper px-3 text-sm text-ink outline-none transition-colors focus:border-brand-500"
-          />
+          <div class="relative">
+            <input
+              id="current"
+              v-model="currentPassword"
+              :type="showCurrentPassword ? 'text' : 'password'"
+              required
+              autocomplete="current-password"
+              class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
+              :aria-label="
+                showCurrentPassword ? 'Ocultar senha' : 'Mostrar senha'
+              "
+              @click="showCurrentPassword = !showCurrentPassword"
+            >
+              <AppIcon
+                :name="showCurrentPassword ? 'eye' : 'eye-off'"
+                class="size-4"
+              />
+            </button>
+          </div>
         </div>
 
         <div class="flex flex-col gap-1.5">
           <label for="new" class="text-sm font-medium text-ink"
             >Nova senha</label
           >
-          <input
-            id="new"
-            v-model="newPassword"
-            type="password"
-            required
-            minlength="8"
-            autocomplete="new-password"
-            class="h-11 rounded-lg border border-line bg-paper px-3 text-sm text-ink outline-none transition-colors focus:border-brand-500"
-          />
+          <div class="relative">
+            <input
+              id="new"
+              v-model="newPassword"
+              :type="showNewPassword ? 'text' : 'password'"
+              required
+              minlength="8"
+              autocomplete="new-password"
+              class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
+              :aria-label="showNewPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              @click="showNewPassword = !showNewPassword"
+            >
+              <AppIcon
+                :name="showNewPassword ? 'eye' : 'eye-off'"
+                class="size-4"
+              />
+            </button>
+          </div>
         </div>
 
         <div class="flex flex-col gap-1.5">
           <label for="confirm" class="text-sm font-medium text-ink"
             >Confirmar nova senha</label
           >
-          <input
-            id="confirm"
-            v-model="confirmPassword"
-            type="password"
-            required
-            minlength="8"
-            autocomplete="new-password"
-            class="h-11 rounded-lg border border-line bg-paper px-3 text-sm text-ink outline-none transition-colors focus:border-brand-500"
-          />
+          <div class="relative">
+            <input
+              id="confirm"
+              v-model="confirmPassword"
+              :type="showConfirmPassword ? 'text' : 'password'"
+              required
+              minlength="8"
+              autocomplete="new-password"
+              class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
+              :aria-label="
+                showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'
+              "
+              @click="showConfirmPassword = !showConfirmPassword"
+            >
+              <AppIcon
+                :name="showConfirmPassword ? 'eye' : 'eye-off'"
+                class="size-4"
+              />
+            </button>
+          </div>
         </div>
-
-        <p v-if="passwordError" class="text-sm text-brand-600">
-          {{ passwordError }}
-        </p>
-        <p v-if="passwordMsg" class="text-sm text-ink-soft">
-          {{ passwordMsg }}
-        </p>
 
         <BaseButton
           type="submit"

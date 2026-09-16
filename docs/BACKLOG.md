@@ -162,6 +162,9 @@ Spec completa do billing (Stripe + tela de consumo) em
 - [ ] Testes E2E com Playwright nos fluxos críticos — **M**
 - [ ] LGPD: política de privacidade, termos, exclusão de conta e dados — **M**
 - [ ] Load test do pipeline (fila sob carga) — **S**
+- [ ] Verificar domínio próprio no Resend (SPF/DKIM) para o remetente de
+      e-mail transacional — hoje usa `onboarding@resend.dev` (domínio
+      compartilhado de teste), que entrega mas cai em spam com facilidade — **S**
 
 ---
 

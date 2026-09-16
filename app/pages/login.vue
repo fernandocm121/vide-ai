@@ -4,6 +4,7 @@ useSeoMeta({ title: 'Entrar', robots: 'noindex' })
 
 const { login } = useAuth()
 const { track } = useAnalytics()
+const notify = useNotify()
 const route = useRoute()
 
 const email = ref('')
@@ -11,15 +12,14 @@ const password = ref('')
 const remember = ref(true)
 const showPassword = ref(false)
 const pending = ref(false)
-const errorMsg = ref('')
-const googleNotice = ref(false)
 
 function onGoogleClick() {
-  googleNotice.value = true
+  notify.info(
+    'Login com Google ainda não está disponível — entre com e-mail e senha.',
+  )
 }
 
 async function submit() {
-  errorMsg.value = ''
   pending.value = true
   try {
     await login(email.value, password.value, remember.value)
@@ -27,9 +27,9 @@ async function submit() {
     const redirect = String(route.query.redirect ?? '/app')
     await navigateTo(redirect)
   } catch (err: unknown) {
-    const data = (err as { data?: { statusMessage?: string } }).data
-    errorMsg.value =
-      data?.statusMessage ?? 'Não foi possível entrar. Tente de novo.'
+    notify.error(
+      apiErrorMessage(err, 'Não foi possível entrar. Tente de novo.'),
+    )
   } finally {
     pending.value = false
   }
@@ -61,9 +61,6 @@ async function submit() {
       <IconGoogle />
       Continuar com Google
     </button>
-    <p v-if="googleNotice" class="mt-2 text-xs text-ink-soft">
-      Login com Google ainda não está disponível — entre com e-mail e senha.
-    </p>
 
     <div class="my-5 flex items-center gap-3">
       <span class="h-px flex-1 bg-line" />
@@ -105,14 +102,15 @@ async function submit() {
             required
             autocomplete="current-password"
             placeholder="••••••••"
-            class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-20 text-sm text-ink outline-none transition-colors focus:border-brand-500"
+            class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
           />
           <button
             type="button"
-            class="absolute inset-y-0 right-3 text-xs font-semibold uppercase tracking-wide text-ink-soft hover:text-ink"
+            class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
+            :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
             @click="showPassword = !showPassword"
           >
-            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            <AppIcon :name="showPassword ? 'eye' : 'eye-off'" class="size-4" />
           </button>
         </div>
       </div>
@@ -125,8 +123,6 @@ async function submit() {
         />
         Manter conectado
       </label>
-
-      <p v-if="errorMsg" class="text-sm text-brand-600">{{ errorMsg }}</p>
 
       <BaseButton
         type="submit"

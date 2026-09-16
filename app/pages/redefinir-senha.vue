@@ -4,23 +4,23 @@ useSeoMeta({ title: 'Redefinir senha', robots: 'noindex' })
 
 const route = useRoute()
 const { fetchUser } = useAuth()
+const notify = useNotify()
 
 const token = String(route.query.token ?? '')
 const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const pending = ref(false)
-const errorMsg = ref('')
 const done = ref(false)
 
 async function submit() {
-  errorMsg.value = ''
   if (!token) {
-    errorMsg.value = 'Link de redefinição inválido.'
+    notify.error('Link de redefinição inválido.')
     return
   }
   if (password.value !== confirmPassword.value) {
-    errorMsg.value = 'As senhas não coincidem.'
+    notify.error('As senhas não coincidem.')
     return
   }
   pending.value = true
@@ -32,9 +32,7 @@ async function submit() {
     await fetchUser()
     done.value = true
   } catch (err: unknown) {
-    const data = (err as { data?: { statusMessage?: string } }).data
-    errorMsg.value =
-      data?.statusMessage ?? 'Não foi possível redefinir sua senha.'
+    notify.error(apiErrorMessage(err, 'Não foi possível redefinir sua senha.'))
   } finally {
     pending.value = false
   }
@@ -85,14 +83,18 @@ async function submit() {
               minlength="8"
               autocomplete="new-password"
               placeholder="Mínimo 8 caracteres"
-              class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-20 text-sm text-ink outline-none transition-colors focus:border-brand-500"
+              class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
             />
             <button
               type="button"
-              class="absolute inset-y-0 right-3 text-xs font-semibold uppercase tracking-wide text-ink-soft hover:text-ink"
+              class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
+              :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
               @click="showPassword = !showPassword"
             >
-              {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+              <AppIcon
+                :name="showPassword ? 'eye' : 'eye-off'"
+                class="size-4"
+              />
             </button>
           </div>
         </div>
@@ -101,19 +103,32 @@ async function submit() {
           <label for="confirm" class="text-sm font-medium text-ink"
             >Confirmar senha</label
           >
-          <input
-            id="confirm"
-            v-model="confirmPassword"
-            :type="showPassword ? 'text' : 'password'"
-            required
-            minlength="8"
-            autocomplete="new-password"
-            placeholder="Repita a senha"
-            class="h-11 rounded-lg border border-line bg-paper px-3 text-sm text-ink outline-none transition-colors focus:border-brand-500"
-          />
+          <div class="relative">
+            <input
+              id="confirm"
+              v-model="confirmPassword"
+              :type="showConfirmPassword ? 'text' : 'password'"
+              required
+              minlength="8"
+              autocomplete="new-password"
+              placeholder="Repita a senha"
+              class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
+              :aria-label="
+                showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'
+              "
+              @click="showConfirmPassword = !showConfirmPassword"
+            >
+              <AppIcon
+                :name="showConfirmPassword ? 'eye' : 'eye-off'"
+                class="size-4"
+              />
+            </button>
+          </div>
         </div>
-
-        <p v-if="errorMsg" class="text-sm text-brand-600">{{ errorMsg }}</p>
 
         <BaseButton
           type="submit"

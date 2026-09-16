@@ -41,20 +41,29 @@ export default defineEventHandler(async (event) => {
     .values({ name, email, passwordHash: await hashPassword(password) })
     .returning()
 
-  const token = await createVerificationToken(user!.id, 'email_verify')
-  await sendMail({
-    to: user!.email,
-    subject: 'Confirme seu e-mail — Vide AI',
-    text: `Olá${name ? `, ${name}` : ''}! Confirme seu e-mail para ativar sua conta:\n${verifyEmailUrl(token)}\n\nO link expira em 24 horas.`,
-  })
+  // A conta já existe a partir daqui — gerar/enviar o e-mail de verificação
+  // é um efeito colateral não crítico (a verificação não bloqueia o acesso).
+  // Uma falha aqui não pode derrubar um cadastro que já foi salvo no banco.
+  let devVerifyUrl: string | undefined
+  try {
+    const token = await createVerificationToken(user!.id, 'email_verify')
+    await sendMail({
+      to: user!.email,
+      subject: 'Confirme seu e-mail — Vide AI',
+      text: `Olá${name ? `, ${name}` : ''}! Confirme seu e-mail para ativar sua conta:\n${verifyEmailUrl(token)}\n\nO link expira em 24 horas.`,
+    })
+    // sem provedor de e-mail real ainda: devolve o link também na resposta,
+    // só em dev, pra dar pra testar o fluxo sem sair do navegador.
+    devVerifyUrl = import.meta.dev ? verifyEmailUrl(token) : undefined
+  } catch (err) {
+    console.error(
+      '[signup] falha ao gerar/enviar e-mail de verificação (cadastro segue normalmente):',
+      err,
+    )
+  }
 
   await createSession(event, user!.id, { remember: true })
 
   setResponseStatus(event, 201)
-  return {
-    user: toPublicUser(user!),
-    // sem provedor de e-mail real ainda: devolve o link também na resposta,
-    // só em dev, pra dar pra testar o fluxo sem sair do navegador.
-    devVerifyUrl: import.meta.dev ? verifyEmailUrl(token) : undefined,
-  }
+  return { user: toPublicUser(user!), devVerifyUrl }
 })

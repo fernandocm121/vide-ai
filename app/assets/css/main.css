@@ -54,6 +54,14 @@
   }
 }
 
+/* Toast (PrimeVue) — só o essencial pra combinar com o resto do app. */
+.p-toast {
+  font-family: var(--font-sans);
+}
+.p-toast-message {
+  border-radius: 0.75rem;
+}
+
 @layer components {
   .container-page {
     width: 100%;
