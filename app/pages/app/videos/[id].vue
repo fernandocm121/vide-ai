@@ -214,6 +214,17 @@ function onTimeUpdate() {
           Transcrição pronta —
           {{ video.transcript?.segments.length ?? 0 }} segmentos.
         </p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <BaseButton
+            v-for="fmt in ['txt', 'srt', 'vtt']"
+            :key="fmt"
+            variant="outline"
+            size="md"
+            :href="`/api/videos/${id}/export/${fmt}`"
+          >
+            Baixar .{{ fmt.toUpperCase() }}
+          </BaseButton>
+        </div>
       </template>
 
       <template v-else>

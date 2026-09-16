@@ -42,6 +42,9 @@ const EnvSchema = z.object({
   // Transcrição (Fase 3) — OpenAI Whisper
   OPENAI_API_KEY: z.string().min(1, 'obrigatório para a transcrição (Fase 3)'),
 
+  // Limite do plano gratuito — minutos de transcrição por mês (30 min default)
+  FREE_PLAN_MONTHLY_SECONDS: z.coerce.number().int().positive().default(1800),
+
   // Integrações de IA — opcionais até a Fase 6
   ANTHROPIC_API_KEY: z.string().optional(),
 })

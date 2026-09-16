@@ -12,7 +12,8 @@
 - ✅ **Home (landing page)** + estrutura do frontend
 - ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
 - ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
-- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao Whisper; vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/issues/fase4-worker-dedicado.md` para a versão de produção)
+- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao Whisper; vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
+- ✅ **Busca, export (TXT/SRT/VTT) e limite gratuito mensal**: busca com destaque na transcrição, download dos 3 formatos, e bloqueio automático quando o plano estoura o uso do mês
 
 Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **OpenAI Whisper** (transcrição).
 
@@ -53,7 +54,7 @@ Login de desenvolvimento (após o seed): `dev@videai.local` / `password`.
 > binário via `ffmpeg-static`) — funciona bem local/VPS; em produção na Vercel só é confiável para
 > vídeos curtos (função serverless pode ser encerrada antes de terminar um vídeo longo, e `/tmp` tem
 > pouco espaço). O caminho de produção (fila + worker dedicado) está detalhado em
-> [`docs/issues/fase4-worker-dedicado.md`](docs/issues/fase4-worker-dedicado.md).
+> [`docs/backlog-issues.pdf`](docs/backlog-issues.pdf) (seção 5).
 > Sem chave da OpenAI, a transcrição termina em `failed` com a mensagem de erro da API.
 
 ### Scripts

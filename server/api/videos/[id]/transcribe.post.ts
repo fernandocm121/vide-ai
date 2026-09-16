@@ -2,6 +2,8 @@ import { and, eq } from 'drizzle-orm'
 import { jobs, videos } from '../../../db/schema'
 import { runExtraction } from '../../../transcription/extract'
 import { runTranscription } from '../../../transcription/run'
+import { planLimitSeconds } from '../../../utils/plans'
+import { getMonthlyTranscriptionSeconds } from '../../../utils/usage'
 
 const STARTABLE = ['queued', 'failed'] as const
 
@@ -10,6 +12,9 @@ const STARTABLE = ['queued', 'failed'] as const
  * - áudio (mp3/wav): vai direto para a transcrição (Whisper)
  * - vídeo (mp4/mov/webm): primeiro extrai o áudio com ffmpeg, depois
  *   encadeia a mesma transcrição
+ *
+ * Único ponto de entrada para os dois tipos — é aqui que o limite mensal do
+ * plano é checado, antes de gastar Whisper com o usuário.
  */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
@@ -26,6 +31,15 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 409,
       statusMessage: `Não é possível processar no status "${video.status}"`,
+    })
+  }
+
+  const limitSeconds = planLimitSeconds(user.plan)
+  const usedSeconds = await getMonthlyTranscriptionSeconds(user.id)
+  if (usedSeconds >= limitSeconds) {
+    throw createError({
+      statusCode: 402,
+      statusMessage: `Limite mensal do plano "${user.plan}" atingido: você já usou ${Math.round(usedSeconds / 60)} de ${Math.round(limitSeconds / 60)} minutos disponíveis este mês. Faça upgrade para continuar transcrevendo.`,
     })
   }
 

@@ -45,6 +45,10 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 
 ## Fase 2 — Autenticação e contas  · `M`
 
+Maior bloqueador do produto hoje — `getCurrentUser()` ainda roda como um
+usuário fixo de dev, sem login real. Spec completa em
+[`docs/backlog-issues.pdf`](backlog-issues.pdf) (seção 1 — Autenticação real).
+
 - [ ] Integrar solução de auth escolhida — **M**
 - [ ] Fluxo signup / login / logout + verificação de e-mail — **M**
 - [ ] Middleware de rota protegida + layout `app` — **S**
@@ -79,7 +83,7 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
       stream para um arquivo temp, extrai o áudio (mono/16kHz/mp3), sobe `media/{id}/extracted-audio.mp3`
       e encadeia `runTranscription()` reaproveitando o pipeline do Whisper que já existia para áudio.
       Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
-      `docs/issues/fase4-worker-dedicado.md` para a versão de produção (Opção B, BullMQ + worker).
+      `docs/backlog-issues.pdf` (seção 5) para a versão de produção (Opção B, BullMQ + worker).
 - [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
 - [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao Whisper
 
@@ -89,8 +93,8 @@ Substitui o processamento em background simples da Fase 3/3B (que hoje roda
 inline no processo do Nitro — sem fila real, sem retry automático, e sem
 garantia de sobreviver a um restart ou a um limite de tempo de função
 serverless). Spec completa (motivação, arquitetura, plano de migração,
-critérios de aceite) em
-[`docs/issues/fase4-worker-dedicado.md`](issues/fase4-worker-dedicado.md).
+critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
+(seção 5 — Worker dedicado).
 
 - [ ] Setup BullMQ + processo `worker` separado (`worker/`, `npm run worker`) — **M**
 - [ ] Mover `runTranscription` para um job da fila `transcribe` — **M**
@@ -102,12 +106,14 @@ critérios de aceite) em
 
 ## Fase 5 — Visualização e export (V1)  · `M`  → **fecha o MVP V1**
 
-- [ ] Player de vídeo/áudio + transcrição sincronizada (highlight no trecho atual) — **L**
-- [ ] Clicar em um trecho da transcrição → seek no player — **S**
-- [ ] Busca dentro da transcrição (destaca ocorrências) — **S**
-- [ ] Export TXT — **S**
-- [ ] Export SRT e VTT — **S**
-- [ ] Edição inline da transcrição + salvar — **M** (pode ir para V1.1)
+- [x] Player de vídeo/áudio + transcrição sincronizada (clicar no trecho → seek) — **L**
+- [x] Busca dentro da transcrição (destaca ocorrências, navega entre elas) — **S**
+- [x] Export TXT — **S**
+- [x] Export SRT e VTT — **S**
+- [ ] Edição inline da transcrição + salvar — **M** — spec em
+      `docs/backlog-issues.pdf` (seção 2)
+- [ ] Identificação de falantes (diarização) — **M** — spec em
+      `docs/backlog-issues.pdf` (seção 3)
 - [ ] Compartilhar transcrição por link público (opcional) — **M**
 
 ## Fase 6 — Inteligência (V2)  · `L`
@@ -139,12 +145,17 @@ critérios de aceite) em
 
 ## Fase 9 — Billing e planos  · `M`
 
+- [x] Enforcement de limite de horas/mês por plano — `server/utils/plans.ts` +
+      `usage.ts`, bloqueia `POST /transcribe` com `402` quando o plano
+      estoura — falta só o `free` ter um dono de verdade (Fase 2) — **M**
 - [ ] Stripe: checkout, webhooks, customer portal — **M**
 - [ ] Planos Starter / Pro / Agency no Stripe + mapeamento no DB — **S**
-- [ ] Enforcement de limite de horas/mês por plano — **M**
 - [ ] Paywall nas features Pro (Ask Video, geração, busca global) — **S**
 - [ ] Tela de uso/consumo no `/app/conta` — **S**
 - [ ] E-mails transacionais (upload pronto, limite atingido) — **M**
+
+Spec completa do billing (Stripe + tela de consumo) em
+[`docs/backlog-issues.pdf`](backlog-issues.pdf) (seção 4).
 
 ## Fase 10 — Produção e escala  · `L`
 

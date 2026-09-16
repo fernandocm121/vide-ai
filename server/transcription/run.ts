@@ -8,11 +8,8 @@ import {
 } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
 import { getObjectBuffer } from '../utils/storage'
+import { currentPeriodMonth } from '../utils/usage'
 import { transcriptionProvider } from './provider'
-
-function currentPeriodMonth(d = new Date()): string {
-  return d.toISOString().slice(0, 7) // 'YYYY-MM'
-}
 
 /**
  * Processa a transcrição de um áudio, do começo ao fim.
