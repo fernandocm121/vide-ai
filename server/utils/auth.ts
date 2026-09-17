@@ -1,30 +1,44 @@
 import type { H3Event } from 'h3'
-import { eq } from 'drizzle-orm'
-import { users } from '../db/schema'
+import { and, eq, gt } from 'drizzle-orm'
+import { sessions, users, type User } from '../db/schema'
 import { useDrizzle } from './drizzle'
+import { getSessionToken } from './session'
 
-/**
- * Usuário da requisição.
- *
- * TODO Fase 2 (autenticação): ler a sessão real do cookie.
- * Por enquanto retorna o usuário de dev criado pelo seed — todas as rotas
- * de `/app` operam como esse usuário.
- */
-const DEV_EMAIL = 'dev@videai.local'
+/** Usuário da sessão atual, ou `null` se não estiver logado (cookie ausente/expirado). */
+export async function getSessionUser(event: H3Event): Promise<User | null> {
+  const token = getSessionToken(event)
+  if (!token) return null
 
-export async function getCurrentUser(_event: H3Event) {
   const db = useDrizzle()
-  const user = await db.query.users.findFirst({
-    where: eq(users.email, DEV_EMAIL),
+  const session = await db.query.sessions.findFirst({
+    where: and(eq(sessions.id, token), gt(sessions.expiresAt, new Date())),
   })
+  if (!session) return null
 
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, session.userId),
+  })
+  return user ?? null
+}
+
+/** Como `getSessionUser`, mas lança 401 quando não há usuário logado. */
+export async function getCurrentUser(event: H3Event): Promise<User> {
+  const user = await getSessionUser(event)
   if (!user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage:
-        'Usuário de desenvolvimento não encontrado. Rode: npm run db:seed',
-    })
+    throw createError({ statusCode: 401, statusMessage: 'Não autenticado' })
   }
-
   return user
 }
+
+/** Formato do usuário exposto ao cliente — nunca inclui `passwordHash`. */
+export function toPublicUser(user: User) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    plan: user.plan,
+    emailVerifiedAt: user.emailVerifiedAt,
+  }
+}
+
+export type PublicUser = ReturnType<typeof toPublicUser>

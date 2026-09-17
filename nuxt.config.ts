@@ -11,7 +11,12 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/eslint', '@nuxt/fonts', '@nuxtjs/seo'],
 
-  css: ['~/assets/css/main.css'],
+  css: [
+    'primevue/resources/themes/lara-light-indigo/theme.css',
+    'primevue/resources/primevue.css',
+    'primeicons/primeicons.css',
+    '~/assets/css/main.css',
+  ],
 
   vite: {
     plugins: [tailwindcss()],
@@ -43,8 +48,15 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    // /app/** é área autenticada; /signup é noindex (página de conversão).
-    exclude: ['/app/**', '/signup'],
+    // /app/** é área autenticada; as demais são páginas de auth (noindex).
+    exclude: [
+      '/app/**',
+      '/login',
+      '/signup',
+      '/verificar-email',
+      '/esqueci-senha',
+      '/redefinir-senha',
+    ],
   },
 
   // As regras de robots.txt vêm de public/_robots.txt (o módulo só acrescenta

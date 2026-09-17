@@ -30,4 +30,5 @@ useSchemaOrg([
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <Toast position="top-center" />
 </template>

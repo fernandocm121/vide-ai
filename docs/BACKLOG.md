@@ -43,18 +43,14 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 - [x] Seed de desenvolvimento — **S**
 - [x] Healthcheck estendido (DB + Redis + storage) — **S**
 
-## Fase 2 — Autenticação e contas  · `M`
+## Fase 2 — Autenticação e contas  · `M`  ✅
 
-Maior bloqueador do produto hoje — `getCurrentUser()` ainda roda como um
-usuário fixo de dev, sem login real. Spec completa em
-[`docs/backlog-issues.pdf`](backlog-issues.pdf) (seção 1 — Autenticação real).
-
-- [ ] Integrar solução de auth escolhida — **M**
-- [ ] Fluxo signup / login / logout + verificação de e-mail — **M**
-- [ ] Middleware de rota protegida + layout `app` — **S**
-- [ ] Páginas `/login`, `/signup`, `/app` (dashboard vazio) — **S**
-- [ ] Registro de usuário cria plano `free` por padrão — **S**
-- [ ] Página `/app/conta` (perfil, trocar senha) — **S**
+- [x] Integrar solução de auth escolhida — **M** (sessão própria por token opaco, sobre o schema `users`/`sessions` já existente)
+- [x] Fluxo signup / login / logout + verificação de e-mail — **M**
+- [x] Middleware de rota protegida + layout `app` — **S**
+- [x] Páginas `/login`, `/signup`, `/app` (dashboard vazio) — **S**
+- [x] Registro de usuário cria plano `free` por padrão — **S**
+- [x] Página `/app/conta` (perfil, trocar senha) — **S**
 
 ## Fase 3 — Áudio: upload de MP3 + transcrição (Whisper)  · `M`  🔨
 
@@ -168,6 +164,9 @@ Spec completa do billing (Stripe + tela de consumo) em
 - [ ] Testes E2E com Playwright nos fluxos críticos — **M**
 - [ ] LGPD: política de privacidade, termos, exclusão de conta e dados — **M**
 - [ ] Load test do pipeline (fila sob carga) — **S**
+- [ ] Verificar domínio próprio no Resend (SPF/DKIM) para o remetente de
+      e-mail transacional — hoje usa `onboarding@resend.dev` (domínio
+      compartilhado de teste), que entrega mas cai em spam com facilidade — **S**
 
 ---
 

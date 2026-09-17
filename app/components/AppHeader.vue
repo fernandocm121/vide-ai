@@ -35,7 +35,7 @@ watch(
       </nav>
 
       <div class="hidden items-center gap-2 md:flex">
-        <BaseButton variant="ghost" size="md" to="/app">Entrar</BaseButton>
+        <BaseButton variant="ghost" size="md" to="/login">Entrar</BaseButton>
         <BaseButton
           variant="primary"
           size="md"
@@ -69,7 +69,7 @@ watch(
         </a>
       </nav>
       <div class="mt-3 flex flex-col gap-2">
-        <BaseButton variant="outline" size="md" to="/app" block
+        <BaseButton variant="outline" size="md" to="/login" block
           >Entrar</BaseButton
         >
         <BaseButton
