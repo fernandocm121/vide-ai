@@ -24,7 +24,13 @@ interface VideoDetail {
     text: string
     language: string | null
     provider: string | null
-    segments: { idx: number; startMs: number; endMs: number; text: string }[]
+    segments: {
+      id: string
+      idx: number
+      startMs: number
+      endMs: number
+      text: string
+    }[]
   } | null
 }
 
@@ -120,7 +126,7 @@ function onTimeUpdate() {
           to="/app"
           class="text-xs font-medium text-ink-soft hover:text-ink"
         >
-          ← Meus vídeos
+          ← Minhas transcrições
         </NuxtLink>
         <h1
           class="mt-1 truncate text-2xl font-extrabold tracking-tight text-ink"
@@ -239,6 +245,7 @@ function onTimeUpdate() {
     <!-- transcrição -->
     <AppTranscriptView
       v-if="video.status === 'ready' && video.transcript"
+      :video-id="id"
       :text="video.transcript.text"
       :segments="video.transcript.segments"
       :active-ms="currentMs"

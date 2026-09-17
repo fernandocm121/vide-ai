@@ -24,7 +24,13 @@ export default defineEventHandler(async (event) => {
     text: string
     language: string | null
     provider: string | null
-    segments: { idx: number; startMs: number; endMs: number; text: string }[]
+    segments: {
+      id: string
+      idx: number
+      startMs: number
+      endMs: number
+      text: string
+    }[]
   } | null = null
 
   if (video.status === 'ready') {
@@ -35,7 +41,13 @@ export default defineEventHandler(async (event) => {
       const segments = await db.query.transcriptSegments.findMany({
         where: eq(transcriptSegments.transcriptId, t.id),
         orderBy: [asc(transcriptSegments.idx)],
-        columns: { idx: true, startMs: true, endMs: true, text: true },
+        columns: {
+          id: true,
+          idx: true,
+          startMs: true,
+          endMs: true,
+          text: true,
+        },
       })
       transcript = {
         text: t.text,

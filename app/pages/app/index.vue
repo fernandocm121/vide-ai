@@ -2,7 +2,7 @@
 import { formatDuration, type VideoStatus } from '~/utils/media'
 
 definePageMeta({ layout: 'app' })
-useHead({ title: 'Meus vídeos — Vide AI' })
+useHead({ title: 'Minhas transcrições — Vide AI' })
 
 interface VideoRow {
   id: string
@@ -72,7 +72,7 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
 
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight text-ink">
-        Meus vídeos
+        Minhas transcrições
       </h1>
       <p class="mt-1 text-sm text-ink-soft">
         Envie um vídeo ou áudio e transforme em texto com timestamps.

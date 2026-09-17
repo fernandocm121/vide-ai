@@ -2,6 +2,7 @@
 import { formatTimestamp } from '~/utils/media'
 
 interface Segment {
+  id: string
   idx: number
   startMs: number
   endMs: number
@@ -9,6 +10,7 @@ interface Segment {
 }
 
 const props = defineProps<{
+  videoId: string
   text: string
   segments: Segment[]
   activeMs?: number
@@ -16,12 +18,31 @@ const props = defineProps<{
 
 const emit = defineEmits<{ seek: [ms: number] }>()
 
-const mode = ref<'segments' | 'full'>('segments')
+const mode = ref<'segments' | 'full'>('full')
 const query = ref('')
+
+/**
+ * Cópia local dos segmentos — edições são aplicadas aqui imediatamente
+ * (sem esperar um refresh do vídeo inteiro). Resincroniza com a prop
+ * quando o pai busca dados novos, exceto durante uma edição em andamento.
+ */
+const localSegments = ref<Segment[]>(props.segments.map((s) => ({ ...s })))
+watch(
+  () => props.segments,
+  (next) => {
+    if (editingId.value) return
+    localSegments.value = next.map((s) => ({ ...s }))
+  },
+)
+
+/** Texto corrido derivado dos segmentos locais — reflete edição na hora. */
+const fullText = computed(() =>
+  localSegments.value.map((s) => s.text).join(' '),
+)
 
 const activeIdx = computed(() => {
   if (props.activeMs == null) return -1
-  return props.segments.findIndex(
+  return localSegments.value.findIndex(
     (s) => props.activeMs! >= s.startMs && props.activeMs! < s.endMs,
   )
 })
@@ -30,7 +51,7 @@ const activeIdx = computed(() => {
 const matchingIdxs = computed(() => {
   const q = query.value.trim().toLowerCase()
   if (!q) return []
-  return props.segments
+  return localSegments.value
     .filter((s) => s.text.toLowerCase().includes(q))
     .map((s) => s.idx)
 })
@@ -83,14 +104,86 @@ function highlight(text: string): string {
   )
 }
 
-const highlightedFullText = computed(() => highlight(props.text))
+const highlightedFullText = computed(() => highlight(fullText.value))
 
 async function copyText() {
   try {
-    await navigator.clipboard.writeText(props.text)
+    await navigator.clipboard.writeText(fullText.value)
   } catch {
     /* clipboard indisponível */
   }
+}
+
+/* edição por segmento --------------------------------------------------- */
+const editingId = ref<string | null>(null)
+const draftText = ref('')
+const textareaRefs = new Map<string, HTMLTextAreaElement>()
+
+type SaveStatus = { status: 'saving' | 'saved' | 'error'; draft?: string }
+const segmentState = reactive<Record<string, SaveStatus>>({})
+
+function setTextareaRef(id: string, el: unknown) {
+  if (el instanceof HTMLTextAreaElement) textareaRefs.set(id, el)
+  else textareaRefs.delete(id)
+}
+
+function autoResize(el: HTMLTextAreaElement) {
+  el.style.height = 'auto'
+  el.style.height = `${el.scrollHeight}px`
+}
+function onTextareaInput(e: Event) {
+  autoResize(e.target as HTMLTextAreaElement)
+}
+function onTextareaEnter(e: KeyboardEvent) {
+  ;(e.target as HTMLTextAreaElement).blur()
+}
+
+function startEdit(seg: Segment) {
+  editingId.value = seg.id
+  draftText.value = seg.text
+  nextTick(() => {
+    const el = textareaRefs.get(seg.id)
+    if (el) {
+      el.focus()
+      autoResize(el)
+    }
+  })
+}
+
+function cancelEdit() {
+  editingId.value = null
+}
+
+async function commitEdit(seg: Segment) {
+  const newText = draftText.value.trim()
+  editingId.value = null
+  if (newText === seg.text) return // nada mudou, não bate na API à toa
+  await persist(seg.id, newText)
+}
+
+async function persist(segmentId: string, text: string) {
+  segmentState[segmentId] = { status: 'saving', draft: text }
+  try {
+    const updated = await $fetch<{ text: string }>(
+      `/api/videos/${props.videoId}/segments/${segmentId}`,
+      { method: 'PATCH', body: { text } },
+    )
+    const target = localSegments.value.find((s) => s.id === segmentId)
+    if (target) target.text = updated.text
+    segmentState[segmentId] = { status: 'saved' }
+    setTimeout(() => {
+      if (segmentState[segmentId]?.status === 'saved') {
+        Reflect.deleteProperty(segmentState, segmentId)
+      }
+    }, 2000)
+  } catch {
+    segmentState[segmentId] = { status: 'error', draft: text }
+  }
+}
+
+function retry(segmentId: string) {
+  const draft = segmentState[segmentId]?.draft
+  if (draft != null) persist(segmentId, draft)
 }
 </script>
 
@@ -103,6 +196,15 @@ async function copyText() {
         <button
           class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
           :class="
+            mode === 'full' ? 'bg-paper text-ink shadow-sm' : 'text-ink-soft'
+          "
+          @click="mode = 'full'"
+        >
+          Texto corrido
+        </button>
+        <button
+          class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
+          :class="
             mode === 'segments'
               ? 'bg-paper text-ink shadow-sm'
               : 'text-ink-soft'
@@ -110,15 +212,6 @@ async function copyText() {
           @click="mode = 'segments'"
         >
           Segmentos
-        </button>
-        <button
-          class="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
-          :class="
-            mode === 'full' ? 'bg-paper text-ink shadow-sm' : 'text-ink-soft'
-          "
-          @click="mode = 'full'"
-        >
-          Texto corrido
         </button>
       </div>
 
@@ -169,25 +262,72 @@ async function copyText() {
       v-if="mode === 'segments'"
       class="max-h-128 divide-y divide-line overflow-y-auto"
     >
-      <button
-        v-for="seg in segments"
-        :key="seg.idx"
+      <div
+        v-for="seg in localSegments"
+        :key="seg.id"
         :ref="(el) => setSegmentRef(seg.idx, el)"
-        class="flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-paper-2"
+        class="group flex w-full gap-3 px-4 py-3 transition-colors hover:bg-paper-2"
         :class="[
           seg.idx === activeIdx ? 'bg-brand-50/60' : '',
           seg.idx === currentMatch ? 'ring-1 ring-inset ring-amber-400' : '',
         ]"
-        @click="emit('seek', seg.startMs)"
       >
-        <span class="shrink-0 pt-0.5 font-mono text-xs text-brand-600">
+        <button
+          class="shrink-0 pt-0.5 font-mono text-xs text-brand-600"
+          @click="emit('seek', seg.startMs)"
+        >
           {{ formatTimestamp(seg.startMs) }}
-        </span>
-        <span
-          class="text-sm leading-relaxed text-ink"
-          v-html="highlight(seg.text)"
-        />
-      </button>
+        </button>
+
+        <div class="min-w-0 flex-1">
+          <textarea
+            v-if="editingId === seg.id"
+            :ref="(el) => setTextareaRef(seg.id, el)"
+            v-model="draftText"
+            rows="1"
+            class="w-full resize-none overflow-hidden rounded border border-brand-400 bg-paper px-2 py-1 text-sm leading-relaxed text-ink outline-none"
+            @input="onTextareaInput"
+            @blur="commitEdit(seg)"
+            @keydown.enter.exact.prevent="onTextareaEnter"
+            @keydown.esc="cancelEdit"
+          />
+          <span
+            v-else
+            class="cursor-text text-sm leading-relaxed text-ink"
+            @click="emit('seek', seg.startMs)"
+            @dblclick="startEdit(seg)"
+            v-html="highlight(seg.text)"
+          />
+
+          <div v-if="segmentState[seg.id]" class="mt-1 text-xs">
+            <span
+              v-if="segmentState[seg.id]?.status === 'saving'"
+              class="text-ink-soft"
+              >salvando…</span
+            >
+            <span
+              v-else-if="segmentState[seg.id]?.status === 'saved'"
+              class="text-emerald-600"
+              >salvo</span
+            >
+            <span v-else class="text-brand-600">
+              erro ao salvar ·
+              <button class="underline" @click="retry(seg.id)">
+                tentar novamente
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <button
+          v-if="editingId !== seg.id"
+          class="shrink-0 self-start p-1 text-ink-soft opacity-0 transition-opacity hover:text-ink group-hover:opacity-100"
+          title="Editar segmento"
+          @click="startEdit(seg)"
+        >
+          <AppIcon name="pencil" class="size-3.5" />
+        </button>
+      </div>
     </div>
 
     <p
