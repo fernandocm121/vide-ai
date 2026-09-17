@@ -81,7 +81,7 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
       Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
       `docs/backlog-issues.pdf` (seção 5) para a versão de produção (Opção B, BullMQ + worker).
 - [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
-- [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao Whisper
+- [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao gpt-transcribe
 
 ## Fase 4 — Pipeline de transcrição escalável  · `L`
 

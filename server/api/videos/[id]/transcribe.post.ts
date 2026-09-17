@@ -9,12 +9,12 @@ const STARTABLE = ['queued', 'failed'] as const
 
 /**
  * Inicia o processamento do vídeo/áudio em background:
- * - áudio (mp3/wav): vai direto para a transcrição (Whisper)
+ * - áudio (mp3/wav): vai direto para a transcrição (gpt-transcribe)
  * - vídeo (mp4/mov/webm): primeiro extrai o áudio com ffmpeg, depois
  *   encadeia a mesma transcrição
  *
  * Único ponto de entrada para os dois tipos — é aqui que o limite mensal do
- * plano é checado, antes de gastar Whisper com o usuário.
+ * plano é checado, antes de gastar a transcrição com o usuário.
  */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)

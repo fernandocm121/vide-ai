@@ -27,7 +27,7 @@ detecta o ambiente e usa o preset `vercel` sem configuração extra.
 | `REDIS_URL` | para o pipeline | Redis gerenciado (Upstash, Redis Cloud). |
 | `S3_ENDPOINT` / `S3_REGION` / `S3_BUCKET` / `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | para upload | Cloudflare R2 ou AWS S3. Em R2, `S3_FORCE_PATH_STYLE=false`. |
 | `MAX_UPLOAD_BYTES` | não | Default 25 MB. |
-| `OPENAI_API_KEY` | para transcrição | Chave da OpenAI (Whisper). |
+| `OPENAI_API_KEY` | para transcrição | Chave da OpenAI (gpt-transcribe). |
 
 > Só a landing? Basta `NUXT_PUBLIC_SITE_URL` (+ PostHog). O boot do servidor
 > tolera a infra ausente em produção — ver `server/plugins/0.env.ts`.

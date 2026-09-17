@@ -24,13 +24,6 @@ interface VideoDetail {
     text: string
     language: string | null
     provider: string | null
-    segments: {
-      id: string
-      idx: number
-      startMs: number
-      endMs: number
-      text: string
-    }[]
   } | null
 }
 
@@ -96,18 +89,6 @@ async function remove() {
   }
 }
 
-/* player <-> transcrição --------------------------------------------- */
-const mediaEl = ref<HTMLMediaElement>()
-const currentMs = ref(0)
-
-function seek(ms: number) {
-  if (!mediaEl.value) return
-  mediaEl.value.currentTime = ms / 1000
-  void mediaEl.value.play()
-}
-function onTimeUpdate() {
-  currentMs.value = (mediaEl.value?.currentTime ?? 0) * 1000
-}
 </script>
 
 <template>
@@ -147,21 +128,17 @@ function onTimeUpdate() {
     <!-- player -->
     <video
       v-if="video.mediaKind === 'video' && video.mediaUrl"
-      ref="mediaEl"
       :src="video.mediaUrl"
       controls
       preload="metadata"
       class="w-full rounded-xl bg-black"
-      @timeupdate="onTimeUpdate"
     />
     <audio
       v-else-if="video.mediaUrl"
-      ref="mediaEl"
       :src="video.mediaUrl"
       controls
       preload="metadata"
       class="w-full"
-      @timeupdate="onTimeUpdate"
     />
 
     <!-- ações por status -->
@@ -216,19 +193,14 @@ function onTimeUpdate() {
       </template>
 
       <template v-else-if="video.status === 'ready'">
-        <p class="text-sm text-ink">
-          Transcrição pronta —
-          {{ video.transcript?.segments.length ?? 0 }} segmentos.
-        </p>
+        <p class="text-sm text-ink">Transcrição pronta.</p>
         <div class="mt-3 flex flex-wrap gap-2">
           <BaseButton
-            v-for="fmt in ['txt', 'srt', 'vtt']"
-            :key="fmt"
             variant="outline"
             size="md"
-            :href="`/api/videos/${id}/export/${fmt}`"
+            :href="`/api/videos/${id}/export/txt`"
           >
-            Baixar .{{ fmt.toUpperCase() }}
+            Baixar .TXT
           </BaseButton>
         </div>
       </template>
@@ -245,11 +217,7 @@ function onTimeUpdate() {
     <!-- transcrição -->
     <AppTranscriptView
       v-if="video.status === 'ready' && video.transcript"
-      :video-id="id"
       :text="video.transcript.text"
-      :segments="video.transcript.segments"
-      :active-ms="currentMs"
-      @seek="seek"
     />
 
     <!-- excluir -->
