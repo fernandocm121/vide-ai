@@ -1,17 +1,10 @@
 import OpenAI, { toFile } from 'openai'
 import { useEnv } from '../utils/env'
 
-export interface TranscriptionSegment {
-  startMs: number
-  endMs: number
-  text: string
-}
-
 export interface TranscriptionResult {
   text: string
   language: string | null
   durationSeconds: number | null
-  segments: TranscriptionSegment[]
 }
 
 export interface TranscriptionInput {
@@ -28,8 +21,11 @@ export interface TranscriptionProvider {
 }
 
 /* ------------------------------------------------------------------ *
- * OpenAI Whisper (whisper-1) — único modelo da OpenAI que devolve
- * timestamps por segmento.
+ * OpenAI gpt-transcribe — sucessor do whisper-1. Não suporta
+ * `verbose_json`/`timestamp_granularities` (confirmado direto na API: erro
+ * 400 "response_format 'verbose_json' is not compatible with model
+ * 'gpt-transcribe'"), então não há timestamps por segmento — só `text` e
+ * `languages` no `response_format: 'json'`.
  * ------------------------------------------------------------------ */
 let client: OpenAI | null = null
 
@@ -38,44 +34,34 @@ function openai(): OpenAI {
   return client
 }
 
-export const openaiWhisper: TranscriptionProvider = {
-  name: 'openai:whisper-1',
+export const openaiGptTranscribe: TranscriptionProvider = {
+  name: 'openai:gpt-transcribe',
 
   async transcribeAudio({ buffer, filename, language }) {
     const file = await toFile(buffer, filename, { type: 'audio/mpeg' })
 
     const res = await openai().audio.transcriptions.create({
       file,
-      model: 'whisper-1',
-      response_format: 'verbose_json',
-      timestamp_granularities: ['segment'],
+      model: 'gpt-transcribe',
+      response_format: 'json',
       ...(language ? { language } : {}),
     })
 
-    // `verbose_json` -> res.text, res.language, res.duration, res.segments[]
     const r = res as unknown as {
       text: string
-      language?: string
-      duration?: number
-      segments?: { start: number; end: number; text: string }[]
+      languages?: { code: string }[]
+      usage?: { type: 'duration'; seconds: number } | { type: 'tokens' }
     }
-
-    const segments: TranscriptionSegment[] = (r.segments ?? []).map((s) => ({
-      startMs: Math.round(s.start * 1000),
-      endMs: Math.round(s.end * 1000),
-      text: s.text.trim(),
-    }))
 
     return {
       text: r.text,
-      language: r.language ?? null,
-      durationSeconds: r.duration ?? null,
-      segments,
+      language: r.languages?.[0]?.code ?? null,
+      durationSeconds: r.usage?.type === 'duration' ? r.usage.seconds : null,
     }
   },
 }
 
 /** Provider ativo. Trocar aqui quando surgir outra opção (Fase 4+). */
 export function transcriptionProvider(): TranscriptionProvider {
-  return openaiWhisper
+  return openaiGptTranscribe
 }
