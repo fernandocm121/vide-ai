@@ -13,10 +13,15 @@ const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const pending = ref(false)
 const done = ref(false)
+const { isValid: passwordIsValid } = usePasswordStrength(password)
 
 async function submit() {
   if (!token) {
     notify.error('Link de redefinição inválido.')
+    return
+  }
+  if (!passwordIsValid.value) {
+    notify.error('A senha não atende a todos os critérios de segurança.')
     return
   }
   if (password.value !== confirmPassword.value) {
@@ -82,7 +87,7 @@ async function submit() {
               required
               minlength="8"
               autocomplete="new-password"
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Crie uma senha forte"
               class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
             />
             <button
@@ -97,6 +102,7 @@ async function submit() {
               />
             </button>
           </div>
+          <PasswordStrengthMeter :password="password" />
         </div>
 
         <div class="flex flex-col gap-1.5">

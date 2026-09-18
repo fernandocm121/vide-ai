@@ -48,10 +48,28 @@ const EnvSchema = z.object({
   // Integrações de IA — opcionais até a Fase 6
   ANTHROPIC_API_KEY: z.string().optional(),
 
-  // E-mail transacional (verificação de conta, redefinição de senha) — Resend.
-  // Sem a chave, os e-mails só ficam no log do servidor (dev).
+  // E-mail transacional (verificação de conta, redefinição de senha).
+  // Sem nenhum provedor configurado, os e-mails só ficam no log (dev).
+  //
+  // SMTP (ex.: Gmail com senha de app) — tem prioridade sobre o Resend
+  // quando configurado, e entrega pra qualquer destinatário sem precisar
+  // verificar domínio. Bom pra sair do estágio "só no console" sem já ter
+  // um domínio próprio.
+  SMTP_HOST: z.string().min(1).default('smtp.gmail.com'),
+  SMTP_PORT: z.coerce.number().int().positive().default(587),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+
+  // Resend — precisa de domínio verificado (resend.com/domains) pra enviar
+  // pra qualquer destinatário; sem isso, só entrega pro e-mail dono da conta.
   RESEND_API_KEY: z.string().optional(),
+
   MAIL_FROM: z.string().min(1).default('Vide AI <onboarding@resend.dev>'),
+
+  // Login com Google (OAuth 2.0) — console.cloud.google.com/apis/credentials.
+  // Sem as duas, o botão "Continuar com Google" fica desativado.
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
 })
 
 export type Env = z.infer<typeof EnvSchema>

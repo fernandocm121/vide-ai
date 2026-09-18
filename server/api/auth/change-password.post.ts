@@ -4,7 +4,7 @@ import { users } from '../../db/schema'
 
 const Body = z.object({
   currentPassword: z.string().min(1, 'obrigatório'),
-  newPassword: z.string().min(8, 'mínimo de 8 caracteres').max(200),
+  newPassword: passwordSchema,
 })
 
 export default defineEventHandler(async (event) => {

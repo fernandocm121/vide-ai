@@ -22,29 +22,6 @@ const {
   error,
 } = await useFetch<VideoRow[]>('/api/videos')
 
-const { user } = useAuth()
-const notify = useNotify()
-const resendPending = ref(false)
-
-async function resendVerification() {
-  resendPending.value = true
-  try {
-    await $fetch('/api/auth/resend-verification', { method: 'POST' })
-    notify.success(
-      'E-mail de confirmação reenviado — confira sua caixa de entrada.',
-    )
-  } catch (err: unknown) {
-    notify.error(
-      apiErrorMessage(
-        err,
-        'Não foi possível reenviar o e-mail. Tente de novo.',
-      ),
-    )
-  } finally {
-    resendPending.value = false
-  }
-}
-
 const dateFmt = new Intl.DateTimeFormat('pt-BR', {
   day: '2-digit',
   month: 'short',
@@ -55,21 +32,6 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
 
 <template>
   <div class="flex flex-col gap-8">
-    <div
-      v-if="user && !user.emailVerifiedAt"
-      class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-paper-3 px-4 py-3 text-sm text-ink-soft"
-    >
-      <span>Confirme seu e-mail para garantir o acesso à sua conta.</span>
-      <button
-        type="button"
-        class="font-medium text-brand-600 hover:text-brand-700 disabled:opacity-50"
-        :disabled="resendPending"
-        @click="resendVerification"
-      >
-        Reenviar e-mail de confirmação
-      </button>
-    </div>
-
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight text-ink">
         Meus vídeos
