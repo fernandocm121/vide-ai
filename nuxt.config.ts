@@ -22,6 +22,14 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
+  // PrimeVue 3.x não tem `exports` map compatível com ESM puro (subpaths tipo
+  // `primevue/api` resolvem pra um diretório). Sem isso, o Nitro deixa o
+  // import externo e o Node quebra em produção com ERR_UNSUPPORTED_DIR_IMPORT.
+  // `transpile` força o Vite a embutir o pacote no bundle SSR.
+  build: {
+    transpile: ['primevue'],
+  },
+
   runtimeConfig: {
     public: {
       siteUrl,
