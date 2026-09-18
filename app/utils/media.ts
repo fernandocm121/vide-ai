@@ -17,7 +17,7 @@ export const STATUS_META: Record<VideoStatus, StatusMeta> = {
   uploading: { label: 'Enviando', tone: 'neutral' },
   uploaded: { label: 'Aguardando confirmação', tone: 'neutral' },
   queued: { label: 'Na fila', tone: 'progress' },
-  extracting: { label: 'Extraindo áudio', tone: 'progress' },
+  extracting: { label: 'Convertendo áudio', tone: 'progress' },
   transcribing: { label: 'Transcrevendo', tone: 'progress' },
   analyzing: { label: 'Analisando', tone: 'progress' },
   ready: { label: 'Pronto', tone: 'success' },

@@ -88,7 +88,6 @@ async function remove() {
     busy.value = false
   }
 }
-
 </script>
 
 <template>

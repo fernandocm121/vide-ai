@@ -11,8 +11,8 @@
 
 - ✅ **Home (landing page)** + estrutura do frontend
 - ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
-- ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
-- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao gpt-transcribe; vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
+- ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV/M4A/AAC via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
+- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): MP3/WAV vão direto ao gpt-transcribe; vídeo, M4A e AAC primeiro passam pelo FFmpeg (extrai/normaliza a trilha de áudio pra mp3 — inline no Nitro, "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
 - ✅ **Busca, export (TXT) e limite gratuito mensal**: busca com destaque na transcrição, download em TXT, e bloqueio automático quando o plano estoura o uso do mês
 
 Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **OpenAI gpt-transcribe** (transcrição).
@@ -39,7 +39,7 @@ Login de desenvolvimento (após o seed): `dev@videai.local` / `password`.
 ### Testar o upload
 
 1. Abra `http://localhost:3000/app`
-2. Arraste um MP4/MOV/WEBM (até 2 GB) ou MP3/WAV (até 25 MB) — a barra de progresso mostra o envio
+2. Arraste um MP4/MOV/WEBM (até 2 GB) ou MP3/WAV/M4A/AAC (até 25 MB) — a barra de progresso mostra o envio
 3. Ao concluir, o item aparece na lista com status `Na fila`
 
 ### Testar a transcrição (áudio ou vídeo)

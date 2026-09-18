@@ -53,9 +53,17 @@ export async function runTranscription(
   try {
     const buffer = await getObjectBuffer(sourceKey)
     const provider = transcriptionProvider()
+    // Com `sourceKeyOverride` o buffer já passou pelo ffmpeg (extração de
+    // vídeo, ou normalização de m4a/aac) e é sempre mp3 de verdade — o nome
+    // enviado à API precisa refletir isso. Usar o nome original (ex.:
+    // "audio.m4a") faria a OpenAI tentar decodificar bytes de mp3 como se
+    // fossem outro container e rejeitar como "corrompido".
+    const filename = sourceKeyOverride
+      ? 'audio.mp3'
+      : video.originalFilename || 'audio.mp3'
     const result = await provider.transcribeAudio({
       buffer,
-      filename: video.originalFilename || 'audio.mp3',
+      filename,
       language: video.language ?? undefined,
     })
 

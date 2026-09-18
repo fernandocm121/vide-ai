@@ -80,6 +80,10 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
       e encadeia `runTranscription()` reaproveitando o pipeline do Whisper que já existia para áudio.
       Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
       `docs/backlog-issues.pdf` (seção 5) para a versão de produção (Opção B, BullMQ + worker).
+- [x] Upload de M4A / AAC (formatos comuns de gravação em celular) — reaproveita o mesmo fluxo
+      pré-assinado; como a OpenAI não documenta `aac` como formato aceito e `m4a` pode conter ALAC
+      (não é sempre AAC), os dois passam pelo mesmo ffmpeg do vídeo antes do gpt-transcribe, em vez de
+      ir direto como mp3/wav — ver `NEEDS_FFMPEG_NORMALIZATION` em `server/utils/media-formats.ts` — **S**
 - [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
 - [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao gpt-transcribe
 

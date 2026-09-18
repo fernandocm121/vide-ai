@@ -9,8 +9,11 @@ const STARTABLE = ['queued', 'failed'] as const
 
 /**
  * Inicia o processamento do vídeo/áudio em background:
- * - áudio (mp3/wav): vai direto para a transcrição (gpt-transcribe)
- * - vídeo (mp4/mov/webm): primeiro extrai o áudio com ffmpeg, depois
+ * - áudio com compatibilidade direta garantida (mp3/wav): vai direto para a
+ *   transcrição (gpt-transcribe)
+ * - vídeo (mp4/mov/webm) ou áudio sem compatibilidade garantida (m4a/aac,
+ *   ver `NEEDS_FFMPEG_NORMALIZATION`): primeiro passa pelo ffmpeg (extrai o
+ *   áudio do vídeo, ou só normaliza pra mp3 no caso do áudio), depois
  *   encadeia a mesma transcrição
  *
  * Único ponto de entrada para os dois tipos — é aqui que o limite mensal do
@@ -43,7 +46,11 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (video.mediaKind === 'video') {
+  const needsFfmpegFirst =
+    video.mediaKind === 'video' ||
+    NEEDS_FFMPEG_NORMALIZATION.has(video.mimeType ?? '')
+
+  if (needsFfmpegFirst) {
     const [job] = await db
       .insert(jobs)
       .values({ videoId: id, type: 'audio_extract', status: 'queued' })
