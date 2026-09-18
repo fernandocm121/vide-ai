@@ -1,11 +1,5 @@
 import { eq, sql } from 'drizzle-orm'
-import {
-  jobs,
-  transcripts,
-  transcriptSegments,
-  usage,
-  videos,
-} from '../db/schema'
+import { jobs, transcripts, usage, videos } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
 import { getObjectBuffer } from '../utils/storage'
 import { currentPeriodMonth } from '../utils/usage'
@@ -73,28 +67,12 @@ export async function runTranscription(
       // retry: descarta a transcrição anterior
       await tx.delete(transcripts).where(eq(transcripts.videoId, videoId))
 
-      const [t] = await tx
-        .insert(transcripts)
-        .values({
-          videoId,
-          text: result.text,
-          provider: provider.name,
-          language: result.language,
-        })
-        .returning()
-
-      if (result.segments.length) {
-        await tx.insert(transcriptSegments).values(
-          result.segments.map((s, i) => ({
-            transcriptId: t!.id,
-            videoId,
-            idx: i,
-            startMs: s.startMs,
-            endMs: s.endMs,
-            text: s.text,
-          })),
-        )
-      }
+      await tx.insert(transcripts).values({
+        videoId,
+        text: result.text,
+        provider: provider.name,
+        language: result.language,
+      })
 
       await tx
         .update(videos)
@@ -123,16 +101,13 @@ export async function runTranscription(
           error: null,
           finishedAt: new Date(),
           result: {
-            segments: result.segments.length,
             durationSeconds: duration,
           },
         })
         .where(eq(jobs.id, jobId))
     })
 
-    console.log(
-      `[transcription] vídeo ${videoId} pronto (${result.segments.length} segmentos)`,
-    )
+    console.log(`[transcription] vídeo ${videoId} pronto`)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     await Promise.allSettled([

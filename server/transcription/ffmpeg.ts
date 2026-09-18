@@ -5,8 +5,8 @@ import { promisify } from 'node:util'
 const run = promisify(execFile)
 
 /**
- * Extrai a trilha de áudio de um vídeo, já no formato que o Whisper espera
- * (mono, 16 kHz, mp3 — menor e suficiente para transcrição de fala).
+ * Extrai a trilha de áudio de um vídeo, já no formato que a API de
+ * transcrição espera (mono, 16 kHz, mp3 — menor e suficiente para fala).
  */
 export async function extractAudio(
   inputPath: string,

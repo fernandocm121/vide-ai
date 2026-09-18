@@ -12,10 +12,10 @@
 - ✅ **Home (landing page)** + estrutura do frontend
 - ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
 - ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
-- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao Whisper; vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
-- ✅ **Busca, export (TXT/SRT/VTT) e limite gratuito mensal**: busca com destaque na transcrição, download dos 3 formatos, e bloqueio automático quando o plano estoura o uso do mês
+- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao gpt-transcribe; vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
+- ✅ **Busca, export (TXT) e limite gratuito mensal**: busca com destaque na transcrição, download em TXT, e bloqueio automático quando o plano estoura o uso do mês
 
-Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **OpenAI Whisper** (transcrição).
+Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **OpenAI gpt-transcribe** (transcrição).
 
 ## Rodando o projeto
 
@@ -98,7 +98,7 @@ app/
     app/                    # área logada (/app)
       MediaUploader.vue     # upload de vídeo/áudio (drag-and-drop + progresso)
       StatusBadge.vue
-      TranscriptView.vue    # segmentos com timestamps + texto corrido
+      TranscriptView.vue    # texto corrido com busca e destaque
   data/home.ts              # conteúdo das seções (passos, públicos, planos)
   utils/media.ts            # rótulos de status, formatação de tempo/duração
   layouts/
@@ -116,8 +116,8 @@ server/
       [id]/index.get.ts · [id]/index.delete.ts
       [id]/complete.post.ts · [id]/transcribe.post.ts
   transcription/
-    provider.ts             # interface + openaiWhisper (whisper-1, verbose_json)
-    run.ts                  # runTranscription(): download -> Whisper -> DB
+    provider.ts             # interface + openaiGptTranscribe (gpt-transcribe, json)
+    run.ts                  # runTranscription(): download -> gpt-transcribe -> DB
     extract.ts              # runExtraction(): vídeo -> ffmpeg -> áudio -> encadeia run.ts
     ffmpeg.ts               # wrapper do binário (ffmpeg-static) — extractAudio()
     sweep.ts                # recupera processamentos presos por restart

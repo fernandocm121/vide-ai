@@ -1,5 +1,5 @@
-import { and, asc, eq } from 'drizzle-orm'
-import { transcriptSegments, transcripts, videos } from '../../../db/schema'
+import { and, eq } from 'drizzle-orm'
+import { transcripts, videos } from '../../../db/schema'
 
 /** Detalhe de um vídeo/áudio + transcrição (quando pronta) + URL para tocar. */
 export default defineEventHandler(async (event) => {
@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
     text: string
     language: string | null
     provider: string | null
-    segments: { idx: number; startMs: number; endMs: number; text: string }[]
   } | null = null
 
   if (video.status === 'ready') {
@@ -32,16 +31,10 @@ export default defineEventHandler(async (event) => {
       where: eq(transcripts.videoId, id),
     })
     if (t) {
-      const segments = await db.query.transcriptSegments.findMany({
-        where: eq(transcriptSegments.transcriptId, t.id),
-        orderBy: [asc(transcriptSegments.idx)],
-        columns: { idx: true, startMs: true, endMs: true, text: true },
-      })
       transcript = {
         text: t.text,
         language: t.language,
         provider: t.provider,
-        segments,
       }
     }
   }

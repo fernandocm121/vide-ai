@@ -81,7 +81,7 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
       Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
       `docs/backlog-issues.pdf` (seção 5) para a versão de produção (Opção B, BullMQ + worker).
 - [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
-- [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao Whisper
+- [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao gpt-transcribe
 
 ## Fase 4 — Pipeline de transcrição escalável  · `L`
 
@@ -106,8 +106,10 @@ critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
 - [x] Busca dentro da transcrição (destaca ocorrências, navega entre elas) — **S**
 - [x] Export TXT — **S**
 - [x] Export SRT e VTT — **S**
-- [ ] Edição inline da transcrição + salvar — **M** — spec em
-      `docs/backlog-issues.pdf` (seção 2)
+- [x] Edição inline da transcrição por segmento — `PATCH /api/videos/:id/segments/:segmentId`
+      atualiza o segmento e resincroniza `transcripts.text` (join dos segmentos por `idx`) na
+      mesma transaction; edição fica restrita ao modo Segmentos (Texto corrido continua só
+      leitura) — **M**
 - [ ] Identificação de falantes (diarização) — **M** — spec em
       `docs/backlog-issues.pdf` (seção 3)
 - [ ] Compartilhar transcrição por link público (opcional) — **M**
