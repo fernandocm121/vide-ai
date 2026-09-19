@@ -78,7 +78,10 @@ uma, quando não é óbvio:
   TypeScript, tradução automática pelo Drizzle.
 - **Storage**: S3-compatível via `@aws-sdk/client-s3` + presigned URLs
   (upload direto do browser).
-- **Transcrição**: OpenAI `gpt-transcribe` (`server/transcription/`).
+- **Transcrição**: ElevenLabs `scribe_v2` (`server/transcription/`) — texto,
+  timestamps por palavra e os blocos de legenda numa chamada só (`additionalFormats`
+  exige `diarize: true`). Os blocos viram `transcript_segments`, e SRT/VTT são
+  gerados a partir deles em `server/utils/subtitles.ts` (a API não exporta VTT).
 - **E-mail**: Resend (`server/utils/mailer.ts`) — sem `RESEND_API_KEY`, cai
   em log no servidor (dev).
 - **Analytics**: PostHog (`posthog-js`), client-only.

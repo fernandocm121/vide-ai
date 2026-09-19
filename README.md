@@ -12,19 +12,19 @@
 - ✅ **Home (landing page)** + estrutura do frontend
 - ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
 - ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
-- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao gpt-transcribe; vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
+- ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao ElevenLabs Scribe v2 (texto + timestamps por segmento e palavra); vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
 - ✅ **Busca, export (TXT) e limite gratuito mensal**: busca com destaque na transcrição, download em TXT, e bloqueio automático quando o plano estoura o uso do mês
 
-Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **OpenAI gpt-transcribe** (transcrição).
+Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **ElevenLabs Scribe v2** (transcrição).
 
 ## Rodando o projeto
 
-Pré-requisitos: **Node 20.12+** (ver `.nvmrc`), **Docker** e uma **chave da OpenAI**.
+Pré-requisitos: **Node 20.12+** (ver `.nvmrc`), **Docker** e uma **chave da ElevenLabs**.
 
 ```bash
 npm install
 cp .env.example .env        # valores padrão já batem com o docker-compose
-# edite .env e coloque sua OPENAI_API_KEY real
+# edite .env e coloque sua ELEVENLABS_API_KEY real
 
 npm run services:up         # sobe Postgres + Redis + MinIO
 npm run db:setup            # aplica migrations + popula dados de dev
@@ -55,7 +55,7 @@ Login de desenvolvimento (após o seed): `dev@videai.local` / `password`.
 > vídeos curtos (função serverless pode ser encerrada antes de terminar um vídeo longo, e `/tmp` tem
 > pouco espaço). O caminho de produção (fila + worker dedicado) está detalhado em
 > [`docs/backlog-issues.pdf`](docs/backlog-issues.pdf) (seção 5).
-> Sem chave da OpenAI, a transcrição termina em `failed` com a mensagem de erro da API.
+> Sem chave da ElevenLabs, a transcrição termina em `failed` com a mensagem de erro da API.
 
 ### Scripts
 
@@ -116,8 +116,11 @@ server/
       [id]/index.get.ts · [id]/index.delete.ts
       [id]/complete.post.ts · [id]/transcribe.post.ts
   transcription/
-    provider.ts             # interface + openaiGptTranscribe (gpt-transcribe, json)
-    run.ts                  # runTranscription(): download -> gpt-transcribe -> DB
+    provider.ts             # interface + elevenlabsScribe (scribe_v2)
+    srt.ts                  # lê os blocos de legenda devolvidos pela API
+    language.ts             # ISO-639-3 -> ISO-639-1
+    timestamps.ts           # associação palavra -> segmento
+    run.ts                  # runTranscription(): download -> Scribe v2 -> DB
     extract.ts              # runExtraction(): vídeo -> ffmpeg -> áudio -> encadeia run.ts
     ffmpeg.ts               # wrapper do binário (ffmpeg-static) — extractAudio()
     sweep.ts                # recupera processamentos presos por restart
