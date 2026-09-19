@@ -34,31 +34,6 @@ async function saveProfile() {
   }
 }
 
-/* ─── Confirmação de e-mail ─────────────────────────────────────── */
-const resendPending = ref(false)
-const resendDevUrl = ref('')
-
-async function resendVerification() {
-  resendPending.value = true
-  try {
-    const res = await $fetch<{ ok: boolean; devVerifyUrl?: string }>(
-      '/api/auth/resend-verification',
-      { method: 'POST' },
-    )
-    notify.success('E-mail de confirmação reenviado.')
-    resendDevUrl.value = res.devVerifyUrl ?? ''
-  } catch (err: unknown) {
-    notify.error(
-      apiErrorMessage(
-        err,
-        'Não foi possível reenviar o e-mail. Tente de novo.',
-      ),
-    )
-  } finally {
-    resendPending.value = false
-  }
-}
-
 /* ─── Trocar senha ──────────────────────────────────────────────── */
 const currentPassword = ref('')
 const newPassword = ref('')
@@ -67,8 +42,13 @@ const savingPassword = ref(false)
 const showCurrentPassword = ref(false)
 const showNewPassword = ref(false)
 const showConfirmPassword = ref(false)
+const { isValid: newPasswordIsValid } = usePasswordStrength(newPassword)
 
 async function changePassword() {
+  if (!newPasswordIsValid.value) {
+    notify.error('A nova senha não atende a todos os critérios de segurança.')
+    return
+  }
   if (newPassword.value !== confirmPassword.value) {
     notify.error('As senhas não coincidem.')
     return
@@ -140,21 +120,6 @@ async function changePassword() {
               Não verificado
             </span>
           </div>
-          <button
-            v-if="!user?.emailVerifiedAt"
-            type="button"
-            class="mt-1 self-start text-xs font-medium text-brand-600 hover:text-brand-700 disabled:opacity-50"
-            :disabled="resendPending"
-            @click="resendVerification"
-          >
-            Reenviar e-mail de confirmação
-          </button>
-          <p v-if="resendDevUrl" class="text-xs text-ink-soft">
-            (dev, sem provedor de e-mail configurado)
-            <NuxtLink :to="resendDevUrl" class="font-medium text-brand-600">
-              abrir link de confirmação
-            </NuxtLink>
-          </p>
         </div>
 
         <div class="flex flex-col gap-1.5">
@@ -240,6 +205,7 @@ async function changePassword() {
               />
             </button>
           </div>
+          <PasswordStrengthMeter :password="newPassword" />
         </div>
 
         <div class="flex flex-col gap-1.5">

@@ -75,8 +75,9 @@ export const users = pgTable('users', {
   id: uuid().primaryKey().defaultRandom(),
   email: text().notNull().unique(),
   name: text(),
-  passwordHash: text(),
+  passwordHash: text(), // null para contas criadas via Google
   emailVerifiedAt: timestamp({ withTimezone: true }),
+  googleId: text().unique(), // sub do Google — null se a conta nunca usou OAuth
   plan: planEnum().notNull().default('free'),
   ...timestamps,
 })

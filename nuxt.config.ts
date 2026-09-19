@@ -37,6 +37,11 @@ export default defineNuxtConfig({
       posthogKey: process.env.NUXT_PUBLIC_POSTHOG_KEY || '',
       posthogHost:
         process.env.NUXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+      // Login com Google — só liga o botão no front se as duas env vars
+      // existirem no servidor (client id/secret nunca chegam ao público).
+      googleOauthEnabled: Boolean(
+        process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
+      ),
     },
   },
 
@@ -62,6 +67,7 @@ export default defineNuxtConfig({
       '/login',
       '/signup',
       '/verificar-email',
+      '/confirme-seu-email',
       '/esqueci-senha',
       '/redefinir-senha',
     ],
