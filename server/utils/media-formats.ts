@@ -3,12 +3,11 @@
  * armazenamento + `mediaKind`. Espelhado no cliente em
  * `app/components/app/MediaUploader.vue` (o comentário lá aponta pra cá).
  *
- * M4A e AAC entram como `audio` e vão direto pro ElevenLabs Scribe v2, sem
- * passar por ffmpeg — a API aceita os dois nativamente (confirmado contra a
- * API real, não só pela doc; ver `server/transcription/provider.test.ts`).
- * Cada formato tem mais de uma variante de MIME porque navegador/SO
- * preenchem `file.type` de forma diferente pro mesmo arquivo — mesmo padrão
- * já usado pro WAV (3 variantes) desde antes.
+ * M4A e AAC vão direto para o Scribe v2 com o `mimeType` original, sem
+ * passar por ffmpeg antes — a ElevenLabs aceita os dois nativamente
+ * (confirmado contra a API real, não só pela documentação). Cada formato
+ * pode ter mais de uma variante de MIME (o navegador/SO reporta de forma
+ * diferente dependendo do codec/container), igual já acontecia com o WAV.
  */
 export const ACCEPTED_MEDIA_TYPES: Record<
   string,

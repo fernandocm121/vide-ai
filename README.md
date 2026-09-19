@@ -13,7 +13,7 @@
 - ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
 - ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
 - ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): áudio vai direto ao ElevenLabs Scribe v2 (texto + timestamps por segmento e palavra); vídeo primeiro extrai a trilha de áudio com FFmpeg (inline no Nitro — "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
-- ✅ **Busca, export (TXT) e limite gratuito mensal**: busca com destaque na transcrição, download em TXT, e bloqueio automático quando o plano estoura o uso do mês
+- ✅ **Busca, export (TXT/JSON/SRT/VTT) e limite gratuito mensal**: busca com destaque na transcrição, download em TXT/JSON/SRT/VTT, e bloqueio automático quando o plano estoura o uso do mês
 
 Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **ElevenLabs Scribe v2** (transcrição).
 
