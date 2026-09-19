@@ -13,7 +13,7 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 
 | Tema | Opções | Sugestão |
 | --- | --- | --- |
-| Speech-to-Text | OpenAI Whisper API · Deepgram · AssemblyAI · faster-whisper self-hosted | **Whisper API** para o MVP (barato, sem infra); migrar para self-hosted se o custo escalar |
+| Speech-to-Text | OpenAI (whisper-1 / gpt-transcribe) · ElevenLabs Scribe · Deepgram · AssemblyAI | **ElevenLabs Scribe v2** — mais barato que o gpt-transcribe, melhor WER e o único da lista com timestamps por palavra num modelo atual |
 | LLM (resumo, Q&A, geração) | Claude (Anthropic) · GPT · Gemini | **Claude** (`claude-sonnet-5` para qualidade, `claude-haiku-4-5` para tarefas simples) |
 | ORM / DB toolkit | Drizzle · Prisma | **Drizzle** (leve, SQL-first, bom com Nitro) |
 | Autenticação | nuxt-auth-utils · Lucia · Supabase Auth · Clerk | **nuxt-auth-utils** (simples, self-hosted) ou **Supabase** se quiser DB+Auth+Storage juntos |
@@ -54,21 +54,21 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 
 ## Fase 3 — Áudio: upload de MP3 + transcrição (Whisper)  · `M`  🔨
 
-Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + chave OpenAI reais.
+Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + chave da ElevenLabs reais.
 
 - [x] Migration: status `uploaded` + coluna `media_kind` — **S**
-- [x] `env.ts`: `OPENAI_API_KEY` + `MAX_UPLOAD_BYTES` — **S**
+- [x] `env.ts`: `ELEVENLABS_API_KEY` + `MAX_UPLOAD_BYTES` — **S**
 - [x] `POST /api/videos` — cria registro + URL pré-assinada (PUT) — **M**
 - [x] Helpers de storage: `presignPut` / `presignGet` / `headObject` / `getObjectBuffer` / `deleteObject` — **S**
 - [x] `POST /api/videos/:id/complete` — confirma upload, status → `uploaded` — **S**
 - [x] `<AudioUploader>`: drag-and-drop, validação, PUT com barra de progresso (XHR) — **M**
 - [x] Botão "Transcrever" + `POST /api/videos/:id/transcribe` (202, background) — **S**
-- [x] `server/transcription/provider.ts` — interface + `openaiWhisper` (`verbose_json`) — **M**
+- [x] `server/transcription/provider.ts` — interface + `elevenlabsScribe` (`scribe_v2`) — **M**
 - [x] `runTranscription()` — download → Whisper → `transcripts` + `transcript_segments` → `ready` + `usage` — **M**
 - [x] Erro → status `failed` + mensagem; sweep no boot recupera presos — **S**
 - [x] `/app` (dashboard): lista com status; `/app/videos/[id]`: player + polling + transcrição + "Tentar de novo" — **M**
 - [x] `DELETE /api/videos/:id` — storage + DB (cascade) — **S**
-- [ ] **Verificar o fluxo completo** com `services:up` + `OPENAI_API_KEY` real
+- [ ] **Verificar o fluxo completo** com `services:up` + `ELEVENLABS_API_KEY` real
 
 ## Fase 3B — Upload e extração de áudio de vídeo  · `M`  🔨
 
@@ -81,7 +81,8 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
       Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
       `docs/backlog-issues.pdf` (seção 5) para a versão de produção (Opção B, BullMQ + worker).
 - [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
-- [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao gpt-transcribe
+- [ ] Arquivos de áudio > 25 MB: mandar por `source_url` (a ElevenLabs aceita até 5 GB e
+      busca o arquivo sozinha), em vez de chunking com ffmpeg
 
 ## Fase 4 — Pipeline de transcrição escalável  · `L`
 
@@ -105,7 +106,10 @@ critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
 - [x] Player de vídeo/áudio + transcrição sincronizada (clicar no trecho → seek) — **L**
 - [x] Busca dentro da transcrição (destaca ocorrências, navega entre elas) — **S**
 - [x] Export TXT — **S**
-- [x] Export SRT e VTT — **S**
+- [x] Export SRT e VTT — os blocos do SRT do Scribe v2 são guardados em
+      `transcript_segments` e os dois formatos são gerados a partir deles (`subtitles.ts`);
+      a API da ElevenLabs não exporta VTT, e gerar os dois da mesma fonte mantém os cortes
+      idênticos — **S**
 - [x] Edição inline da transcrição por segmento — `PATCH /api/videos/:id/segments/:segmentId`
       atualiza o segmento e resincroniza `transcripts.text` (join dos segmentos por `idx`) na
       mesma transaction; edição fica restrita ao modo Segmentos (Texto corrido continua só

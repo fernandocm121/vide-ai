@@ -30,7 +30,9 @@ const EnvSchema = z.object({
     .optional()
     .transform((v) => v !== 'false'),
 
-  // Upload de áudio — limite de 25 MB (restrição da API de transcrição da OpenAI)
+  // Upload de áudio — 25 MB. A ElevenLabs aceita até 5 GB, mas runTranscription()
+  // carrega o arquivo inteiro em memória (getObjectBuffer); aumentar o teto só
+  // depois de mandar o áudio por URL (source_url) em vez de buffer.
   MAX_UPLOAD_BYTES: z.coerce.number().int().positive().default(26_214_400),
   // Upload de vídeo (MP4/MOV/WEBM) — sem o limite de 25 MB do áudio, mas precisa de teto
   MAX_VIDEO_UPLOAD_BYTES: z.coerce
@@ -39,8 +41,10 @@ const EnvSchema = z.object({
     .positive()
     .default(2_147_483_648), // 2 GB
 
-  // Transcrição (Fase 3) — OpenAI gpt-transcribe
-  OPENAI_API_KEY: z.string().min(1, 'obrigatório para a transcrição (Fase 3)'),
+  // Transcrição (Fase 3) — ElevenLabs Scribe v2
+  ELEVENLABS_API_KEY: z
+    .string()
+    .min(1, 'obrigatório para a transcrição (chave da ElevenLabs, xi-api-key)'),
 
   // Limite do plano gratuito — minutos de transcrição por mês (30 min default)
   FREE_PLAN_MONTHLY_SECONDS: z.coerce.number().int().positive().default(1800),

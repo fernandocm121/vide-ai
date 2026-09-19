@@ -9,7 +9,7 @@ const STARTABLE = ['queued', 'failed'] as const
 
 /**
  * Inicia o processamento do vídeo/áudio em background:
- * - áudio (mp3/wav): vai direto para a transcrição (gpt-transcribe)
+ * - áudio (mp3/wav): vai direto para a transcrição (ElevenLabs Scribe v2)
  * - vídeo (mp4/mov/webm): primeiro extrai o áudio com ffmpeg, depois
  *   encadeia a mesma transcrição
  *

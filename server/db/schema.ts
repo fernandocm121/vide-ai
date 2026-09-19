@@ -6,6 +6,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  real,
   text,
   timestamp,
   uuid,
@@ -168,6 +169,34 @@ export const transcriptSegments = pgTable(
   ],
 )
 
+export const transcriptWords = pgTable(
+  'transcript_words',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    transcriptId: uuid()
+      .notNull()
+      .references(() => transcripts.id, { onDelete: 'cascade' }),
+    // nulo quando a transcrição veio sem quadros de legenda
+    segmentId: uuid().references(() => transcriptSegments.id, {
+      onDelete: 'cascade',
+    }),
+    videoId: uuid()
+      .notNull()
+      .references(() => videos.id, { onDelete: 'cascade' }),
+    idx: integer().notNull(), // ordem da palavra dentro da transcrição
+    startMs: integer().notNull(),
+    endMs: integer().notNull(),
+    text: text().notNull(),
+    // confiança do modelo na palavra (log-probabilidade, <= 0)
+    logprob: real(),
+  },
+  (t) => [
+    index('transcript_words_transcript_idx').on(t.transcriptId, t.idx),
+    index('transcript_words_segment_idx').on(t.segmentId, t.idx),
+    index('transcript_words_video_idx').on(t.videoId),
+  ],
+)
+
 export const jobs = pgTable(
   'jobs',
   {
@@ -236,6 +265,7 @@ export const videosRelations = relations(videos, ({ one, many }) => ({
   user: one(users, { fields: [videos.userId], references: [users.id] }),
   transcript: one(transcripts),
   segments: many(transcriptSegments),
+  words: many(transcriptWords),
   jobs: many(jobs),
 }))
 
@@ -245,17 +275,37 @@ export const transcriptsRelations = relations(transcripts, ({ one, many }) => ({
     references: [videos.id],
   }),
   segments: many(transcriptSegments),
+  words: many(transcriptWords),
 }))
 
 export const transcriptSegmentsRelations = relations(
   transcriptSegments,
-  ({ one }) => ({
+  ({ one, many }) => ({
     transcript: one(transcripts, {
       fields: [transcriptSegments.transcriptId],
       references: [transcripts.id],
     }),
     video: one(videos, {
       fields: [transcriptSegments.videoId],
+      references: [videos.id],
+    }),
+    words: many(transcriptWords),
+  }),
+)
+
+export const transcriptWordsRelations = relations(
+  transcriptWords,
+  ({ one }) => ({
+    transcript: one(transcripts, {
+      fields: [transcriptWords.transcriptId],
+      references: [transcripts.id],
+    }),
+    segment: one(transcriptSegments, {
+      fields: [transcriptWords.segmentId],
+      references: [transcriptSegments.id],
+    }),
+    video: one(videos, {
+      fields: [transcriptWords.videoId],
       references: [videos.id],
     }),
   }),
@@ -276,6 +326,9 @@ export type Video = typeof videos.$inferSelect
 export type NewVideo = typeof videos.$inferInsert
 export type Transcript = typeof transcripts.$inferSelect
 export type TranscriptSegment = typeof transcriptSegments.$inferSelect
+export type NewTranscriptSegment = typeof transcriptSegments.$inferInsert
+export type TranscriptWord = typeof transcriptWords.$inferSelect
+export type NewTranscriptWord = typeof transcriptWords.$inferInsert
 export type Job = typeof jobs.$inferSelect
 export type NewJob = typeof jobs.$inferInsert
 export type UsageRecord = typeof usage.$inferSelect

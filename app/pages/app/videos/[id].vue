@@ -24,6 +24,14 @@ interface VideoDetail {
     text: string
     language: string | null
     provider: string | null
+    segments: {
+      id: string
+      idx: number
+      startMs: number
+      endMs: number
+      text: string
+    }[]
+    wordCount: number
   } | null
 }
 
@@ -38,6 +46,12 @@ const {
 } = await useFetch<VideoDetail>(() => `/api/videos/${id}`)
 
 useHead(() => ({ title: `${video.value?.title ?? 'Vídeo'} — Vide AI` }))
+
+// transcrições feitas antes da migração para o Scribe v2 não têm timestamps,
+// então não dá para gerar legenda a partir delas
+const hasSubtitles = computed(
+  () => (video.value?.transcript?.segments?.length ?? 0) > 0,
+)
 
 /* polling enquanto está processando ------------------------------------ */
 let timer: ReturnType<typeof setInterval> | undefined
@@ -201,6 +215,23 @@ async function remove() {
           >
             Baixar .TXT
           </BaseButton>
+          <!-- legendas só existem quando a transcrição tem timestamps -->
+          <template v-if="hasSubtitles">
+            <BaseButton
+              variant="outline"
+              size="md"
+              :href="`/api/videos/${id}/export/srt`"
+            >
+              Baixar .SRT
+            </BaseButton>
+            <BaseButton
+              variant="outline"
+              size="md"
+              :href="`/api/videos/${id}/export/vtt`"
+            >
+              Baixar .VTT
+            </BaseButton>
+          </template>
         </div>
       </template>
 
