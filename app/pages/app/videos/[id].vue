@@ -218,6 +218,13 @@ async function remove() {
           >
             Baixar .TXT
           </BaseButton>
+          <BaseButton
+            variant="outline"
+            size="md"
+            :href="`/api/videos/${id}/export/json`"
+          >
+            Baixar .JSON
+          </BaseButton>
           <!-- legendas só existem quando a transcrição tem timestamps -->
           <template v-if="hasSubtitles">
             <BaseButton

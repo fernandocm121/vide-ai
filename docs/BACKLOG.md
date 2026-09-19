@@ -80,6 +80,9 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
       e encadeia `runTranscription()` reaproveitando o pipeline do Whisper que já existia para áudio.
       Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
       `docs/backlog-issues.pdf` (seção 5) para a versão de produção (Opção B, BullMQ + worker).
+- [x] Upload de M4A / AAC (formatos comuns de gravação em celular) — reaproveita o mesmo fluxo
+      pré-assinado; o Scribe v2 aceita os dois nativamente (confirmado contra a API real), então
+      vão direto pra transcrição com o `mimeType` original, sem passar pelo ffmpeg — **S**
 - [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
 - [ ] Arquivos de áudio > 25 MB: mandar por `source_url` (a ElevenLabs aceita até 5 GB e
       busca o arquivo sozinha), em vez de chunking com ffmpeg
@@ -103,9 +106,21 @@ critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
 
 ## Fase 5 — Visualização e export (V1)  · `M`  → **fecha o MVP V1**
 
-- [x] Player de vídeo/áudio + transcrição sincronizada (clicar no trecho → seek) — **L**
-- [x] Busca dentro da transcrição (destaca ocorrências, navega entre elas) — **S**
+> Vários itens abaixo foram implementados na fase do Whisper (`whisper-1` +
+> `verbose_json`, com timestamp por segmento) e regrediram na migração pro
+> `gpt-transcribe` (PR #2), que só devolve `text`/`language` — sem
+> segmentos, sem seek sincronizado, sem edição por trecho. A migração pro
+> ElevenLabs Scribe v2 trouxe segmento e timestamp por palavra de volta —
+> estado reavaliado em 2026-09-19 ao mesclar o export em JSON com o que a
+> migração já tinha entregue.
+
 - [x] Export TXT — **S**
+- [x] Export JSON — texto completo + metadados do vídeo/transcrição +
+      `segments` com timestamp e `words` (timestamp por palavra, associada
+      ao segmento por `segmentId`) quando disponíveis. Campo `speaker`
+      já existe no formato, sempre `null` até o pipeline persistir a
+      diarização que o Scribe v2 já devolve — ver
+      `server/utils/transcript-export.ts` — **S**
 - [x] Export SRT e VTT — os blocos do SRT do Scribe v2 são guardados em
       `transcript_segments` e os dois formatos são gerados a partir deles (`subtitles.ts`);
       a API da ElevenLabs não exporta VTT, e gerar os dois da mesma fonte mantém os cortes
@@ -114,8 +129,13 @@ critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
       atualiza o segmento e resincroniza `transcripts.text` (join dos segmentos por `idx`) na
       mesma transaction; edição fica restrita ao modo Segmentos (Texto corrido continua só
       leitura) — **M**
-- [ ] Identificação de falantes (diarização) — **M** — spec em
-      `docs/backlog-issues.pdf` (seção 3)
+- [ ] Player de vídeo/áudio + transcrição sincronizada (clicar no trecho → seek) — **L**
+- [ ] Busca dentro da transcrição com navegação entre ocorrências — **S**
+      — hoje `AppTranscriptView` só destaca as ocorrências, sem ir pra
+      próxima/anterior
+- [ ] Identificação de falantes (diarização) — **M** — o Scribe v2 já
+      devolve `speakerId` por palavra, mas o pipeline ainda não persiste;
+      spec em `docs/backlog-issues.pdf` (seção 3)
 - [ ] Compartilhar transcrição por link público (opcional) — **M**
 
 ## Fase 6 — Inteligência (V2)  · `L`

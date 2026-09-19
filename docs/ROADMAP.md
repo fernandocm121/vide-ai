@@ -3,7 +3,7 @@
 ## V1 — MVP
 - [x] Landing page (Home)
 - [ ] Autenticação + contas
-- [ ] Upload (MP4, MOV, MP3, WAV, WEBM)
+- [ ] Upload (MP4, MOV, MP3, WAV, WEBM, M4A, AAC)
 - [ ] Extração de áudio (FFmpeg) + Speech-to-Text
 - [ ] Transcrição com timestamps
 - [ ] Player sincronizado com o texto

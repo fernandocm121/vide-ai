@@ -10,15 +10,21 @@ const ACCEPTED: Record<string, { ext: string; kind: Kind; label: string }> = {
   'audio/wav': { ext: 'wav', kind: 'audio', label: 'WAV' },
   'audio/x-wav': { ext: 'wav', kind: 'audio', label: 'WAV' },
   'audio/wave': { ext: 'wav', kind: 'audio', label: 'WAV' },
+  'audio/mp4': { ext: 'm4a', kind: 'audio', label: 'M4A' },
+  'audio/x-m4a': { ext: 'm4a', kind: 'audio', label: 'M4A' },
+  'audio/aac': { ext: 'aac', kind: 'audio', label: 'AAC' },
+  'audio/x-aac': { ext: 'aac', kind: 'audio', label: 'AAC' },
 }
 
-// alguns navegadores/SOs não preenchem file.type para .mov/.wav — cai para a extensão
+// alguns navegadores/SOs não preenchem file.type para certas extensões — cai pra extensão
 const EXT_FALLBACK: Record<string, string> = {
   mp4: 'video/mp4',
   mov: 'video/quicktime',
   webm: 'video/webm',
   mp3: 'audio/mpeg',
   wav: 'audio/wav',
+  m4a: 'audio/mp4',
+  aac: 'audio/aac',
 }
 
 const MAX_BYTES: Record<Kind, number> = {
@@ -47,7 +53,8 @@ function validate(
   const contentType = detectType(file)
   if (!contentType) {
     return {
-      error: 'Formato não suportado. Aceitamos MP4, MOV, WEBM, MP3 ou WAV.',
+      error:
+        'Formato não suportado. Aceitamos MP4, MOV, WEBM, MP3, WAV, M4A ou AAC.',
     }
   }
   const { kind } = ACCEPTED[contentType]!
@@ -153,7 +160,7 @@ function onDrop(e: DragEvent) {
     <input
       ref="inputEl"
       type="file"
-      accept="video/mp4,.mp4,video/quicktime,.mov,video/webm,.webm,audio/mpeg,.mp3,audio/wav,.wav"
+      accept="video/mp4,.mp4,video/quicktime,.mov,video/webm,.webm,audio/mpeg,.mp3,audio/wav,.wav,audio/mp4,.m4a,audio/aac,audio/x-aac,.aac"
       class="hidden"
       @change="onInput"
     />
@@ -186,7 +193,7 @@ function onDrop(e: DragEvent) {
         Escolher arquivo
       </BaseButton>
       <p class="mt-3 text-xs text-ink-soft">
-        MP4 · MOV · WEBM (até 2 GB) · MP3 · WAV (até 25 MB)
+        MP4 · MOV · WEBM (até 2 GB) · MP3 · WAV · M4A · AAC (até 25 MB)
       </p>
     </template>
 

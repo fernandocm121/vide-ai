@@ -72,11 +72,16 @@ export async function runTranscription(
   try {
     const buffer = await getObjectBuffer(sourceKey)
     const provider = transcriptionProvider()
+    // Com `sourceKeyOverride` o buffer já passou pelo ffmpeg (extração de
+    // áudio de vídeo) e é sempre mp3 de verdade — o nome e o mimeType
+    // enviados à API precisam refletir isso, não o arquivo original que o
+    // usuário enviou. Só se aplica ao caminho de vídeo: upload de áudio
+    // (mp3/wav/m4a/aac) vai direto pro Scribe v2 sem passar por aqui.
     const result = await provider.transcribeAudio({
       buffer,
-      filename: video.originalFilename || 'audio.mp3',
-      // com sourceKeyOverride o que vai para a API é o áudio extraído (mp3),
-      // não o arquivo original que o usuário enviou
+      filename: sourceKeyOverride
+        ? 'audio.mp3'
+        : video.originalFilename || 'audio.mp3',
       mimeType: sourceKeyOverride
         ? 'audio/mpeg'
         : (video.mimeType ?? undefined),

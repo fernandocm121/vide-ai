@@ -1,5 +1,11 @@
 import { and, asc, eq } from 'drizzle-orm'
-import { transcriptSegments, transcripts, videos } from '../../../../db/schema'
+import {
+  transcriptSegments,
+  transcripts,
+  transcriptWords,
+  videos,
+} from '../../../../db/schema'
+import { buildTranscriptExportJson } from '../../../../utils/transcript-export'
 import {
   sanitizeFilename,
   toSrt,
@@ -9,13 +15,17 @@ import {
 
 const FORMATS = {
   txt: { extension: 'txt', contentType: 'text/plain; charset=utf-8' },
+  json: {
+    extension: 'json',
+    contentType: 'application/json; charset=utf-8',
+  },
   srt: { extension: 'srt', contentType: 'application/x-subrip; charset=utf-8' },
   vtt: { extension: 'vtt', contentType: 'text/vtt; charset=utf-8' },
 } as const
 
 type Format = keyof typeof FORMATS
 
-/** Exporta a transcrição pronta em TXT, SRT ou VTT. */
+/** Exporta a transcrição pronta em TXT, JSON, SRT ou VTT. */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
   const id = getRouterParam(event, 'id')!
@@ -24,7 +34,7 @@ export default defineEventHandler(async (event) => {
   if (!(format in FORMATS)) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Formato inválido. Use txt, srt ou vtt.',
+      statusMessage: 'Formato inválido. Use txt, json, srt ou vtt.',
     })
   }
 
@@ -56,6 +66,25 @@ export default defineEventHandler(async (event) => {
 
   if (format === 'txt') {
     body = toTxt(transcript.text)
+  } else if (format === 'json') {
+    const [segments, words] = await Promise.all([
+      db.query.transcriptSegments.findMany({
+        where: eq(transcriptSegments.transcriptId, transcript.id),
+        orderBy: [asc(transcriptSegments.idx)],
+      }),
+      db.query.transcriptWords.findMany({
+        where: eq(transcriptWords.transcriptId, transcript.id),
+        orderBy: [asc(transcriptWords.idx)],
+      }),
+    ])
+
+    const payload = buildTranscriptExportJson(
+      video,
+      transcript,
+      segments,
+      words,
+    )
+    body = JSON.stringify(payload, null, 2)
   } else {
     const segments = await db.query.transcriptSegments.findMany({
       where: eq(transcriptSegments.transcriptId, transcript.id),
