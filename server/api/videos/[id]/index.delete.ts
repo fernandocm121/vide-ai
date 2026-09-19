@@ -1,7 +1,10 @@
 import { and, eq } from 'drizzle-orm'
 import { videos } from '../../../db/schema'
 
-/** Apaga o áudio: objeto no storage + registro (cascade cuida do resto). */
+/**
+ * Apaga o vídeo/áudio: objeto(s) no storage (original + áudio extraído,
+ * quando existir) + registro (cascade cuida do resto).
+ */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
   const id = getRouterParam(event, 'id')!
@@ -18,6 +21,15 @@ export default defineEventHandler(async (event) => {
     await deleteObject(video.storageKey).catch((err) => {
       console.warn('[delete] falha ao apagar do storage:', err?.message)
     })
+  }
+
+  if (video.mediaKind === 'video') {
+    const audioKey = await findExtractedAudioKey(id)
+    if (audioKey) {
+      await deleteObject(audioKey).catch((err) => {
+        console.warn('[delete] falha ao apagar áudio extraído:', err?.message)
+      })
+    }
   }
 
   // cascade: transcripts, transcript_segments, jobs, usage(video_id -> null)

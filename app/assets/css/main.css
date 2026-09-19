@@ -59,6 +59,39 @@
   font-family: var(--font-sans);
 }
 
+/*
+ * TabView (PrimeVue) — o tema do PrimeVue entra numa `@layer primevue`
+ * declarada antes da `base` do Tailwind (ordem de carregamento em
+ * nuxt.config.ts), então o preflight zera padding/border por prioridade de
+ * layer, não de especificidade. Repõe o essencial sem layer (fora de
+ * `@layer`, o que sempre vence contra qualquer regra em layer) e já com a
+ * cor de marca no lugar do indigo padrão do tema.
+ */
+.p-tabview-nav {
+  border-bottom: 1px solid var(--color-line);
+}
+.p-tabview-nav-link {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.p-tabview
+  .p-tabview-nav
+  li:not(.p-highlight):not(.p-disabled):hover
+  .p-tabview-nav-link {
+  border-color: var(--color-brand-300);
+  color: var(--color-brand-600);
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-600);
+}
+.p-tabview-panels {
+  padding: 1.25rem;
+}
+
 @layer components {
   .container-page {
     width: 100%;
