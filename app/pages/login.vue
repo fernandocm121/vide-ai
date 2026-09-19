@@ -6,6 +6,7 @@ const { login } = useAuth()
 const { track } = useAnalytics()
 const notify = useNotify()
 const route = useRoute()
+const { public: publicConfig } = useRuntimeConfig()
 
 const email = ref('')
 const password = ref('')
@@ -13,10 +14,30 @@ const remember = ref(true)
 const showPassword = ref(false)
 const pending = ref(false)
 
-function onGoogleClick() {
-  notify.info(
-    'Login com Google ainda não está disponível — entre com e-mail e senha.',
-  )
+const redirectPath = computed(() => String(route.query.redirect ?? '/app'))
+const googleAuthHref = computed(
+  () => `/api/auth/google?redirect=${encodeURIComponent(redirectPath.value)}`,
+)
+
+const GOOGLE_ERRORS: Record<string, () => void> = {
+  google_not_configured: () =>
+    notify.info(
+      'Login com Google ainda não está disponível — entre com e-mail e senha.',
+    ),
+  google_cancelled: () => notify.info('Login com Google cancelado.'),
+  google_failed: () =>
+    notify.error('Não foi possível entrar com o Google. Tente de novo.'),
+}
+
+onMounted(() => {
+  const error = String(route.query.error ?? '')
+  GOOGLE_ERRORS[error]?.()
+})
+
+function onGoogleClick(event: MouseEvent) {
+  if (publicConfig.googleOauthEnabled) return
+  event.preventDefault()
+  GOOGLE_ERRORS.google_not_configured!()
 }
 
 async function submit() {
@@ -53,14 +74,14 @@ async function submit() {
       Acesse suas transcrições, resumos e cortes em um só lugar.
     </p>
 
-    <button
-      type="button"
+    <a
+      :href="googleAuthHref"
       class="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-line bg-paper text-sm font-medium text-ink transition-colors hover:bg-paper-2"
       @click="onGoogleClick"
     >
       <IconGoogle />
       Continuar com Google
-    </button>
+    </a>
 
     <div class="my-5 flex items-center gap-3">
       <span class="h-px flex-1 bg-line" />

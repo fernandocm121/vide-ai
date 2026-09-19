@@ -19,5 +19,9 @@ export function useNotify() {
     toast.add({ severity: 'info', summary, detail, life: 3500 })
   }
 
-  return { success, error, info }
+  function warn(detail: string, summary = 'Atenção') {
+    toast.add({ severity: 'warn', summary, detail, life: 4000 })
+  }
+
+  return { success, error, info, warn }
 }

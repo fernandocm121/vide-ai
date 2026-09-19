@@ -54,12 +54,9 @@
   }
 }
 
-/* Toast (PrimeVue) — só o essencial pra combinar com o resto do app. */
+/* Toast (PrimeVue) — o resto do visual vive no `pt` do AppToast.vue. */
 .p-toast {
   font-family: var(--font-sans);
-}
-.p-toast-message {
-  border-radius: 0.75rem;
 }
 
 @layer components {

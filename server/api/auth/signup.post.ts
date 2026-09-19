@@ -5,7 +5,7 @@ import { users } from '../../db/schema'
 const Body = z.object({
   name: z.string().min(1, 'obrigatório').max(120),
   email: z.string().email('e-mail inválido').toLowerCase(),
-  password: z.string().min(8, 'mínimo de 8 caracteres').max(200),
+  password: passwordSchema,
 })
 
 /**
