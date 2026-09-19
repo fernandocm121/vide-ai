@@ -39,12 +39,12 @@ Login de desenvolvimento (após o seed): `dev@videai.local` / `password`.
 ### Testar o upload
 
 1. Abra `http://localhost:3000/app`
-2. Arraste um MP4/MOV/WEBM (até 2 GB) ou MP3/WAV (até 25 MB) — a barra de progresso mostra o envio
+2. Arraste um MP4/MOV/WEBM (até 2 GB) ou MP3/WAV/M4A/AAC (até 25 MB) — a barra de progresso mostra o envio
 3. Ao concluir, o item aparece na lista com status `Na fila`
 
 ### Testar a transcrição (áudio ou vídeo)
 
-1. Envie um arquivo de áudio (**.mp3**/**.wav**) ou vídeo (**.mp4**/**.mov**/**.webm**)
+1. Envie um arquivo de áudio (**.mp3**/**.wav**/**.m4a**/**.aac**) ou vídeo (**.mp4**/**.mov**/**.webm**)
 2. Na página do vídeo, clique em **Transcrever áudio** (áudio) ou **Processar vídeo** (vídeo)
 3. Áudio: `Na fila` → `Transcrevendo` → `Pronto`. Vídeo: `Na fila` → `Extraindo áudio` →
    `Transcrevendo` → `Pronto` (polling a cada 3 s)

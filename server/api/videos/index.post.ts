@@ -1,21 +1,11 @@
 import { z } from 'zod'
 import { videos } from '../../db/schema'
 
-/** Formatos aceitos nesta versão — mapeia o `contentType` p/ extensão + mediaKind. */
-const ACCEPTED_TYPES: Record<string, { ext: string; kind: 'audio' | 'video' }> =
-  {
-    'video/mp4': { ext: 'mp4', kind: 'video' },
-    'video/quicktime': { ext: 'mov', kind: 'video' },
-    'video/webm': { ext: 'webm', kind: 'video' },
-    'audio/mpeg': { ext: 'mp3', kind: 'audio' },
-    'audio/wav': { ext: 'wav', kind: 'audio' },
-    'audio/x-wav': { ext: 'wav', kind: 'audio' },
-    'audio/wave': { ext: 'wav', kind: 'audio' },
-  }
-
 const Body = z.object({
   filename: z.string().min(1).max(255),
-  contentType: z.enum(Object.keys(ACCEPTED_TYPES) as [string, ...string[]]),
+  contentType: z.enum(
+    Object.keys(ACCEPTED_MEDIA_TYPES) as [string, ...string[]],
+  ),
   sizeBytes: z.number().int().positive(),
 })
 
@@ -36,7 +26,7 @@ export default defineEventHandler(async (event) => {
     })
   }
   const { filename, contentType, sizeBytes } = parsed.data
-  const { ext, kind } = ACCEPTED_TYPES[contentType]!
+  const { ext, kind } = ACCEPTED_MEDIA_TYPES[contentType]!
 
   const maxBytes = kind === 'video' ? MAX_VIDEO_UPLOAD_BYTES : MAX_UPLOAD_BYTES
   if (sizeBytes > maxBytes) {

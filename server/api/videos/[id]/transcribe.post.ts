@@ -9,7 +9,9 @@ const STARTABLE = ['queued', 'failed'] as const
 
 /**
  * Inicia o processamento do vídeo/áudio em background:
- * - áudio (mp3/wav): vai direto para a transcrição (ElevenLabs Scribe v2)
+ * - áudio (mp3/wav/m4a/aac): vai direto para a transcrição, com o `mimeType`
+ *   original do arquivo — o Scribe v2 aceita os formatos nativamente, sem
+ *   precisar normalizar com ffmpeg antes
  * - vídeo (mp4/mov/webm): primeiro extrai o áudio com ffmpeg, depois
  *   encadeia a mesma transcrição
  *
