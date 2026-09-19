@@ -13,6 +13,7 @@ const ACCEPTED: Record<string, { ext: string; kind: Kind; label: string }> = {
   'audio/mp4': { ext: 'm4a', kind: 'audio', label: 'M4A' },
   'audio/x-m4a': { ext: 'm4a', kind: 'audio', label: 'M4A' },
   'audio/aac': { ext: 'aac', kind: 'audio', label: 'AAC' },
+  'audio/x-aac': { ext: 'aac', kind: 'audio', label: 'AAC' },
 }
 
 // alguns navegadores/SOs não preenchem file.type para certas extensões — cai pra extensão
@@ -159,7 +160,7 @@ function onDrop(e: DragEvent) {
     <input
       ref="inputEl"
       type="file"
-      accept="video/mp4,.mp4,video/quicktime,.mov,video/webm,.webm,audio/mpeg,.mp3,audio/wav,.wav,audio/mp4,.m4a,audio/aac,.aac"
+      accept="video/mp4,.mp4,video/quicktime,.mov,video/webm,.webm,audio/mpeg,.mp3,audio/wav,.wav,audio/mp4,.m4a,audio/aac,audio/x-aac,.aac"
       class="hidden"
       @change="onInput"
     />
