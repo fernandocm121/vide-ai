@@ -21,8 +21,15 @@ export default defineEventHandler(async (event) => {
 
   // só oferece a URL de mídia depois que o upload foi confirmado
   const hasFile = video.storageKey && video.status !== 'uploading'
-  const mediaUrl = hasFile
-    ? await presignGet(video.storageKey!, 3600).catch(() => null)
+  // para vídeo, toca o áudio já extraído — nunca o vídeo original; sem
+  // extração concluída ainda, não há player (ver findExtractedAudioKey)
+  const mediaKey = hasFile
+    ? video.mediaKind === 'video'
+      ? await findExtractedAudioKey(id)
+      : video.storageKey
+    : null
+  const mediaUrl = mediaKey
+    ? await presignGet(mediaKey, 3600).catch(() => null)
     : null
 
   let transcript: {

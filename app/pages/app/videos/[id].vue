@@ -87,6 +87,15 @@ async function transcribe() {
   }
 }
 
+/* player ---------------------------------------------------------------- */
+const mediaEl = ref<HTMLAudioElement>()
+
+function seekTo(ms: number) {
+  if (!mediaEl.value) return
+  mediaEl.value.currentTime = ms / 1000
+  mediaEl.value.play()
+}
+
 async function remove() {
   if (
     !confirm(
@@ -138,16 +147,10 @@ async function remove() {
       <AppStatusBadge :status="video.status" />
     </div>
 
-    <!-- player -->
-    <video
-      v-if="video.mediaKind === 'video' && video.mediaUrl"
-      :src="video.mediaUrl"
-      controls
-      preload="metadata"
-      class="w-full rounded-xl bg-black"
-    />
+    <!-- player: sempre áudio — para vídeo, é a trilha já extraída -->
     <audio
-      v-else-if="video.mediaUrl"
+      v-if="video.mediaUrl"
+      ref="mediaEl"
       :src="video.mediaUrl"
       controls
       preload="metadata"
@@ -248,6 +251,8 @@ async function remove() {
     <AppTranscriptView
       v-if="video.status === 'ready' && video.transcript"
       :text="video.transcript.text"
+      :segments="video.transcript.segments"
+      @seek="seekTo"
     />
 
     <!-- excluir -->
