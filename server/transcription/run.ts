@@ -1,9 +1,28 @@
 import { eq, sql } from 'drizzle-orm'
-import { jobs, transcripts, usage, videos } from '../db/schema'
+import {
+  jobs,
+  transcripts,
+  transcriptSegments,
+  transcriptWords,
+  usage,
+  videos,
+} from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
 import { getObjectBuffer } from '../utils/storage'
 import { currentPeriodMonth } from '../utils/usage'
 import { transcriptionProvider } from './provider'
+
+/**
+ * Linhas por INSERT. Uma hora de áudio passa de 10 mil palavras e um insert
+ * único estouraria o limite de parâmetros do Postgres (65535).
+ */
+const INSERT_CHUNK = 500
+
+function chunk<T>(rows: T[], size = INSERT_CHUNK): T[][] {
+  const out: T[][] = []
+  for (let i = 0; i < rows.length; i += size) out.push(rows.slice(i, i + size))
+  return out
+}
 
 /**
  * Processa a transcrição de um áudio, do começo ao fim.
@@ -54,16 +73,18 @@ export async function runTranscription(
     const buffer = await getObjectBuffer(sourceKey)
     const provider = transcriptionProvider()
     // Com `sourceKeyOverride` o buffer já passou pelo ffmpeg (extração de
-    // vídeo, ou normalização de m4a/aac) e é sempre mp3 de verdade — o nome
-    // enviado à API precisa refletir isso. Usar o nome original (ex.:
-    // "audio.m4a") faria a OpenAI tentar decodificar bytes de mp3 como se
-    // fossem outro container e rejeitar como "corrompido".
-    const filename = sourceKeyOverride
-      ? 'audio.mp3'
-      : video.originalFilename || 'audio.mp3'
+    // áudio de vídeo) e é sempre mp3 de verdade — o nome e o mimeType
+    // enviados à API precisam refletir isso, não o arquivo original que o
+    // usuário enviou. Só se aplica ao caminho de vídeo: upload de áudio
+    // (mp3/wav/m4a/aac) vai direto pro Scribe v2 sem passar por aqui.
     const result = await provider.transcribeAudio({
       buffer,
-      filename,
+      filename: sourceKeyOverride
+        ? 'audio.mp3'
+        : video.originalFilename || 'audio.mp3',
+      mimeType: sourceKeyOverride
+        ? 'audio/mpeg'
+        : (video.mimeType ?? undefined),
       language: video.language ?? undefined,
     })
 
@@ -75,12 +96,62 @@ export async function runTranscription(
       // retry: descarta a transcrição anterior
       await tx.delete(transcripts).where(eq(transcripts.videoId, videoId))
 
-      await tx.insert(transcripts).values({
-        videoId,
-        text: result.text,
-        provider: provider.name,
-        language: result.language,
-      })
+      const [t] = await tx
+        .insert(transcripts)
+        .values({
+          videoId,
+          text: result.text,
+          provider: provider.name,
+          language: result.language,
+        })
+        .returning()
+
+      // segmentos e palavras só existem quando o provider devolve timestamps;
+      // sem eles a transcrição fica só com o texto corrido
+      const segmentIdByIdx = new Map<number, string>()
+
+      if (result.segments?.length) {
+        const segmentRows = result.segments.map((seg) => ({
+          transcriptId: t!.id,
+          videoId,
+          idx: seg.idx,
+          startMs: seg.startMs,
+          endMs: seg.endMs,
+          text: seg.text,
+        }))
+
+        for (const batch of chunk(segmentRows)) {
+          const rows = await tx
+            .insert(transcriptSegments)
+            .values(batch)
+            .returning({
+              id: transcriptSegments.id,
+              idx: transcriptSegments.idx,
+            })
+
+          for (const row of rows) segmentIdByIdx.set(row.idx, row.id)
+        }
+      }
+
+      if (result.words?.length) {
+        const wordRows = result.words.map((w) => ({
+          transcriptId: t!.id,
+          segmentId:
+            w.segmentIdx === null
+              ? null
+              : (segmentIdByIdx.get(w.segmentIdx) ?? null),
+          videoId,
+          idx: w.idx,
+          startMs: w.startMs,
+          endMs: w.endMs,
+          text: w.text,
+          logprob: w.logprob,
+        }))
+
+        for (const batch of chunk(wordRows)) {
+          await tx.insert(transcriptWords).values(batch)
+        }
+      }
 
       await tx
         .update(videos)
@@ -110,12 +181,17 @@ export async function runTranscription(
           finishedAt: new Date(),
           result: {
             durationSeconds: duration,
+            segments: result.segments?.length ?? 0,
+            words: result.words?.length ?? 0,
           },
         })
         .where(eq(jobs.id, jobId))
     })
 
-    console.log(`[transcription] vídeo ${videoId} pronto`)
+    console.log(
+      `[transcription] vídeo ${videoId} pronto ` +
+        `(${result.segments?.length ?? 0} segmentos, ${result.words?.length ?? 0} palavras)`,
+    )
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     await Promise.allSettled([

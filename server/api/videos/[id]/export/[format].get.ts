@@ -1,20 +1,40 @@
-import { and, eq } from 'drizzle-orm'
-import { transcriptSegments, transcripts, videos } from '../../../../db/schema'
-import { sanitizeFilename, toTxt } from '../../../../utils/subtitles'
+import { and, asc, eq } from 'drizzle-orm'
+import {
+  transcriptSegments,
+  transcripts,
+  transcriptWords,
+  videos,
+} from '../../../../db/schema'
+import { buildTranscriptExportJson } from '../../../../utils/transcript-export'
+import {
+  sanitizeFilename,
+  toSrt,
+  toTxt,
+  toVtt,
+} from '../../../../utils/subtitles'
 
-const FORMATS = ['txt', 'json'] as const
-type Format = (typeof FORMATS)[number]
+const FORMATS = {
+  txt: { extension: 'txt', contentType: 'text/plain; charset=utf-8' },
+  json: {
+    extension: 'json',
+    contentType: 'application/json; charset=utf-8',
+  },
+  srt: { extension: 'srt', contentType: 'application/x-subrip; charset=utf-8' },
+  vtt: { extension: 'vtt', contentType: 'text/vtt; charset=utf-8' },
+} as const
 
-/** Exporta a transcrição pronta em TXT ou JSON. */
+type Format = keyof typeof FORMATS
+
+/** Exporta a transcrição pronta em TXT, JSON, SRT ou VTT. */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
   const id = getRouterParam(event, 'id')!
-  const format = getRouterParam(event, 'format') ?? ''
+  const format = (getRouterParam(event, 'format') ?? '') as Format
 
-  if (!FORMATS.includes(format as Format)) {
+  if (!(format in FORMATS)) {
     throw createError({
       statusCode: 400,
-      statusMessage: `Formato inválido. Use ${FORMATS.join(' ou ')}.`,
+      statusMessage: 'Formato inválido. Use txt, json, srt ou vtt.',
     })
   }
 
@@ -42,30 +62,54 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const filename = sanitizeFilename(video.title)
+  let body: string
 
-  if (format === 'json') {
+  if (format === 'txt') {
+    body = toTxt(transcript.text)
+  } else if (format === 'json') {
+    const [segments, words] = await Promise.all([
+      db.query.transcriptSegments.findMany({
+        where: eq(transcriptSegments.transcriptId, transcript.id),
+        orderBy: [asc(transcriptSegments.idx)],
+      }),
+      db.query.transcriptWords.findMany({
+        where: eq(transcriptWords.transcriptId, transcript.id),
+        orderBy: [asc(transcriptWords.idx)],
+      }),
+    ])
+
+    const payload = buildTranscriptExportJson(
+      video,
+      transcript,
+      segments,
+      words,
+    )
+    body = JSON.stringify(payload, null, 2)
+  } else {
     const segments = await db.query.transcriptSegments.findMany({
       where: eq(transcriptSegments.transcriptId, transcript.id),
-      orderBy: (s, { asc }) => [asc(s.idx)],
+      orderBy: [asc(transcriptSegments.idx)],
+      columns: { startMs: true, endMs: true, text: true },
     })
 
-    const payload = buildTranscriptExportJson(video, transcript, segments)
+    // transcrições anteriores à migração para o Scribe v2 não têm timestamps
+    if (!segments.length) {
+      throw createError({
+        statusCode: 409,
+        statusMessage:
+          'Esta transcrição foi feita sem timestamps e não pode virar legenda. Transcreva o arquivo novamente para gerar SRT/VTT.',
+      })
+    }
 
-    setResponseHeader(event, 'Content-Type', 'application/json; charset=utf-8')
-    setResponseHeader(
-      event,
-      'Content-Disposition',
-      `attachment; filename="${filename}.json"`,
-    )
-    return JSON.stringify(payload, null, 2)
+    body = format === 'srt' ? toSrt(segments) : toVtt(segments)
   }
 
-  setResponseHeader(event, 'Content-Type', 'text/plain; charset=utf-8')
+  const { extension, contentType } = FORMATS[format]
+  setResponseHeader(event, 'Content-Type', contentType)
   setResponseHeader(
     event,
     'Content-Disposition',
-    `attachment; filename="${filename}.txt"`,
+    `attachment; filename="${sanitizeFilename(video.title)}.${extension}"`,
   )
-  return toTxt(transcript.text)
+  return body
 })

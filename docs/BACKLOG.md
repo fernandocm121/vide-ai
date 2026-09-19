@@ -13,7 +13,7 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 
 | Tema | Opções | Sugestão |
 | --- | --- | --- |
-| Speech-to-Text | OpenAI Whisper API · Deepgram · AssemblyAI · faster-whisper self-hosted | **Whisper API** para o MVP (barato, sem infra); migrar para self-hosted se o custo escalar |
+| Speech-to-Text | OpenAI (whisper-1 / gpt-transcribe) · ElevenLabs Scribe · Deepgram · AssemblyAI | **ElevenLabs Scribe v2** — mais barato que o gpt-transcribe, melhor WER e o único da lista com timestamps por palavra num modelo atual |
 | LLM (resumo, Q&A, geração) | Claude (Anthropic) · GPT · Gemini | **Claude** (`claude-sonnet-5` para qualidade, `claude-haiku-4-5` para tarefas simples) |
 | ORM / DB toolkit | Drizzle · Prisma | **Drizzle** (leve, SQL-first, bom com Nitro) |
 | Autenticação | nuxt-auth-utils · Lucia · Supabase Auth · Clerk | **nuxt-auth-utils** (simples, self-hosted) ou **Supabase** se quiser DB+Auth+Storage juntos |
@@ -54,21 +54,21 @@ Escolhas que travam o resto do trabalho. Sugestão entre parênteses.
 
 ## Fase 3 — Áudio: upload de MP3 + transcrição (Whisper)  · `M`  🔨
 
-Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + chave OpenAI reais.
+Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + chave da ElevenLabs reais.
 
 - [x] Migration: status `uploaded` + coluna `media_kind` — **S**
-- [x] `env.ts`: `OPENAI_API_KEY` + `MAX_UPLOAD_BYTES` — **S**
+- [x] `env.ts`: `ELEVENLABS_API_KEY` + `MAX_UPLOAD_BYTES` — **S**
 - [x] `POST /api/videos` — cria registro + URL pré-assinada (PUT) — **M**
 - [x] Helpers de storage: `presignPut` / `presignGet` / `headObject` / `getObjectBuffer` / `deleteObject` — **S**
 - [x] `POST /api/videos/:id/complete` — confirma upload, status → `uploaded` — **S**
 - [x] `<AudioUploader>`: drag-and-drop, validação, PUT com barra de progresso (XHR) — **M**
 - [x] Botão "Transcrever" + `POST /api/videos/:id/transcribe` (202, background) — **S**
-- [x] `server/transcription/provider.ts` — interface + `openaiWhisper` (`verbose_json`) — **M**
+- [x] `server/transcription/provider.ts` — interface + `elevenlabsScribe` (`scribe_v2`) — **M**
 - [x] `runTranscription()` — download → Whisper → `transcripts` + `transcript_segments` → `ready` + `usage` — **M**
 - [x] Erro → status `failed` + mensagem; sweep no boot recupera presos — **S**
 - [x] `/app` (dashboard): lista com status; `/app/videos/[id]`: player + polling + transcrição + "Tentar de novo" — **M**
 - [x] `DELETE /api/videos/:id` — storage + DB (cascade) — **S**
-- [ ] **Verificar o fluxo completo** com `services:up` + `OPENAI_API_KEY` real
+- [ ] **Verificar o fluxo completo** com `services:up` + `ELEVENLABS_API_KEY` real
 
 ## Fase 3B — Upload e extração de áudio de vídeo  · `M`  🔨
 
@@ -81,11 +81,11 @@ Fatia vertical ponta a ponta. Código pronto — falta verificar com Docker + ch
       Funciona local/VPS; **não é confiável em serverless (Vercel) para vídeos longos** — ver
       `docs/backlog-issues.pdf` (seção 5) para a versão de produção (Opção B, BullMQ + worker).
 - [x] Upload de M4A / AAC (formatos comuns de gravação em celular) — reaproveita o mesmo fluxo
-      pré-assinado; como a OpenAI não documenta `aac` como formato aceito e `m4a` pode conter ALAC
-      (não é sempre AAC), os dois passam pelo mesmo ffmpeg do vídeo antes do gpt-transcribe, em vez de
-      ir direto como mp3/wav — ver `NEEDS_FFMPEG_NORMALIZATION` em `server/utils/media-formats.ts` — **S**
+      pré-assinado; o Scribe v2 aceita os dois nativamente (confirmado contra a API real), então
+      vão direto pra transcrição com o `mimeType` original, sem passar pelo ffmpeg — **S**
 - [ ] Thumbnail real do vídeo (hoje o dashboard usa um ícone por `mediaKind` como placeholder)
-- [ ] Arquivos de áudio > 25 MB: chunking com ffmpeg antes de enviar ao gpt-transcribe
+- [ ] Arquivos de áudio > 25 MB: mandar por `source_url` (a ElevenLabs aceita até 5 GB e
+      busca o arquivo sozinha), em vez de chunking com ffmpeg
 
 ## Fase 4 — Pipeline de transcrição escalável  · `L`
 
@@ -109,28 +109,33 @@ critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
 > Vários itens abaixo foram implementados na fase do Whisper (`whisper-1` +
 > `verbose_json`, com timestamp por segmento) e regrediram na migração pro
 > `gpt-transcribe` (PR #2), que só devolve `text`/`language` — sem
-> segmentos, sem seek sincronizado, sem edição por trecho. Estado real
-> reavaliado em 2026-09-19 ao investigar o export em JSON — os itens abaixo
-> foram desmarcados de volta pra refletir o que o código faz hoje.
+> segmentos, sem seek sincronizado, sem edição por trecho. A migração pro
+> ElevenLabs Scribe v2 trouxe segmento e timestamp por palavra de volta —
+> estado reavaliado em 2026-09-19 ao mesclar o export em JSON com o que a
+> migração já tinha entregue.
 
 - [x] Export TXT — **S**
 - [x] Export JSON — texto completo + metadados do vídeo/transcrição +
-      `segments` (cai para um único segmento cobrindo o áudio inteiro
-      quando não há segmentos reais salvos, que é sempre o caso hoje).
-      Campos `words`/`speaker` já existem no formato, sempre `null` até o
-      pipeline suportar timestamp por palavra / diarização — ver
+      `segments` com timestamp e `words` (timestamp por palavra, associada
+      ao segmento por `segmentId`) quando disponíveis. Campo `speaker`
+      já existe no formato, sempre `null` até o pipeline persistir a
+      diarização que o Scribe v2 já devolve — ver
       `server/utils/transcript-export.ts` — **S**
+- [x] Export SRT e VTT — os blocos do SRT do Scribe v2 são guardados em
+      `transcript_segments` e os dois formatos são gerados a partir deles (`subtitles.ts`);
+      a API da ElevenLabs não exporta VTT, e gerar os dois da mesma fonte mantém os cortes
+      idênticos — **S**
+- [x] Edição inline da transcrição por segmento — `PATCH /api/videos/:id/segments/:segmentId`
+      atualiza o segmento e resincroniza `transcripts.text` (join dos segmentos por `idx`) na
+      mesma transaction; edição fica restrita ao modo Segmentos (Texto corrido continua só
+      leitura) — **M**
 - [ ] Player de vídeo/áudio + transcrição sincronizada (clicar no trecho → seek) — **L**
-      — depende de timestamp por segmento, que o `gpt-transcribe` não fornece
 - [ ] Busca dentro da transcrição com navegação entre ocorrências — **S**
       — hoje `AppTranscriptView` só destaca as ocorrências, sem ir pra
       próxima/anterior
-- [ ] Export SRT e VTT — **S** — depende de timestamp por segmento
-- [ ] Edição inline da transcrição por segmento — **M** — depende de
-      segmentos reais existirem (`transcript_segments` está no schema mas
-      nunca é populada pelo pipeline atual)
-- [ ] Identificação de falantes (diarização) — **M** — spec em
-      `docs/backlog-issues.pdf` (seção 3)
+- [ ] Identificação de falantes (diarização) — **M** — o Scribe v2 já
+      devolve `speakerId` por palavra, mas o pipeline ainda não persiste;
+      spec em `docs/backlog-issues.pdf` (seção 3)
 - [ ] Compartilhar transcrição por link público (opcional) — **M**
 
 ## Fase 6 — Inteligência (V2)  · `L`

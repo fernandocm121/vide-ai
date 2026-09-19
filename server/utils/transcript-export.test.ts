@@ -16,7 +16,7 @@ const video: Pick<
 const transcript = {
   text: 'Olá pessoal, bem-vindos ao episódio de hoje.',
   language: 'pt',
-  provider: 'openai:gpt-transcribe',
+  provider: 'elevenlabs:scribe_v2',
 }
 
 describe('buildTranscriptExportJson', () => {
@@ -62,8 +62,14 @@ describe('buildTranscriptExportJson', () => {
 
   it('usa os segmentos reais quando existem, na ordem recebida (a ordenação por `idx` é feita na query)', () => {
     const json = buildTranscriptExportJson(video, transcript, [
-      { idx: 0, startMs: 0, endMs: 4200, text: 'primeiro trecho' },
-      { idx: 1, startMs: 4200, endMs: 9800, text: 'segundo trecho' },
+      { id: 'seg-0', idx: 0, startMs: 0, endMs: 4200, text: 'primeiro trecho' },
+      {
+        id: 'seg-1',
+        idx: 1,
+        startMs: 4200,
+        endMs: 9800,
+        text: 'segundo trecho',
+      },
     ])
 
     expect(json.segments).toEqual([
@@ -84,6 +90,53 @@ describe('buildTranscriptExportJson', () => {
         speaker: null,
       },
     ])
+  })
+
+  it('distribui as palavras pros segmentos certos, por segmentId', () => {
+    const json = buildTranscriptExportJson(
+      video,
+      transcript,
+      [
+        {
+          id: 'seg-0',
+          idx: 0,
+          startMs: 0,
+          endMs: 4200,
+          text: 'primeiro trecho',
+        },
+        {
+          id: 'seg-1',
+          idx: 1,
+          startMs: 4200,
+          endMs: 9800,
+          text: 'segundo trecho',
+        },
+      ],
+      [
+        { segmentId: 'seg-0', startMs: 0, endMs: 900, text: 'primeiro' },
+        { segmentId: 'seg-0', startMs: 900, endMs: 1800, text: 'trecho' },
+        { segmentId: 'seg-1', startMs: 4200, endMs: 5000, text: 'segundo' },
+      ],
+    )
+
+    expect(json.segments[0]!.words).toEqual([
+      { word: 'primeiro', startMs: 0, endMs: 900 },
+      { word: 'trecho', startMs: 900, endMs: 1800 },
+    ])
+    expect(json.segments[1]!.words).toEqual([
+      { word: 'segundo', startMs: 4200, endMs: 5000 },
+    ])
+  })
+
+  it('sempre inclui `speaker: null` — diarização ainda não é persistida pelo pipeline', () => {
+    const json = buildTranscriptExportJson(
+      video,
+      transcript,
+      [{ id: 'seg-0', idx: 0, startMs: 0, endMs: 4200, text: 'trecho' }],
+      [{ segmentId: 'seg-0', startMs: 0, endMs: 900, text: 'trecho' }],
+    )
+
+    expect(json.segments[0]!.speaker).toBeNull()
   })
 
   it('gera um JSON válido (round-trip via JSON.stringify/parse)', () => {

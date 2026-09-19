@@ -9,11 +9,10 @@ const STARTABLE = ['queued', 'failed'] as const
 
 /**
  * Inicia o processamento do vídeo/áudio em background:
- * - áudio com compatibilidade direta garantida (mp3/wav): vai direto para a
- *   transcrição (gpt-transcribe)
- * - vídeo (mp4/mov/webm) ou áudio sem compatibilidade garantida (m4a/aac,
- *   ver `NEEDS_FFMPEG_NORMALIZATION`): primeiro passa pelo ffmpeg (extrai o
- *   áudio do vídeo, ou só normaliza pra mp3 no caso do áudio), depois
+ * - áudio (mp3/wav/m4a/aac): vai direto para a transcrição, com o
+ *   `mimeType` original do arquivo — o Scribe v2 aceita os formatos
+ *   nativamente, sem precisar normalizar com ffmpeg antes
+ * - vídeo (mp4/mov/webm): primeiro extrai o áudio com ffmpeg, depois
  *   encadeia a mesma transcrição
  *
  * Único ponto de entrada para os dois tipos — é aqui que o limite mensal do
@@ -46,11 +45,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const needsFfmpegFirst =
-    video.mediaKind === 'video' ||
-    NEEDS_FFMPEG_NORMALIZATION.has(video.mimeType ?? '')
-
-  if (needsFfmpegFirst) {
+  if (video.mediaKind === 'video') {
     const [job] = await db
       .insert(jobs)
       .values({ videoId: id, type: 'audio_extract', status: 'queued' })
