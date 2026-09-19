@@ -1,17 +1,20 @@
 import { and, eq } from 'drizzle-orm'
-import { transcripts, videos } from '../../../../db/schema'
+import { transcriptSegments, transcripts, videos } from '../../../../db/schema'
 import { sanitizeFilename, toTxt } from '../../../../utils/subtitles'
 
-/** Exporta a transcrição pronta em TXT. */
+const FORMATS = ['txt', 'json'] as const
+type Format = (typeof FORMATS)[number]
+
+/** Exporta a transcrição pronta em TXT ou JSON. */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
   const id = getRouterParam(event, 'id')!
   const format = getRouterParam(event, 'format') ?? ''
 
-  if (format !== 'txt') {
+  if (!FORMATS.includes(format as Format)) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Formato inválido. Use txt.',
+      statusMessage: `Formato inválido. Use ${FORMATS.join(' ou ')}.`,
     })
   }
 
@@ -39,11 +42,30 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const filename = sanitizeFilename(video.title)
+
+  if (format === 'json') {
+    const segments = await db.query.transcriptSegments.findMany({
+      where: eq(transcriptSegments.transcriptId, transcript.id),
+      orderBy: (s, { asc }) => [asc(s.idx)],
+    })
+
+    const payload = buildTranscriptExportJson(video, transcript, segments)
+
+    setResponseHeader(event, 'Content-Type', 'application/json; charset=utf-8')
+    setResponseHeader(
+      event,
+      'Content-Disposition',
+      `attachment; filename="${filename}.json"`,
+    )
+    return JSON.stringify(payload, null, 2)
+  }
+
   setResponseHeader(event, 'Content-Type', 'text/plain; charset=utf-8')
   setResponseHeader(
     event,
     'Content-Disposition',
-    `attachment; filename="${sanitizeFilename(video.title)}.txt"`,
+    `attachment; filename="${filename}.txt"`,
   )
   return toTxt(transcript.text)
 })

@@ -13,7 +13,7 @@
 - ✅ **Infra local + camada de dados** (Fase 1): Postgres + Redis + MinIO via Docker, Drizzle ORM, healthcheck
 - ✅ **Upload de vídeo/áudio** (Fase 3B): MP4/MOV/WEBM/MP3/WAV/M4A/AAC via URL pré-assinada, drag-and-drop + progresso, dashboard, exclusão
 - ✅ **Transcrição de vídeo e áudio** (Fase 3 + 3B): MP3/WAV vão direto ao gpt-transcribe; vídeo, M4A e AAC primeiro passam pelo FFmpeg (extrai/normaliza a trilha de áudio pra mp3 — inline no Nitro, "Opção A", ver `docs/backlog-issues.pdf` para a versão de produção)
-- ✅ **Busca, export (TXT) e limite gratuito mensal**: busca com destaque na transcrição, download em TXT, e bloqueio automático quando o plano estoura o uso do mês
+- ✅ **Busca, export (TXT/JSON) e limite gratuito mensal**: busca com destaque na transcrição, download em TXT ou JSON estruturado (texto, metadados e segmentos — ver `server/utils/transcript-export.ts`), e bloqueio automático quando o plano estoura o uso do mês
 
 Stack: **Nuxt 4 + Vue 3 + Tailwind CSS v4**, **Drizzle ORM + PostgreSQL**, **Redis** (fila, Fase 4), **S3/MinIO** (storage), **OpenAI gpt-transcribe** (transcrição).
 

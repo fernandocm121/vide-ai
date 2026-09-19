@@ -106,14 +106,29 @@ critérios de aceite) em [`docs/backlog-issues.pdf`](backlog-issues.pdf)
 
 ## Fase 5 — Visualização e export (V1)  · `M`  → **fecha o MVP V1**
 
-- [x] Player de vídeo/áudio + transcrição sincronizada (clicar no trecho → seek) — **L**
-- [x] Busca dentro da transcrição (destaca ocorrências, navega entre elas) — **S**
+> Vários itens abaixo foram implementados na fase do Whisper (`whisper-1` +
+> `verbose_json`, com timestamp por segmento) e regrediram na migração pro
+> `gpt-transcribe` (PR #2), que só devolve `text`/`language` — sem
+> segmentos, sem seek sincronizado, sem edição por trecho. Estado real
+> reavaliado em 2026-09-19 ao investigar o export em JSON — os itens abaixo
+> foram desmarcados de volta pra refletir o que o código faz hoje.
+
 - [x] Export TXT — **S**
-- [x] Export SRT e VTT — **S**
-- [x] Edição inline da transcrição por segmento — `PATCH /api/videos/:id/segments/:segmentId`
-      atualiza o segmento e resincroniza `transcripts.text` (join dos segmentos por `idx`) na
-      mesma transaction; edição fica restrita ao modo Segmentos (Texto corrido continua só
-      leitura) — **M**
+- [x] Export JSON — texto completo + metadados do vídeo/transcrição +
+      `segments` (cai para um único segmento cobrindo o áudio inteiro
+      quando não há segmentos reais salvos, que é sempre o caso hoje).
+      Campos `words`/`speaker` já existem no formato, sempre `null` até o
+      pipeline suportar timestamp por palavra / diarização — ver
+      `server/utils/transcript-export.ts` — **S**
+- [ ] Player de vídeo/áudio + transcrição sincronizada (clicar no trecho → seek) — **L**
+      — depende de timestamp por segmento, que o `gpt-transcribe` não fornece
+- [ ] Busca dentro da transcrição com navegação entre ocorrências — **S**
+      — hoje `AppTranscriptView` só destaca as ocorrências, sem ir pra
+      próxima/anterior
+- [ ] Export SRT e VTT — **S** — depende de timestamp por segmento
+- [ ] Edição inline da transcrição por segmento — **M** — depende de
+      segmentos reais existirem (`transcript_segments` está no schema mas
+      nunca é populada pelo pipeline atual)
 - [ ] Identificação de falantes (diarização) — **M** — spec em
       `docs/backlog-issues.pdf` (seção 3)
 - [ ] Compartilhar transcrição por link público (opcional) — **M**

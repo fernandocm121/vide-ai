@@ -201,6 +201,13 @@ async function remove() {
           >
             Baixar .TXT
           </BaseButton>
+          <BaseButton
+            variant="outline"
+            size="md"
+            :href="`/api/videos/${id}/export/json`"
+          >
+            Baixar .JSON
+          </BaseButton>
         </div>
       </template>
 
