@@ -1,5 +1,10 @@
-import { and, eq } from 'drizzle-orm'
-import { transcripts, videos } from '../../../db/schema'
+import { and, asc, count, eq } from 'drizzle-orm'
+import {
+  transcripts,
+  transcriptSegments,
+  transcriptWords,
+  videos,
+} from '../../../db/schema'
 
 /** Detalhe de um vídeo/áudio + transcrição (quando pronta) + URL para tocar. */
 export default defineEventHandler(async (event) => {
@@ -24,6 +29,15 @@ export default defineEventHandler(async (event) => {
     text: string
     language: string | null
     provider: string | null
+    segments: {
+      id: string
+      idx: number
+      startMs: number
+      endMs: number
+      text: string
+    }[]
+    /** As palavras não vêm aqui (são milhares) — ver GET /api/videos/:id/words. */
+    wordCount: number
   } | null = null
 
   if (video.status === 'ready') {
@@ -31,10 +45,30 @@ export default defineEventHandler(async (event) => {
       where: eq(transcripts.videoId, id),
     })
     if (t) {
+      const [segments, [words]] = await Promise.all([
+        db.query.transcriptSegments.findMany({
+          where: eq(transcriptSegments.transcriptId, t.id),
+          orderBy: [asc(transcriptSegments.idx)],
+          columns: {
+            id: true,
+            idx: true,
+            startMs: true,
+            endMs: true,
+            text: true,
+          },
+        }),
+        db
+          .select({ total: count() })
+          .from(transcriptWords)
+          .where(eq(transcriptWords.transcriptId, t.id)),
+      ])
+
       transcript = {
         text: t.text,
         language: t.language,
         provider: t.provider,
+        segments,
+        wordCount: words?.total ?? 0,
       }
     }
   }

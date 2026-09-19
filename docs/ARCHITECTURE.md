@@ -28,7 +28,8 @@ Entidades principais:
 
 - `users`, `subscriptions`
 - `videos` (metadados, status de processamento)
-- `transcripts` (texto + segmentos com timestamps)
+- `transcripts` (texto), `transcript_segments` (quadros de legenda) e
+  `transcript_words` (timestamp por palavra)
 - `chapters`, `highlights`, `derived_content`
 - `embeddings` (busca semântica — pgvector)
 

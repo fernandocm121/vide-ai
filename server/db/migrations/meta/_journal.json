@@ -22,6 +22,13 @@
       "when": 1789490727178,
       "tag": "0002_daffy_the_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789793404193,
+      "tag": "0003_free_purple_man",
+      "breakpoints": true
     }
   ]
 }
