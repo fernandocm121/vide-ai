@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import {
+  AUTO_DETECT_LANGUAGE,
+  LANGUAGE_OPTIONS,
+  TRANSCRIPTION_LANGUAGES,
+} from '~/utils/languages'
+import {
   IN_PROGRESS,
   STATUS_META,
   formatDuration,
@@ -68,12 +73,27 @@ const actionError = ref<string | null>(null)
 // evita reexibir o botão de processar enquanto o job já foi solicitado
 // mas o status ainda não saiu de `queued` (curta janela de corrida)
 const requested = ref(false)
+// idioma escolhido antes de transcrever — "" = detecção automática. Pré-
+// seleciona o idioma já salvo (ex.: de uma tentativa anterior) quando ele
+// está entre as opções curadas; um retry (failed → "Tentar de novo")
+// permite trocar antes de reenviar.
+const selectedLanguage = ref(
+  video.value?.language && video.value.language in TRANSCRIPTION_LANGUAGES
+    ? video.value.language
+    : AUTO_DETECT_LANGUAGE,
+)
 
 async function transcribe() {
   busy.value = true
   actionError.value = null
   try {
-    await $fetch(`/api/videos/${id}/transcribe`, { method: 'POST' })
+    await $fetch(`/api/videos/${id}/transcribe`, {
+      method: 'POST',
+      body:
+        selectedLanguage.value === AUTO_DETECT_LANGUAGE
+          ? {}
+          : { language: selectedLanguage.value },
+    })
     requested.value = true
     await refresh()
   } catch (e: unknown) {
@@ -168,13 +188,22 @@ async function remove() {
           }}
           Custo estimado: <span class="font-medium">US$ 0,006 / minuto</span>.
         </p>
-        <BaseButton class="mt-3" :loading="busy" @click="transcribe">
-          {{
-            video.mediaKind === 'audio'
-              ? 'Transcrever áudio'
-              : 'Processar vídeo'
-          }}
-        </BaseButton>
+        <div class="mt-3 flex flex-wrap items-center gap-2">
+          <Dropdown
+            v-model="selectedLanguage"
+            :options="LANGUAGE_OPTIONS"
+            option-label="label"
+            option-value="code"
+            class="w-56"
+          />
+          <BaseButton :loading="busy" @click="transcribe">
+            {{
+              video.mediaKind === 'audio'
+                ? 'Transcrever áudio'
+                : 'Processar vídeo'
+            }}
+          </BaseButton>
+        </div>
       </template>
 
       <template
@@ -198,14 +227,18 @@ async function remove() {
         <p v-if="video.error" class="mt-1 text-xs text-ink-soft">
           {{ video.error }}
         </p>
-        <BaseButton
-          variant="outline"
-          class="mt-3"
-          :loading="busy"
-          @click="transcribe"
-        >
-          Tentar de novo
-        </BaseButton>
+        <div class="mt-3 flex flex-wrap items-center gap-2">
+          <Dropdown
+            v-model="selectedLanguage"
+            :options="LANGUAGE_OPTIONS"
+            option-label="label"
+            option-value="code"
+            class="w-56"
+          />
+          <BaseButton variant="outline" :loading="busy" @click="transcribe">
+            Tentar de novo
+          </BaseButton>
+        </div>
       </template>
 
       <template v-else-if="video.status === 'ready'">

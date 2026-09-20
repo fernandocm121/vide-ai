@@ -3,6 +3,7 @@ import { jobs, videos } from '../../../db/schema'
 import { runExtraction } from '../../../transcription/extract'
 import { runTranscription } from '../../../transcription/run'
 import { planLimitSeconds } from '../../../utils/plans'
+import { TranscribeBody } from '../../../utils/transcribe-language'
 import { getMonthlyTranscriptionSeconds } from '../../../utils/usage'
 
 const STARTABLE = ['queued', 'failed'] as const
@@ -17,11 +18,27 @@ const STARTABLE = ['queued', 'failed'] as const
  *
  * Único ponto de entrada para os dois tipos — é aqui que o limite mensal do
  * plano é checado, antes de gastar a transcrição com o usuário.
+ *
+ * Body opcional `{ language?: string }`: dica de idioma escolhida
+ * manualmente pelo usuário (ausente/vazio = detecção automática). Gravada
+ * em `videos.language` antes de disparar o job — `runTranscription()` já
+ * repassa esse valor pro provider sozinha (`video.language ?? undefined`
+ * em `server/transcription/run.ts`), nenhuma mudança necessária lá.
  */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
   const id = getRouterParam(event, 'id')!
   const db = useDrizzle()
+
+  const rawBody = await readBody(event).catch(() => undefined)
+  const parsedBody = TranscribeBody.safeParse(rawBody ?? {})
+  if (!parsedBody.success) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: parsedBody.error.issues[0]?.message ?? 'Corpo inválido',
+    })
+  }
+  const language = parsedBody.data.language ?? null
 
   const video = await db.query.videos.findFirst({
     where: and(eq(videos.id, id), eq(videos.userId, user.id)),
@@ -45,16 +62,18 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // grava a escolha de idioma (ou limpa, no retry com "detecção automática")
+  // antes de disparar o job — runExtraction()/runTranscription() leem daqui
+  await db
+    .update(videos)
+    .set({ status: 'queued', error: null, language })
+    .where(eq(videos.id, id))
+
   if (video.mediaKind === 'video') {
     const [job] = await db
       .insert(jobs)
       .values({ videoId: id, type: 'audio_extract', status: 'queued' })
       .returning()
-
-    await db
-      .update(videos)
-      .set({ status: 'queued', error: null })
-      .where(eq(videos.id, id))
 
     // background — não bloqueia a resposta
     runExtraction(id, job!.id).catch((err) => {
@@ -65,11 +84,6 @@ export default defineEventHandler(async (event) => {
       .insert(jobs)
       .values({ videoId: id, type: 'transcribe', status: 'queued' })
       .returning()
-
-    await db
-      .update(videos)
-      .set({ status: 'queued', error: null })
-      .where(eq(videos.id, id))
 
     // background — não bloqueia a resposta
     runTranscription(id, job!.id).catch((err) => {
