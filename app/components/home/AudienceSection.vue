@@ -1,20 +1,55 @@
 <script setup lang="ts">
 import { audiences } from '~/data/home'
+
+const { t } = useI18n()
+
+const AUDIENCE_TEXT: Record<
+  string,
+  { tag: string; title: string; desc: string }
+> = {
+  youtubers: {
+    tag: 'home.audience.items.youtubers.tag',
+    title: 'home.audience.items.youtubers.title',
+    desc: 'home.audience.items.youtubers.desc',
+  },
+  podcasters: {
+    tag: 'home.audience.items.podcasters.tag',
+    title: 'home.audience.items.podcasters.title',
+    desc: 'home.audience.items.podcasters.desc',
+  },
+  teachers: {
+    tag: 'home.audience.items.teachers.tag',
+    title: 'home.audience.items.teachers.title',
+    desc: 'home.audience.items.teachers.desc',
+  },
+}
+
+const items = computed(() =>
+  audiences.map((a) => {
+    const keys = AUDIENCE_TEXT[a.id]!
+    return {
+      ...a,
+      tag: t(keys.tag as 'home.audience.items.youtubers.tag'),
+      title: t(keys.title as 'home.audience.items.youtubers.title'),
+      desc: t(keys.desc as 'home.audience.items.youtubers.desc'),
+    }
+  }),
+)
 </script>
 
 <template>
   <section id="publico" class="border-b border-line bg-paper-2">
     <div class="container-page py-16 lg:py-24">
       <SectionHeading
-        eyebrow="Para quem é"
-        title="Feito para quem vive de vídeo"
-        subtitle="YouTubers, podcasters, professores e jornalistas que precisam extrair o máximo de cada gravação."
+        :eyebrow="$t('home.audience.eyebrow')"
+        :title="$t('home.audience.title')"
+        :subtitle="$t('home.audience.subtitle')"
       />
 
       <div class="mt-12 grid gap-6 md:grid-cols-3">
         <article
-          v-for="a in audiences"
-          :key="a.tag"
+          v-for="a in items"
+          :key="a.id"
           class="flex flex-col gap-4 rounded-2xl border border-line bg-paper p-6"
         >
           <span

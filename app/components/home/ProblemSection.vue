@@ -1,25 +1,27 @@
 <script setup lang="ts">
-const derived = [
-  'Legendas',
-  'Artigo',
-  '5 Shorts',
-  'Títulos A/B',
-  'Descrição',
-  'Show notes',
-  'Thread',
-  'Newsletter',
-  'Capítulos',
-  'Melhores momentos',
-]
+const { t } = useI18n()
+
+const derived = computed(() => [
+  t('home.problem.derived1'),
+  t('home.problem.derived2'),
+  t('home.problem.derived3'),
+  t('home.problem.derived4'),
+  t('home.problem.derived5'),
+  t('home.problem.derived6'),
+  t('home.problem.derived7'),
+  t('home.problem.derived8'),
+  t('home.problem.derived9'),
+  t('home.problem.derived10'),
+])
 </script>
 
 <template>
   <section id="problema" class="border-b border-line bg-paper">
     <div class="container-page grid gap-12 py-16 lg:grid-cols-2 lg:py-24">
       <SectionHeading
-        eyebrow="O problema"
-        title="Seus vídeos têm valor escondido"
-        subtitle="Milhões de horas de vídeo são gravadas todo dia, mas a maior parte desse conteúdo nunca é aproveitada. Transformar uma gravação em legendas, artigos, cortes e resumos consome tempo demais."
+        :eyebrow="$t('home.problem.eyebrow')"
+        :title="$t('home.problem.title')"
+        :subtitle="$t('home.problem.subtitle')"
       />
 
       <div class="grid gap-4 sm:grid-cols-2">
@@ -29,12 +31,14 @@ const derived = [
           <p
             class="text-xs font-semibold uppercase tracking-wider text-ink-soft"
           >
-            Antes
+            {{ $t('home.problem.beforeLabel') }}
           </p>
           <div class="mt-6">
-            <p class="text-2xl font-extrabold text-ink">Vídeo de 2 horas</p>
+            <p class="text-2xl font-extrabold text-ink">
+              {{ $t('home.problem.beforeTitle') }}
+            </p>
             <p class="mt-2 text-sm text-ink-soft">
-              parado no HD, sem aproveitamento
+              {{ $t('home.problem.beforeDesc') }}
             </p>
           </div>
         </div>
@@ -45,12 +49,14 @@ const derived = [
           <p
             class="text-xs font-semibold uppercase tracking-wider text-brand-600"
           >
-            Depois
+            {{ $t('home.problem.afterLabel') }}
           </p>
           <div class="mt-6">
-            <p class="text-2xl font-extrabold text-ink">10+ conteúdos</p>
+            <p class="text-2xl font-extrabold text-ink">
+              {{ $t('home.problem.afterTitle') }}
+            </p>
             <p class="mt-2 text-sm text-ink-soft">
-              derivados de uma única gravação
+              {{ $t('home.problem.afterDesc') }}
             </p>
           </div>
         </div>
@@ -59,7 +65,7 @@ const derived = [
           <p
             class="text-xs font-semibold uppercase tracking-wider text-ink-soft"
           >
-            Um vídeo vira
+            {{ $t('home.problem.derivedLabel') }}
           </p>
           <ul class="mt-4 flex flex-wrap gap-2">
             <li

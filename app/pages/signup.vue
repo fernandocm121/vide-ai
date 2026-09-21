@@ -1,9 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
+const { t } = useI18n()
 useSeoMeta({
-  title: 'Criar conta',
-  description:
-    'Crie sua conta no Vide AI e transforme seus vídeos em transcrição, conhecimento e conteúdo pronto para publicar.',
+  title: () => t('auth.signup.seoTitle'),
+  description: () => t('auth.signup.seoDescription'),
   robots: 'noindex',
 })
 
@@ -29,20 +29,16 @@ onMounted(() => {
 function onGoogleClick(event: MouseEvent) {
   if (publicConfig.googleOauthEnabled) return
   event.preventDefault()
-  notify.info(
-    'Login com Google ainda não está disponível — crie sua conta com e-mail e senha.',
-  )
+  notify.info(t('auth.signup.googleNotConfigured'))
 }
 
 async function submit() {
   if (!passwordIsValid.value) {
-    notify.error('A senha não atende a todos os critérios de segurança.')
+    notify.error(t('auth.signup.passwordInvalid'))
     return
   }
   if (!acceptedTerms.value) {
-    notify.error(
-      'É preciso concordar com os Termos de Uso e a Política de Privacidade.',
-    )
+    notify.error(t('auth.signup.termsRequired'))
     return
   }
   pending.value = true
@@ -56,9 +52,7 @@ async function submit() {
     track('signup_completed')
     await navigateTo('/confirme-seu-email')
   } catch (err: unknown) {
-    notify.error(
-      apiErrorMessage(err, 'Não foi possível criar sua conta. Tente de novo.'),
-    )
+    notify.error(apiErrorMessage(err, t('auth.signup.genericError')))
   } finally {
     pending.value = false
   }
@@ -71,15 +65,15 @@ async function submit() {
   >
     <span class="eyebrow">
       <span class="h-px w-6 bg-brand-500" />
-      Comece gratuitamente
+      {{ $t('auth.signup.eyebrow') }}
     </span>
     <h1
       class="mt-3 text-3xl font-extrabold leading-[1.1] tracking-tight text-ink"
     >
-      Crie sua conta
+      {{ $t('auth.signup.title') }}
     </h1>
     <p class="mt-2 text-sm leading-relaxed text-ink-soft">
-      Transcreva seu primeiro vídeo em minutos. Sem cartão de crédito.
+      {{ $t('auth.signup.subtitle') }}
     </p>
 
     <a
@@ -88,46 +82,50 @@ async function submit() {
       @click="onGoogleClick"
     >
       <IconGoogle />
-      Continuar com Google
+      {{ $t('auth.continueWithGoogle') }}
     </a>
 
     <div class="my-5 flex items-center gap-3">
       <span class="h-px flex-1 bg-line" />
-      <span class="text-xs text-ink-soft">ou</span>
+      <span class="text-xs text-ink-soft">{{ $t('common.or') }}</span>
       <span class="h-px flex-1 bg-line" />
     </div>
 
     <form class="flex flex-col gap-4" @submit.prevent="submit">
       <div class="flex flex-col gap-1.5">
-        <label for="name" class="text-sm font-medium text-ink"
-          >Nome completo</label
-        >
+        <label for="name" class="text-sm font-medium text-ink">{{
+          $t('auth.signup.nameLabel')
+        }}</label>
         <input
           id="name"
           v-model="name"
           type="text"
           required
           autocomplete="name"
-          placeholder="Seu nome"
+          :placeholder="$t('auth.signup.namePlaceholder')"
           class="h-11 rounded-lg border border-line bg-paper px-3 text-sm text-ink outline-none transition-colors focus:border-brand-500"
         />
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label for="email" class="text-sm font-medium text-ink">E-mail</label>
+        <label for="email" class="text-sm font-medium text-ink">{{
+          $t('auth.emailLabel')
+        }}</label>
         <input
           id="email"
           v-model="email"
           type="email"
           required
           autocomplete="email"
-          placeholder="voce@empresa.com"
+          :placeholder="$t('auth.emailPlaceholder')"
           class="h-11 rounded-lg border border-line bg-paper px-3 text-sm text-ink outline-none transition-colors focus:border-brand-500"
         />
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label for="password" class="text-sm font-medium text-ink">Senha</label>
+        <label for="password" class="text-sm font-medium text-ink">{{
+          $t('auth.passwordLabel')
+        }}</label>
         <div class="relative">
           <input
             id="password"
@@ -136,13 +134,17 @@ async function submit() {
             required
             minlength="8"
             autocomplete="new-password"
-            placeholder="Crie uma senha forte"
+            :placeholder="$t('auth.signup.passwordPlaceholder')"
             class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
           />
           <button
             type="button"
             class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
-            :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+            :aria-label="
+              showPassword
+                ? $t('common.hidePassword')
+                : $t('common.showPassword')
+            "
             @click="showPassword = !showPassword"
           >
             <AppIcon :name="showPassword ? 'eye' : 'eye-off'" class="size-4" />
@@ -158,12 +160,14 @@ async function submit() {
           class="mt-0.5 size-4 shrink-0 rounded border-line accent-brand-500"
         />
         <span>
-          Concordo com os
-          <a href="#" class="font-medium text-brand-600">Termos de Uso</a>
-          e a
-          <a href="#" class="font-medium text-brand-600"
-            >Política de Privacidade</a
-          >
+          {{ $t('auth.signup.termsPrefix') }}
+          <a href="#" class="font-medium text-brand-600">{{
+            $t('auth.signup.termsLink')
+          }}</a>
+          {{ $t('auth.signup.termsAnd') }}
+          <a href="#" class="font-medium text-brand-600">{{
+            $t('auth.signup.privacyLink')
+          }}</a>
         </span>
       </label>
 
@@ -174,15 +178,15 @@ async function submit() {
         :loading="pending"
         block
       >
-        Criar conta
+        {{ $t('auth.signup.submit') }}
         <AppIcon name="arrow-right" class="size-4" />
       </BaseButton>
 
       <p class="text-center text-xs text-ink-soft">
-        Já tem uma conta?
-        <NuxtLink to="/login" class="font-medium text-brand-600"
-          >Entrar</NuxtLink
-        >
+        {{ $t('auth.signup.hasAccount') }}
+        <NuxtLink to="/login" class="font-medium text-brand-600">{{
+          $t('auth.signup.loginLink')
+        }}</NuxtLink>
       </p>
     </form>
   </div>

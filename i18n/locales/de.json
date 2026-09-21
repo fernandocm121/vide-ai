@@ -1,0 +1,447 @@
+{
+  "common": {
+    "or": "oder",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen",
+    "toast": {
+      "success": "Erfolg",
+      "error": "Fehler",
+      "info": "Hinweis",
+      "warn": "Achtung"
+    },
+    "languageSwitcher": {
+      "label": "Sprache",
+      "names": {
+        "pt-BR": "Portugiesisch",
+        "en": "Englisch",
+        "es": "Spanisch",
+        "fr": "Französisch",
+        "de": "Deutsch",
+        "it": "Italienisch",
+        "ja": "Japanisch",
+        "ko": "Koreanisch"
+      }
+    }
+  },
+  "nav": {
+    "problem": "Das Problem",
+    "howItWorks": "So funktioniert's",
+    "features": "Funktionen",
+    "pricing": "Preise",
+    "login": "Anmelden",
+    "startFree": "Kostenlos starten",
+    "openMenu": "Menü öffnen"
+  },
+  "footer": {
+    "tagline": "Video Intelligence. Verwandelt jedes Video in Text, Wissen und veröffentlichungsfertigen Content.",
+    "groups": {
+      "product": {
+        "title": "Produkt",
+        "howItWorks": "So funktioniert's",
+        "features": "Funktionen",
+        "pricing": "Preise",
+        "roadmap": "Roadmap"
+      },
+      "audience": {
+        "title": "Für wen",
+        "youtubers": "YouTuber",
+        "podcasters": "Podcaster",
+        "teachers": "Lehrkräfte",
+        "companies": "Unternehmen"
+      },
+      "company": {
+        "title": "Unternehmen",
+        "contact": "Kontakt",
+        "terms": "AGB",
+        "privacy": "Datenschutz"
+      }
+    },
+    "copyright": "© {year} Vide AI. Alle Rechte vorbehalten.",
+    "madeFor": "Gemacht für alle, die von Video leben."
+  },
+  "home": {
+    "seo": {
+      "title": "Verwandeln Sie Videos in Intelligenz",
+      "description": "Laden Sie ein beliebiges Video hoch und erhalten Sie Transkription, Kapitel, Zusammenfassung, Clips und eine durchsuchbare Wissensdatenbank. Gemacht für Creator."
+    },
+    "hero": {
+      "eyebrow": "Video Intelligence",
+      "titleLine1": "Verwandeln Sie Videos in",
+      "titleHighlight": "Intelligenz",
+      "subtitle": "Laden Sie ein beliebiges Video oder Audio hoch und erhalten Sie Transkription, Kapitel, Zusammenfassung, Clips und eine Wissensdatenbank, in der Sie fragen und den exakten Moment finden.",
+      "ctaPrimary": "Kostenlos starten",
+      "ctaSecondary": "So funktioniert's ansehen",
+      "bullet1": "Transkription mit Zeitstempeln",
+      "bullet2": "SRT- und VTT-Untertitel",
+      "bullet3": "Keine Kreditkarte nötig",
+      "output1": "Vollständige Transkription",
+      "output2": "Automatische Kapitel und Zusammenfassung",
+      "output3": "Beste Momente für Shorts",
+      "output4": "48 Min. verarbeitet",
+      "cardLabel": "Neue Verarbeitung",
+      "cardStatus": "in Bearbeitung",
+      "cardFilename": "podcast-interview-42.mp4",
+      "cardFileMeta": "MP4 · 1080p · 52:14",
+      "momentFoundLabel": "Moment gefunden",
+      "momentFoundExample": "„GTA 6“ · 04:31"
+    },
+    "problem": {
+      "eyebrow": "Das Problem",
+      "title": "Ihre Videos haben verborgenen Wert",
+      "subtitle": "Täglich werden Millionen Stunden Video aufgenommen, doch der Großteil dieser Inhalte wird nie genutzt. Eine Aufnahme in Untertitel, Artikel, Clips und Zusammenfassungen zu verwandeln, kostet zu viel Zeit.",
+      "beforeLabel": "Vorher",
+      "beforeTitle": "2-Stunden-Video",
+      "beforeDesc": "liegt ungenutzt auf der Festplatte",
+      "afterLabel": "Nachher",
+      "afterTitle": "10+ Inhalte",
+      "afterDesc": "aus einer einzigen Aufnahme abgeleitet",
+      "derivedLabel": "Aus einem Video wird",
+      "derived1": "Untertitel",
+      "derived2": "Artikel",
+      "derived3": "5 Shorts",
+      "derived4": "A/B-Titel",
+      "derived5": "Beschreibung",
+      "derived6": "Show Notes",
+      "derived7": "Thread",
+      "derived8": "Newsletter",
+      "derived9": "Kapitel",
+      "derived10": "Beste Momente"
+    },
+    "howItWorks": {
+      "eyebrow": "So funktioniert's",
+      "title": "Vom Rohmaterial zum fertigen Content",
+      "subtitle": "Vier automatische Schritte. Sie laden die Aufnahme hoch, die Plattform erledigt den Rest.",
+      "steps": {
+        "01": {
+          "title": "Upload",
+          "desc": "Laden Sie MP4, MOV, MP3, WAV oder WEBM hoch. Das Audio wird automatisch mit FFmpeg extrahiert."
+        },
+        "02": {
+          "title": "Understand",
+          "desc": "Speech-to-Text erstellt die vollständige Transkription mit präzisen, wortgenauen Zeitstempeln."
+        },
+        "03": {
+          "title": "Extract",
+          "desc": "Die KI analysiert den Inhalt und extrahiert Zusammenfassung, Kapitel, Schlüsselwörter und beste Momente."
+        },
+        "04": {
+          "title": "Create",
+          "desc": "Erstellen Sie Titel, Beschreibungen, Shorts-Skripte und veröffentlichungsfertige Clips."
+        }
+      }
+    },
+    "differential": {
+      "eyebrow": "Der Unterschied",
+      "title": "Nicht nur Transkription. Intelligenz über Ihre Videos",
+      "subtitle": "Jedes verarbeitete Video wird Teil einer durchsuchbaren Wissensdatenbank — vom exakten Moment bis zur fertigen Antwort.",
+      "askYourVideoTitle": "Ask Your Video",
+      "askYourVideoDesc": "Fragen Sie in natürlicher Sprache und erhalten Sie das Video, den Moment und die Antwort.",
+      "askYourVideoExampleQuestion": "„Wann wurde über GTA 6 gesprochen?“",
+      "askYourVideoResultTitle": "GTA 6 Gameplay",
+      "askYourVideoResultTime": "04:31",
+      "askYourVideoResultDesc": "Das Thema kommt auf, als der Creator den neuen Trailer kommentiert und mit den Erwartungen der Community vergleicht.",
+      "libraryTitle": "Intelligente Bibliothek",
+      "libraryDesc": "Das Google Ihrer Videos: Suchen Sie ein Thema und sehen Sie, in welchen Aufnahmen Sie schon darüber gesprochen haben.",
+      "librarySearchPlaceholder": "In welchem Video habe ich über OAuth-Authentifizierung gesprochen?",
+      "libraryResult1Video": "Podcast #12 — Tech-Karriere",
+      "libraryResult1Match": "OAuth-Authentifizierung",
+      "libraryResult2Video": "React-Kurs — Woche 3",
+      "libraryResult2Match": "OAuth-Flow mit Refresh Token",
+      "libraryResult3Video": "Interview — Sicherheit",
+      "libraryResult3Match": "OAuth vs. Session"
+    },
+    "audience": {
+      "eyebrow": "Für wen es ist",
+      "title": "Gemacht für alle, die von Video leben",
+      "subtitle": "YouTuber, Podcaster, Lehrkräfte und Journalisten, die aus jeder Aufnahme das Maximum herausholen müssen.",
+      "items": {
+        "youtubers": {
+          "tag": "YouTuber",
+          "title": "Verwandeln Sie lange Videos in fertigen Content",
+          "desc": "Titel, Beschreibungen, Kapitel und Clips werden automatisch aus jeder Aufnahme generiert."
+        },
+        "podcasters": {
+          "tag": "Podcaster",
+          "title": "Show Notes, Clips und Highlights",
+          "desc": "Vom zweistündigen Gespräch zu vollständigen Show Notes und den besten Ausschnitten in Minuten."
+        },
+        "teachers": {
+          "tag": "Lehrkräfte",
+          "title": "Aus Unterricht wird Lernmaterial",
+          "desc": "Zusammenfassung, Themen und Begleitmaterial direkt aus der Aufnahme der Unterrichtsstunde generiert."
+        }
+      }
+    },
+    "pipeline": {
+      "eyebrow": "Content-Pipeline",
+      "title": "Ein Video. Viele Inhalte",
+      "subtitle": "Dieselbe Aufnahme füllt Ihren gesamten Redaktionskalender.",
+      "recordingLabel": "30 Min.",
+      "recordingCaption": "Aufnahme",
+      "outputs": {
+        "transcript": "Transkription",
+        "summary": "Zusammenfassung",
+        "chapters": "Kapitel",
+        "subtitles": "SRT/VTT-Untertitel",
+        "keywords": "Schlüsselwörter",
+        "bestMoments": "Beste Momente",
+        "titles": "Titel und Beschreibungen",
+        "shorts": "Clips für Shorts"
+      },
+      "footer": "Alles bereit zur Veröffentlichung auf YouTube, TikTok, Instagram und im Newsletter."
+    },
+    "pricing": {
+      "eyebrow": "Pläne",
+      "title": "Wählen Sie den richtigen Plan für Sie",
+      "subtitle": "Wir konkurrieren nicht über den Transkriptionspreis. Sie zahlen für Wert: fertigen Content und durchsuchbares Wissen.",
+      "mostPopular": "Am beliebtesten",
+      "plans": {
+        "starter": {
+          "tagline": "Für kleine Creator, die zu skalieren beginnen.",
+          "features": [
+            "10 Stunden Verarbeitung pro Monat",
+            "Automatische Transkription + Zeitstempel",
+            "SRT- / VTT-Untertitel",
+            "Zusammenfassung und Kapitel",
+            "TXT- / SRT-Export"
+          ],
+          "cta": "Loslegen"
+        },
+        "pro": {
+          "tagline": "Für professionelle Creator, die jede Woche veröffentlichen.",
+          "features": [
+            "40 Stunden Verarbeitung pro Monat",
+            "Alles aus Starter",
+            "Ask Your Video (fragen Sie Ihr Video)",
+            "Suche über alle Ihre Videos",
+            "Vorschläge für beste Momente",
+            "Shorts- und Skript-Generierung",
+            "Optimierte Titel und Beschreibungen"
+          ],
+          "cta": "Loslegen"
+        },
+        "agency": {
+          "tagline": "Für Agenturen und Teams, die mehrere Kanäle verwalten.",
+          "features": [
+            "150 Stunden Verarbeitung pro Monat",
+            "Alles aus Pro",
+            "Mehrere Teammitglieder",
+            "Arbeitsbereiche pro Kunde",
+            "Priorisierter Support"
+          ],
+          "cta": "Vertrieb kontaktieren"
+        }
+      },
+      "enterpriseNote": "Brauchen Sie mehr? Der Plan {plan} richtet sich an Unternehmen mit hohem Volumen und spezifischen Anforderungen.",
+      "enterpriseName": "Enterprise"
+    },
+    "finalCta": {
+      "title": "Ihr nächstes Video kann so viel mehr schaffen.",
+      "subtitle": "Verwandeln Sie Stunden an Aufnahmen in intelligenten Content. Starten Sie kostenlos, ohne Kreditkarte.",
+      "ctaPrimary": "Jetzt starten",
+      "ctaSecondary": "Pläne ansehen"
+    }
+  },
+  "appHeader": {
+    "myTranscriptions": "Meine Transkriptionen",
+    "myAccount": "Mein Konto",
+    "logout": "Abmelden"
+  },
+  "auth": {
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "sie{'@'}unternehmen.com",
+    "passwordLabel": "Passwort",
+    "continueWithGoogle": "Mit Google fortfahren",
+    "login": {
+      "seoTitle": "Anmelden",
+      "eyebrow": "Willkommen zurück",
+      "title": "In Ihr Konto anmelden",
+      "subtitle": "Greifen Sie an einem Ort auf Ihre Transkriptionen, Zusammenfassungen und Clips zu.",
+      "forgotPassword": "Passwort vergessen?",
+      "remember": "Angemeldet bleiben",
+      "submit": "Anmelden",
+      "noAccount": "Noch kein Konto?",
+      "signupLink": "Kostenlos starten",
+      "googleNotConfigured": "Die Google-Anmeldung ist noch nicht verfügbar — melden Sie sich mit E-Mail und Passwort an.",
+      "googleCancelled": "Google-Anmeldung abgebrochen.",
+      "googleFailed": "Anmeldung mit Google nicht möglich. Bitte erneut versuchen.",
+      "genericError": "Anmeldung nicht möglich. Bitte erneut versuchen."
+    },
+    "signup": {
+      "seoTitle": "Konto erstellen",
+      "seoDescription": "Erstellen Sie Ihr Vide AI-Konto und verwandeln Sie Ihre Videos in Transkription, Wissen und veröffentlichungsfertigen Content.",
+      "eyebrow": "Kostenlos starten",
+      "title": "Erstellen Sie Ihr Konto",
+      "subtitle": "Transkribieren Sie Ihr erstes Video in wenigen Minuten. Ohne Kreditkarte.",
+      "nameLabel": "Vollständiger Name",
+      "namePlaceholder": "Ihr Name",
+      "passwordPlaceholder": "Erstellen Sie ein sicheres Passwort",
+      "termsPrefix": "Ich stimme den",
+      "termsLink": "Nutzungsbedingungen",
+      "termsAnd": "und der",
+      "privacyLink": "Datenschutzerklärung",
+      "submit": "Konto erstellen",
+      "hasAccount": "Sie haben bereits ein Konto?",
+      "loginLink": "Anmelden",
+      "googleNotConfigured": "Die Google-Anmeldung ist noch nicht verfügbar — erstellen Sie Ihr Konto mit E-Mail und Passwort.",
+      "passwordInvalid": "Das Passwort erfüllt nicht alle Sicherheitskriterien.",
+      "termsRequired": "Sie müssen den Nutzungsbedingungen und der Datenschutzerklärung zustimmen.",
+      "genericError": "Ihr Konto konnte nicht erstellt werden. Bitte erneut versuchen."
+    },
+    "forgotPassword": {
+      "seoTitle": "Passwort vergessen",
+      "eyebrow": "Passwort zurücksetzen",
+      "title": "Passwort vergessen?",
+      "subtitle": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Erstellen eines neuen Passworts.",
+      "submit": "Link senden",
+      "backToLogin": "Zurück zur Anmeldung",
+      "genericError": "Die E-Mail konnte nicht gesendet werden. Bitte erneut versuchen.",
+      "doneTitle": "Prüfen Sie Ihre E-Mails",
+      "doneSubtitle": "Wir haben einen Link zum Zurücksetzen des Passworts an {email} gesendet.",
+      "devNote": "(dev, kein E-Mail-Anbieter konfiguriert)",
+      "devLink": "Reset-Link öffnen"
+    },
+    "resetPassword": {
+      "seoTitle": "Passwort zurücksetzen",
+      "invalidToken": "Ungültiger Reset-Link.",
+      "passwordInvalid": "Das Passwort erfüllt nicht alle Sicherheitskriterien.",
+      "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+      "genericError": "Ihr Passwort konnte nicht zurückgesetzt werden.",
+      "doneTitle": "Passwort zurückgesetzt",
+      "doneSubtitle": "Sie sind jetzt mit dem neuen Passwort angemeldet.",
+      "goToDashboard": "Zum Dashboard",
+      "eyebrow": "Neues Passwort",
+      "title": "Erstellen Sie ein neues Passwort",
+      "newPasswordLabel": "Neues Passwort",
+      "passwordPlaceholder": "Erstellen Sie ein sicheres Passwort",
+      "confirmLabel": "Passwort bestätigen",
+      "confirmPlaceholder": "Passwort wiederholen",
+      "submit": "Passwort zurücksetzen"
+    },
+    "confirmYourEmail": {
+      "seoTitle": "Bestätigen Sie Ihre E-Mail",
+      "title": "Bestätigen Sie Ihre E-Mail",
+      "subtitle": "Wir haben einen Bestätigungslink an {email} gesendet. Öffnen Sie Ihre E-Mail und klicken Sie auf den Link, um den Zugriff freizuschalten — diese Seite aktualisiert sich automatisch, sobald Sie bestätigt haben.",
+      "resend": "Bestätigungs-E-Mail erneut senden",
+      "resendCooldown": "Erneut senden in {seconds}s",
+      "resendSuccess": "Bestätigungs-E-Mail erneut gesendet — prüfen Sie Ihren Posteingang.",
+      "resendError": "Die E-Mail konnte nicht erneut gesendet werden. Bitte erneut versuchen.",
+      "logoutAndUseOther": "Abmelden und andere E-Mail verwenden"
+    },
+    "verifyEmail": {
+      "seoTitle": "E-Mail bestätigen",
+      "invalidToken": "Ungültiger Bestätigungslink.",
+      "genericError": "Ihre E-Mail konnte nicht bestätigt werden.",
+      "pendingTitle": "E-Mail wird bestätigt…",
+      "successTitle": "E-Mail bestätigt",
+      "successWithEmail": "{email} ist bestätigt.",
+      "successGeneric": "Ihr Konto ist bereit.",
+      "errorTitle": "Bestätigung nicht möglich",
+      "goToDashboard": "Zum Dashboard"
+    }
+  },
+  "passwordStrength": {
+    "levels": {
+      "weak": "Schwach",
+      "medium": "Mittel",
+      "strong": "Stark"
+    },
+    "criteria": {
+      "length": "Mindestens 8 Zeichen",
+      "lower": "Ein Kleinbuchstabe",
+      "upper": "Ein Großbuchstabe",
+      "number": "Eine Zahl",
+      "special": "Ein Sonderzeichen ({'@'}, #, $...)"
+    }
+  },
+  "app": {
+    "transcriptions": {
+      "seoTitle": "Meine Transkriptionen — Vide AI",
+      "title": "Meine Transkriptionen",
+      "subtitle": "Laden Sie ein Video oder Audio hoch und wandeln Sie es mit Zeitstempeln in Text um.",
+      "sentSectionTitle": "Hochgeladen",
+      "refresh": "Aktualisieren",
+      "loadError": "Ihre Videos konnten nicht geladen werden. Läuft die lokale Infrastruktur? (npm run services:up)",
+      "loading": "Wird geladen…",
+      "empty": "Noch kein Video hochgeladen."
+    },
+    "account": {
+      "seoTitle": "Mein Konto — Vide AI",
+      "title": "Mein Konto",
+      "subtitle": "Profil, Plan und Sicherheit.",
+      "profileSection": "Profil",
+      "nameLabel": "Name",
+      "emailLabel": "E-Mail",
+      "verified": "Bestätigt",
+      "notVerified": "Nicht bestätigt",
+      "planLabel": "Plan",
+      "save": "Speichern",
+      "profileSaved": "Profil aktualisiert.",
+      "profileSaveError": "Speichern nicht möglich. Bitte erneut versuchen.",
+      "changePasswordSection": "Passwort ändern",
+      "currentPasswordLabel": "Aktuelles Passwort",
+      "newPasswordLabel": "Neues Passwort",
+      "confirmNewPasswordLabel": "Neues Passwort bestätigen",
+      "changePassword": "Passwort ändern",
+      "passwordChanged": "Passwort erfolgreich geändert.",
+      "passwordInvalid": "Das neue Passwort erfüllt nicht alle Sicherheitskriterien.",
+      "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+      "passwordSameAsCurrent": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+      "passwordChangeError": "Das Passwort konnte nicht geändert werden."
+    },
+    "videoDetail": {
+      "backLink": "← Meine Transkriptionen",
+      "loadError": "Dieses Video konnte nicht geladen werden.",
+      "back": "Zurück",
+      "audioReady": "Das Audio ist bereit zur Transkription.",
+      "videoReady": "Das Video ist bereit zur Verarbeitung (Audio-Extraktion + Transkription).",
+      "estimatedCost": "Geschätzte Kosten: {cost} / Minute.",
+      "transcribeAudio": "Audio transkribieren",
+      "processVideo": "Video verarbeiten",
+      "processingHint": "— das kann einige Minuten dauern.",
+      "processingFailed": "Die Verarbeitung ist fehlgeschlagen.",
+      "retry": "Erneut versuchen",
+      "transcriptReady": "Transkription fertig.",
+      "downloadTxt": ".TXT herunterladen",
+      "downloadJson": ".JSON herunterladen",
+      "downloadSrt": ".SRT herunterladen",
+      "downloadVtt": ".VTT herunterladen",
+      "uploadProcessing": "Upload wird verarbeitet…",
+      "startError": "Verarbeitung konnte nicht gestartet werden.",
+      "deleteConfirm": "Dieses Video und die Transkription löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "delete": "Video löschen"
+    }
+  },
+  "mediaUploader": {
+    "unsupportedFormat": "Format nicht unterstützt. Wir akzeptieren MP4, MOV, WEBM, MP3, WAV, M4A oder AAC.",
+    "emptyFile": "Die Datei ist leer.",
+    "tooLarge": "Datei zu groß (max. {max} MB für {kind}).",
+    "kindVideo": "Video",
+    "kindAudio": "Audio",
+    "storageError": "Der Speicher antwortete mit {status}",
+    "networkError": "Netzwerkfehler beim Upload",
+    "uploadFailed": "Upload fehlgeschlagen.",
+    "uploading": "Wird hochgeladen… {progress}%",
+    "dontClose": "Schließen Sie diesen Tab erst, wenn der Vorgang abgeschlossen ist.",
+    "dropHint": "Ziehen Sie ein Video oder Audio hierher",
+    "chooseFile": "Datei auswählen",
+    "acceptedFormats": "MP4 · MOV · WEBM (bis 2 GB) · MP3 · WAV · M4A · AAC (bis 25 MB)"
+  },
+  "transcriptView": {
+    "fullText": "Fließtext",
+    "segmented": "Segmentiert",
+    "searchPlaceholder": "In der Transkription suchen…",
+    "copyText": "Text kopieren",
+    "label": "Transkription"
+  },
+  "statusBadge": {
+    "uploading": "Wird hochgeladen",
+    "uploaded": "Wartet auf Bestätigung",
+    "queued": "In Warteschlange",
+    "extracting": "Audio wird konvertiert",
+    "transcribing": "Wird transkribiert",
+    "analyzing": "Wird analysiert",
+    "ready": "Fertig",
+    "failed": "Fehlgeschlagen"
+  }
+}

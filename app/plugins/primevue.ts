@@ -1,18 +1,459 @@
-import PrimeVue from 'primevue/config'
+import PrimeVue, { usePrimeVue } from 'primevue/config'
 import TabPanel from 'primevue/tabpanel'
 import TabView from 'primevue/tabview'
 import Toast from 'primevue/toast'
 import ToastService from 'primevue/toastservice'
 
 /**
- * Só usamos o PrimeVue pelo Toast (notificações) e pelo TabView/TabPanel
- * (abas Texto corrido / Segmentado da transcrição). O resto da UI é
- * Tailwind + componentes próprios — não registramos o restante da lib.
+ * O projeto só usa Toast + TabView/TabPanel do PrimeVue hoje (nenhum dos
+ * dois lê `config.locale`), mas outros componentes da lib (Calendar,
+ * DataTable paginado, MultiSelect...) leem essas strings — deixamos isso
+ * pronto para acompanhar o idioma ativo assim que forem adotados.
  */
-export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.use(PrimeVue, { ripple: true })
-  nuxtApp.vueApp.use(ToastService)
-  nuxtApp.vueApp.component('Toast', Toast)
-  nuxtApp.vueApp.component('TabView', TabView)
-  nuxtApp.vueApp.component('TabPanel', TabPanel)
+type PrimeVueLocale = {
+  today: string
+  clear: string
+  accept: string
+  reject: string
+  weak: string
+  medium: string
+  strong: string
+  dayNames: string[]
+  dayNamesShort: string[]
+  dayNamesMin: string[]
+  monthNames: string[]
+  monthNamesShort: string[]
+  firstDayOfWeek: number
+  dateFormat: string
+}
+
+const LOCALES: Record<string, PrimeVueLocale> = {
+  'pt-BR': {
+    today: 'Hoje',
+    clear: 'Limpar',
+    accept: 'Sim',
+    reject: 'Não',
+    weak: 'Fraca',
+    medium: 'Média',
+    strong: 'Forte',
+    dayNames: [
+      'domingo',
+      'segunda-feira',
+      'terça-feira',
+      'quarta-feira',
+      'quinta-feira',
+      'sexta-feira',
+      'sábado',
+    ],
+    dayNamesShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
+    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+    monthNames: [
+      'janeiro',
+      'fevereiro',
+      'março',
+      'abril',
+      'maio',
+      'junho',
+      'julho',
+      'agosto',
+      'setembro',
+      'outubro',
+      'novembro',
+      'dezembro',
+    ],
+    monthNamesShort: [
+      'jan',
+      'fev',
+      'mar',
+      'abr',
+      'mai',
+      'jun',
+      'jul',
+      'ago',
+      'set',
+      'out',
+      'nov',
+      'dez',
+    ],
+    firstDayOfWeek: 0,
+    dateFormat: 'dd/mm/yy',
+  },
+  en: {
+    today: 'Today',
+    clear: 'Clear',
+    accept: 'Yes',
+    reject: 'No',
+    weak: 'Weak',
+    medium: 'Medium',
+    strong: 'Strong',
+    dayNames: [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ],
+    dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    monthNames: [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ],
+    monthNamesShort: [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ],
+    firstDayOfWeek: 0,
+    dateFormat: 'mm/dd/yy',
+  },
+  es: {
+    today: 'Hoy',
+    clear: 'Limpiar',
+    accept: 'Sí',
+    reject: 'No',
+    weak: 'Débil',
+    medium: 'Media',
+    strong: 'Fuerte',
+    dayNames: [
+      'domingo',
+      'lunes',
+      'martes',
+      'miércoles',
+      'jueves',
+      'viernes',
+      'sábado',
+    ],
+    dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+    dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+    monthNames: [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ],
+    monthNamesShort: [
+      'ene',
+      'feb',
+      'mar',
+      'abr',
+      'may',
+      'jun',
+      'jul',
+      'ago',
+      'sep',
+      'oct',
+      'nov',
+      'dic',
+    ],
+    firstDayOfWeek: 1,
+    dateFormat: 'dd/mm/yy',
+  },
+  fr: {
+    today: "Aujourd'hui",
+    clear: 'Effacer',
+    accept: 'Oui',
+    reject: 'Non',
+    weak: 'Faible',
+    medium: 'Moyen',
+    strong: 'Fort',
+    dayNames: [
+      'dimanche',
+      'lundi',
+      'mardi',
+      'mercredi',
+      'jeudi',
+      'vendredi',
+      'samedi',
+    ],
+    dayNamesShort: ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'],
+    dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+    monthNames: [
+      'janvier',
+      'février',
+      'mars',
+      'avril',
+      'mai',
+      'juin',
+      'juillet',
+      'août',
+      'septembre',
+      'octobre',
+      'novembre',
+      'décembre',
+    ],
+    monthNamesShort: [
+      'jan',
+      'fév',
+      'mar',
+      'avr',
+      'mai',
+      'jun',
+      'jul',
+      'aoû',
+      'sep',
+      'oct',
+      'nov',
+      'déc',
+    ],
+    firstDayOfWeek: 1,
+    dateFormat: 'dd/mm/yy',
+  },
+  de: {
+    today: 'Heute',
+    clear: 'Löschen',
+    accept: 'Ja',
+    reject: 'Nein',
+    weak: 'Schwach',
+    medium: 'Mittel',
+    strong: 'Stark',
+    dayNames: [
+      'Sonntag',
+      'Montag',
+      'Dienstag',
+      'Mittwoch',
+      'Donnerstag',
+      'Freitag',
+      'Samstag',
+    ],
+    dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+    dayNamesMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+    monthNames: [
+      'Januar',
+      'Februar',
+      'März',
+      'April',
+      'Mai',
+      'Juni',
+      'Juli',
+      'August',
+      'September',
+      'Oktober',
+      'November',
+      'Dezember',
+    ],
+    monthNamesShort: [
+      'Jan',
+      'Feb',
+      'Mär',
+      'Apr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Dez',
+    ],
+    firstDayOfWeek: 1,
+    dateFormat: 'dd.mm.yy',
+  },
+  it: {
+    today: 'Oggi',
+    clear: 'Cancella',
+    accept: 'Sì',
+    reject: 'No',
+    weak: 'Debole',
+    medium: 'Media',
+    strong: 'Forte',
+    dayNames: [
+      'domenica',
+      'lunedì',
+      'martedì',
+      'mercoledì',
+      'giovedì',
+      'venerdì',
+      'sabato',
+    ],
+    dayNamesShort: ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab'],
+    dayNamesMin: ['D', 'L', 'M', 'M', 'G', 'V', 'S'],
+    monthNames: [
+      'gennaio',
+      'febbraio',
+      'marzo',
+      'aprile',
+      'maggio',
+      'giugno',
+      'luglio',
+      'agosto',
+      'settembre',
+      'ottobre',
+      'novembre',
+      'dicembre',
+    ],
+    monthNamesShort: [
+      'gen',
+      'feb',
+      'mar',
+      'apr',
+      'mag',
+      'giu',
+      'lug',
+      'ago',
+      'set',
+      'ott',
+      'nov',
+      'dic',
+    ],
+    firstDayOfWeek: 1,
+    dateFormat: 'dd/mm/yy',
+  },
+  ja: {
+    today: '今日',
+    clear: 'クリア',
+    accept: 'はい',
+    reject: 'いいえ',
+    weak: '弱い',
+    medium: '普通',
+    strong: '強い',
+    dayNames: [
+      '日曜日',
+      '月曜日',
+      '火曜日',
+      '水曜日',
+      '木曜日',
+      '金曜日',
+      '土曜日',
+    ],
+    dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+    dayNamesMin: ['日', '月', '火', '水', '木', '金', '土'],
+    monthNames: [
+      '1月',
+      '2月',
+      '3月',
+      '4月',
+      '5月',
+      '6月',
+      '7月',
+      '8月',
+      '9月',
+      '10月',
+      '11月',
+      '12月',
+    ],
+    monthNamesShort: [
+      '1月',
+      '2月',
+      '3月',
+      '4月',
+      '5月',
+      '6月',
+      '7月',
+      '8月',
+      '9月',
+      '10月',
+      '11月',
+      '12月',
+    ],
+    firstDayOfWeek: 0,
+    dateFormat: 'yy/mm/dd',
+  },
+  ko: {
+    today: '오늘',
+    clear: '지우기',
+    accept: '예',
+    reject: '아니요',
+    weak: '약함',
+    medium: '보통',
+    strong: '강함',
+    dayNames: [
+      '일요일',
+      '월요일',
+      '화요일',
+      '수요일',
+      '목요일',
+      '금요일',
+      '토요일',
+    ],
+    dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+    dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+    monthNames: [
+      '1월',
+      '2월',
+      '3월',
+      '4월',
+      '5월',
+      '6월',
+      '7월',
+      '8월',
+      '9월',
+      '10월',
+      '11월',
+      '12월',
+    ],
+    monthNamesShort: [
+      '1월',
+      '2월',
+      '3월',
+      '4월',
+      '5월',
+      '6월',
+      '7월',
+      '8월',
+      '9월',
+      '10월',
+      '11월',
+      '12월',
+    ],
+    firstDayOfWeek: 0,
+    dateFormat: 'yy.mm.dd',
+  },
+}
+
+export default defineNuxtPlugin({
+  name: 'primevue',
+  setup(nuxtApp) {
+    nuxtApp.vueApp.use(PrimeVue, { ripple: true })
+    nuxtApp.vueApp.use(ToastService)
+    nuxtApp.vueApp.component('Toast', Toast)
+    nuxtApp.vueApp.component('TabView', TabView)
+    nuxtApp.vueApp.component('TabPanel', TabPanel)
+
+    // Locale do PrimeVue acompanhando o idioma ativo. `useI18n()` (Composition
+    // API do vue-i18n) exige uma instância de componente ativa e lança "Must
+    // be called at the top of a `setup` function" se chamado num plugin —
+    // por isso lemos o composer global via `nuxtApp.$i18n` em vez disso.
+    // `usePrimeVue()` (inject puro do Vue) precisa ficar na mesma chamada
+    // síncrona do `.use(PrimeVue, ...)` acima; por isso os dois vivem juntos
+    // neste plugin, sem `dependsOn` (que quebraria essa sincronia).
+    const primevue = usePrimeVue()
+    watch(
+      () => nuxtApp.$i18n.locale.value,
+      (code) => {
+        const preset = LOCALES[code] ?? LOCALES.en!
+        Object.assign(primevue.config.locale!, preset)
+      },
+      { immediate: true },
+    )
+  },
 })

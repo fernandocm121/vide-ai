@@ -12,7 +12,11 @@
  * esperar o próximo tick do polling.
  */
 definePageMeta({ layout: 'auth' })
-useSeoMeta({ title: 'Confirme seu e-mail', robots: 'noindex' })
+const { t } = useI18n()
+useSeoMeta({
+  title: () => t('auth.confirmYourEmail.seoTitle'),
+  robots: 'noindex',
+})
 
 const { user, fetchUser, logout } = useAuth()
 const notify = useNotify()
@@ -37,17 +41,10 @@ async function resend() {
   resendPending.value = true
   try {
     await $fetch('/api/auth/resend-verification', { method: 'POST' })
-    notify.success(
-      'E-mail de confirmação reenviado — confira sua caixa de entrada.',
-    )
+    notify.success(t('auth.confirmYourEmail.resendSuccess'))
     startCooldown()
   } catch (err: unknown) {
-    notify.error(
-      apiErrorMessage(
-        err,
-        'Não foi possível reenviar o e-mail. Tente de novo.',
-      ),
-    )
+    notify.error(apiErrorMessage(err, t('auth.confirmYourEmail.resendError')))
   } finally {
     resendPending.value = false
   }
@@ -86,13 +83,18 @@ onUnmounted(() => {
       <AppIcon name="info" class="size-6" />
     </span>
 
-    <h1 class="mt-4 text-xl font-bold text-ink">Confirme seu e-mail</h1>
-    <p class="mt-2 text-sm leading-relaxed text-ink-soft">
-      Mandamos um link de confirmação para
-      <span class="font-medium text-ink">{{ user?.email }}</span
-      >. Abra seu e-mail e clique no link para liberar o acesso — esta página
-      atualiza sozinha assim que você confirmar.
-    </p>
+    <h1 class="mt-4 text-xl font-bold text-ink">
+      {{ $t('auth.confirmYourEmail.title') }}
+    </h1>
+    <i18n-t
+      keypath="auth.confirmYourEmail.subtitle"
+      tag="p"
+      class="mt-2 text-sm leading-relaxed text-ink-soft"
+    >
+      <template #email>
+        <span class="font-medium text-ink">{{ user?.email }}</span>
+      </template>
+    </i18n-t>
 
     <BaseButton
       variant="primary"
@@ -104,8 +106,8 @@ onUnmounted(() => {
     >
       {{
         cooldown > 0
-          ? `Reenviar em ${cooldown}s`
-          : 'Reenviar e-mail de confirmação'
+          ? $t('auth.confirmYourEmail.resendCooldown', { seconds: cooldown })
+          : $t('auth.confirmYourEmail.resend')
       }}
     </BaseButton>
 
@@ -114,7 +116,7 @@ onUnmounted(() => {
       class="mt-4 text-sm font-medium text-ink-soft transition-colors hover:text-ink"
       @click="logout"
     >
-      Sair e usar outro e-mail
+      {{ $t('auth.confirmYourEmail.logoutAndUseOther') }}
     </button>
   </div>
 </template>

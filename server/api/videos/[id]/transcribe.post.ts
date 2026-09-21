@@ -20,6 +20,7 @@ const STARTABLE = ['queued', 'failed'] as const
  */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
+  const locale = getRequestLocale(event)
   const id = getRouterParam(event, 'id')!
   const db = useDrizzle()
 
@@ -27,12 +28,21 @@ export default defineEventHandler(async (event) => {
     where: and(eq(videos.id, id), eq(videos.userId, user.id)),
   })
   if (!video) {
-    throw createError({ statusCode: 404, statusMessage: 'Não encontrado' })
+    throw createError({
+      statusCode: 404,
+      statusMessage: translateError(locale, 'videos.notFound'),
+    })
   }
   if (!STARTABLE.includes(video.status as (typeof STARTABLE)[number])) {
     throw createError({
       statusCode: 409,
-      statusMessage: `Não é possível processar no status "${video.status}"`,
+      statusMessage: translateError(
+        locale,
+        'videos.invalidStatusForProcessing',
+        {
+          status: video.status,
+        },
+      ),
     })
   }
 
@@ -41,7 +51,11 @@ export default defineEventHandler(async (event) => {
   if (usedSeconds >= limitSeconds) {
     throw createError({
       statusCode: 402,
-      statusMessage: `Limite mensal do plano "${user.plan}" atingido: você já usou ${Math.round(usedSeconds / 60)} de ${Math.round(limitSeconds / 60)} minutos disponíveis este mês. Faça upgrade para continuar transcrevendo.`,
+      statusMessage: translateError(locale, 'videos.planLimitReached', {
+        plan: user.plan,
+        used: Math.round(usedSeconds / 60),
+        limit: Math.round(limitSeconds / 60),
+      }),
     })
   }
 

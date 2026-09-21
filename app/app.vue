@@ -1,5 +1,10 @@
 <script setup lang="ts">
 const site = useSiteConfig()
+const { localeProperties } = useI18n()
+
+// `htmlAttrs.lang`/`dir` reativos ao idioma ativo (@nuxtjs/i18n) — substitui
+// o `lang="pt-BR"` fixo que existia antes no `nuxt.config.ts`.
+useHead(useLocaleHead())
 
 // Defaults do site — cada página sobrescreve título/descrição com useSeoMeta.
 // O nuxt-seo-utils cuida do titleTemplate ("%s · Vide AI") a partir do site.name.
@@ -21,7 +26,7 @@ useSchemaOrg([
   }),
   defineWebSite({
     name: 'Vide AI',
-    inLanguage: 'pt-BR',
+    inLanguage: () => localeProperties.value.language,
   }),
 ])
 </script>

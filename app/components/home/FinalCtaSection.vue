@@ -10,11 +10,10 @@ const { track } = useAnalytics()
       <h2
         class="max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
       >
-        Seu próximo vídeo pode criar muito mais.
+        {{ $t('home.finalCta.title') }}
       </h2>
       <p class="max-w-xl text-lg text-white/85">
-        Transforme horas de gravação em conteúdo inteligente. Comece grátis, sem
-        cartão de crédito.
+        {{ $t('home.finalCta.subtitle') }}
       </p>
       <div class="flex flex-col gap-3 sm:flex-row">
         <BaseButton
@@ -23,7 +22,7 @@ const { track } = useAnalytics()
           to="/signup"
           @click="track('cta_click', { location: 'final_cta' })"
         >
-          Começar agora
+          {{ $t('home.finalCta.ctaPrimary') }}
           <AppIcon name="arrow-right" class="size-4" />
         </BaseButton>
         <BaseButton
@@ -32,7 +31,7 @@ const { track } = useAnalytics()
           href="#planos"
           class="!text-white hover:!bg-white/10"
         >
-          Ver planos
+          {{ $t('home.finalCta.ctaSecondary') }}
         </BaseButton>
       </div>
     </div>

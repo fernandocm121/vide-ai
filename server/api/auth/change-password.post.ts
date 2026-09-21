@@ -3,18 +3,22 @@ import { z } from 'zod'
 import { users } from '../../db/schema'
 
 const Body = z.object({
-  currentPassword: z.string().min(1, 'obrigatório'),
+  currentPassword: z.string().min(1, 'validation.required'),
   newPassword: passwordSchema,
 })
 
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
+  const locale = getRequestLocale(event)
 
   const parsed = Body.safeParse(await readBody(event))
   if (!parsed.success) {
     throw createError({
       statusCode: 400,
-      statusMessage: parsed.error.issues[0]?.message ?? 'Dados inválidos',
+      statusMessage: translateError(
+        locale,
+        parsed.error.issues[0]?.message ?? 'validation.generic',
+      ),
     })
   }
   const { currentPassword, newPassword } = parsed.data
@@ -25,7 +29,7 @@ export default defineEventHandler(async (event) => {
   ) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Senha atual incorreta',
+      statusMessage: translateError(locale, 'auth.wrongCurrentPassword'),
     })
   }
 
@@ -34,7 +38,7 @@ export default defineEventHandler(async (event) => {
   if (await verifyPassword(user.passwordHash, newPassword)) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'A nova senha deve ser diferente da senha atual',
+      statusMessage: translateError(locale, 'auth.newPasswordSameAsCurrent'),
     })
   }
 

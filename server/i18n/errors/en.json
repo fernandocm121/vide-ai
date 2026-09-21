@@ -1,0 +1,33 @@
+{
+  "validation.required": "Required field",
+  "validation.invalidEmail": "Invalid email",
+  "validation.generic": "Invalid data",
+  "validation.invalidRequest": "Invalid request",
+  "validation.invalidLocale": "Invalid language",
+  "validation.password.tooShort": "The password must be at least 8 characters long",
+  "validation.password.needsLower": "The password needs at least one lowercase letter",
+  "validation.password.needsUpper": "The password needs at least one uppercase letter",
+  "validation.password.needsNumber": "The password needs at least one number",
+  "validation.password.needsSpecial": "The password needs at least one special character (e.g.: @, #, $, %)",
+
+  "auth.notAuthenticated": "Not authenticated",
+  "auth.invalidCredentials": "Incorrect email or password",
+  "auth.emailTaken": "An account with this email already exists",
+  "auth.wrongCurrentPassword": "Current password is incorrect",
+  "auth.newPasswordSameAsCurrent": "The new password must be different from the current one",
+  "auth.emailNotFound": "There's no account with this email",
+  "auth.emailSendFailed": "Couldn't send the email. Please try again.",
+  "auth.resetLinkInvalid": "Invalid or expired link. Request a new password reset.",
+  "auth.tokenMissing": "Missing token",
+  "auth.verifyLinkInvalid": "Invalid or expired link. Request a new confirmation email.",
+
+  "videos.notFound": "Not found",
+  "videos.fileTooLarge": "File above the {max} MB limit",
+  "videos.uploadNotFound": "File not found in storage — the upload wasn't completed",
+  "videos.invalidExportFormat": "Invalid format. Use txt, json, srt or vtt.",
+  "videos.transcriptNotReady": "The transcription isn't ready to export yet.",
+  "videos.transcriptNotFound": "Transcription not found",
+  "videos.noTimestampsForSubtitles": "This transcription was made without timestamps and can't become subtitles. Transcribe the file again to generate SRT/VTT.",
+  "videos.invalidStatusForProcessing": "Can't process in status \"{status}\"",
+  "videos.planLimitReached": "Monthly limit for the \"{plan}\" plan reached: you've already used {used} of {limit} available minutes this month. Upgrade to keep transcribing."
+}

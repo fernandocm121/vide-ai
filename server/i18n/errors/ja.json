@@ -1,0 +1,33 @@
+{
+  "validation.required": "必須項目です",
+  "validation.invalidEmail": "メールアドレスが無効です",
+  "validation.generic": "入力内容が無効です",
+  "validation.invalidRequest": "リクエストが無効です",
+  "validation.invalidLocale": "無効な言語です",
+  "validation.password.tooShort": "パスワードは8文字以上である必要があります",
+  "validation.password.needsLower": "パスワードには小文字を1つ以上含めてください",
+  "validation.password.needsUpper": "パスワードには大文字を1つ以上含めてください",
+  "validation.password.needsNumber": "パスワードには数字を1つ以上含めてください",
+  "validation.password.needsSpecial": "パスワードには特殊文字を1つ以上含めてください(例:@, #, $, %)",
+
+  "auth.notAuthenticated": "認証されていません",
+  "auth.invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+  "auth.emailTaken": "このメールアドレスのアカウントは既に存在します",
+  "auth.wrongCurrentPassword": "現在のパスワードが正しくありません",
+  "auth.newPasswordSameAsCurrent": "新しいパスワードは現在のパスワードと異なる必要があります",
+  "auth.emailNotFound": "このメールアドレスのアカウントは存在しません",
+  "auth.emailSendFailed": "メールを送信できませんでした。もう一度お試しください。",
+  "auth.resetLinkInvalid": "リンクが無効か期限切れです。もう一度パスワード再設定をリクエストしてください。",
+  "auth.tokenMissing": "トークンがありません",
+  "auth.verifyLinkInvalid": "リンクが無効か期限切れです。確認メールを再度リクエストしてください。",
+
+  "videos.notFound": "見つかりません",
+  "videos.fileTooLarge": "ファイルが上限の{max}MBを超えています",
+  "videos.uploadNotFound": "ストレージにファイルが見つかりません — アップロードが完了していません",
+  "videos.invalidExportFormat": "形式が無効です。txt、json、srt、vttのいずれかを使用してください。",
+  "videos.transcriptNotReady": "文字起こしはまだエクスポートできる状態ではありません。",
+  "videos.transcriptNotFound": "文字起こしが見つかりません",
+  "videos.noTimestampsForSubtitles": "この文字起こしはタイムスタンプなしで作成されたため、字幕にできません。ファイルを再度文字起こしして SRT/VTT を生成してください。",
+  "videos.invalidStatusForProcessing": "ステータス「{status}」では処理できません",
+  "videos.planLimitReached": "「{plan}」プランの月間上限に達しました。今月は利用可能な{limit}分のうち{used}分を既に使用しています。トランスクリプトを続けるにはアップグレードしてください。"
+}

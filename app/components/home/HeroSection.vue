@@ -1,18 +1,19 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const { track } = useAnalytics()
 
-const bullets = [
-  'Transcrição com timestamps',
-  'Legendas SRT e VTT',
-  'Sem cartão de crédito',
-]
+const bullets = computed(() => [
+  t('home.hero.bullet1'),
+  t('home.hero.bullet2'),
+  t('home.hero.bullet3'),
+])
 
-const outputs = [
-  'Transcrição completa',
-  'Capítulos e resumo automáticos',
-  'Melhores momentos para Shorts',
-  '48 min processados',
-]
+const outputs = computed(() => [
+  t('home.hero.output1'),
+  t('home.hero.output2'),
+  t('home.hero.output3'),
+  t('home.hero.output4'),
+])
 </script>
 
 <template>
@@ -23,20 +24,21 @@ const outputs = [
       <div class="flex flex-col gap-7">
         <span class="eyebrow">
           <span class="h-px w-6 bg-brand-500" />
-          Video Intelligence
+          {{ $t('home.hero.eyebrow') }}
         </span>
 
         <h1
           class="text-4xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl"
         >
-          Transforme vídeos em
-          <span class="text-brand-500">inteligência</span>.
+          {{ $t('home.hero.titleLine1') }}
+          <span class="text-brand-500">{{
+            $t('home.hero.titleHighlight')
+          }}</span
+          >.
         </h1>
 
         <p class="max-w-xl text-lg leading-relaxed text-ink-soft">
-          Envie qualquer vídeo ou áudio e receba transcrição, capítulos, resumo,
-          cortes e uma base de conhecimento onde você pergunta e encontra o
-          momento exato.
+          {{ $t('home.hero.subtitle') }}
         </p>
 
         <div class="flex flex-col gap-3 sm:flex-row">
@@ -46,11 +48,11 @@ const outputs = [
             to="/signup"
             @click="track('cta_click', { location: 'hero' })"
           >
-            Começar gratuitamente
+            {{ $t('home.hero.ctaPrimary') }}
             <AppIcon name="arrow-right" class="size-4" />
           </BaseButton>
           <BaseButton variant="outline" size="lg" href="#como-funciona">
-            Ver como funciona
+            {{ $t('home.hero.ctaSecondary') }}
           </BaseButton>
         </div>
 
@@ -74,13 +76,13 @@ const outputs = [
             <span
               class="text-xs font-semibold uppercase tracking-wider text-ink-soft"
             >
-              Novo processamento
+              {{ $t('home.hero.cardLabel') }}
             </span>
             <span
               class="flex items-center gap-1.5 text-xs font-medium text-brand-600"
             >
               <span class="size-1.5 animate-pulse rounded-full bg-brand-500" />
-              processando
+              {{ $t('home.hero.cardStatus') }}
             </span>
           </div>
 
@@ -89,9 +91,11 @@ const outputs = [
           >
             <AppIcon name="upload" class="size-7 text-ink-soft" />
             <p class="text-sm font-medium text-ink">
-              entrevista-podcast-42.mp4
+              {{ $t('home.hero.cardFilename') }}
             </p>
-            <p class="text-xs text-ink-soft">MP4 · 1080p · 52:14</p>
+            <p class="text-xs text-ink-soft">
+              {{ $t('home.hero.cardFileMeta') }}
+            </p>
           </div>
 
           <ul class="mt-4 flex flex-col gap-2.5">
@@ -113,8 +117,12 @@ const outputs = [
         <div
           class="absolute -bottom-5 -left-5 hidden rounded-xl border border-line bg-paper px-4 py-3 shadow-lg shadow-ink/5 sm:block"
         >
-          <p class="text-xs text-ink-soft">Momento encontrado</p>
-          <p class="text-sm font-semibold text-ink">"GTA 6" · 04:31</p>
+          <p class="text-xs text-ink-soft">
+            {{ $t('home.hero.momentFoundLabel') }}
+          </p>
+          <p class="text-sm font-semibold text-ink">
+            {{ $t('home.hero.momentFoundExample') }}
+          </p>
         </div>
       </div>
     </div>

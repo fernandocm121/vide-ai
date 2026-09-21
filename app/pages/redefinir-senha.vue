@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
-useSeoMeta({ title: 'Redefinir senha', robots: 'noindex' })
+const { t } = useI18n()
+useSeoMeta({ title: () => t('auth.resetPassword.seoTitle'), robots: 'noindex' })
 
 const route = useRoute()
 const { fetchUser } = useAuth()
@@ -17,15 +18,15 @@ const { isValid: passwordIsValid } = usePasswordStrength(password)
 
 async function submit() {
   if (!token) {
-    notify.error('Link de redefinição inválido.')
+    notify.error(t('auth.resetPassword.invalidToken'))
     return
   }
   if (!passwordIsValid.value) {
-    notify.error('A senha não atende a todos os critérios de segurança.')
+    notify.error(t('auth.resetPassword.passwordInvalid'))
     return
   }
   if (password.value !== confirmPassword.value) {
-    notify.error('As senhas não coincidem.')
+    notify.error(t('auth.resetPassword.passwordMismatch'))
     return
   }
   pending.value = true
@@ -37,7 +38,7 @@ async function submit() {
     await fetchUser()
     done.value = true
   } catch (err: unknown) {
-    notify.error(apiErrorMessage(err, 'Não foi possível redefinir sua senha.'))
+    notify.error(apiErrorMessage(err, t('auth.resetPassword.genericError')))
   } finally {
     pending.value = false
   }
@@ -54,31 +55,33 @@ async function submit() {
       >
         <AppIcon name="check" class="size-6" />
       </span>
-      <h1 class="mt-4 text-xl font-bold text-ink">Senha redefinida</h1>
+      <h1 class="mt-4 text-xl font-bold text-ink">
+        {{ $t('auth.resetPassword.doneTitle') }}
+      </h1>
       <p class="mt-2 text-sm text-ink-soft">
-        Você já está logado com a nova senha.
+        {{ $t('auth.resetPassword.doneSubtitle') }}
       </p>
       <BaseButton to="/app" variant="primary" size="md" class="mt-5">
-        Ir para o painel
+        {{ $t('auth.resetPassword.goToDashboard') }}
       </BaseButton>
     </template>
 
     <template v-else>
       <span class="eyebrow">
         <span class="h-px w-6 bg-brand-500" />
-        Nova senha
+        {{ $t('auth.resetPassword.eyebrow') }}
       </span>
       <h1
         class="mt-3 text-3xl font-extrabold leading-[1.1] tracking-tight text-ink"
       >
-        Crie uma nova senha
+        {{ $t('auth.resetPassword.title') }}
       </h1>
 
       <form class="mt-6 flex flex-col gap-4" @submit.prevent="submit">
         <div class="flex flex-col gap-1.5">
-          <label for="password" class="text-sm font-medium text-ink"
-            >Nova senha</label
-          >
+          <label for="password" class="text-sm font-medium text-ink">{{
+            $t('auth.resetPassword.newPasswordLabel')
+          }}</label>
           <div class="relative">
             <input
               id="password"
@@ -87,13 +90,17 @@ async function submit() {
               required
               minlength="8"
               autocomplete="new-password"
-              placeholder="Crie uma senha forte"
+              :placeholder="$t('auth.resetPassword.passwordPlaceholder')"
               class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
             />
             <button
               type="button"
               class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
-              :aria-label="showPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              :aria-label="
+                showPassword
+                  ? $t('common.hidePassword')
+                  : $t('common.showPassword')
+              "
               @click="showPassword = !showPassword"
             >
               <AppIcon
@@ -106,9 +113,9 @@ async function submit() {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="confirm" class="text-sm font-medium text-ink"
-            >Confirmar senha</label
-          >
+          <label for="confirm" class="text-sm font-medium text-ink">{{
+            $t('auth.resetPassword.confirmLabel')
+          }}</label>
           <div class="relative">
             <input
               id="confirm"
@@ -117,14 +124,16 @@ async function submit() {
               required
               minlength="8"
               autocomplete="new-password"
-              placeholder="Repita a senha"
+              :placeholder="$t('auth.resetPassword.confirmPlaceholder')"
               class="h-11 w-full rounded-lg border border-line bg-paper px-3 pr-10 text-sm text-ink outline-none transition-colors focus:border-brand-500"
             />
             <button
               type="button"
               class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
               :aria-label="
-                showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'
+                showConfirmPassword
+                  ? $t('common.hidePassword')
+                  : $t('common.showPassword')
               "
               @click="showConfirmPassword = !showConfirmPassword"
             >
@@ -143,7 +152,7 @@ async function submit() {
           :loading="pending"
           block
         >
-          Redefinir senha
+          {{ $t('auth.resetPassword.submit') }}
         </BaseButton>
       </form>
     </template>

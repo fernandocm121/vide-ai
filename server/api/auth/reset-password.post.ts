@@ -8,11 +8,16 @@ const Body = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const locale = getRequestLocale(event)
+
   const parsed = Body.safeParse(await readBody(event))
   if (!parsed.success) {
     throw createError({
       statusCode: 400,
-      statusMessage: parsed.error.issues[0]?.message ?? 'Dados inválidos',
+      statusMessage: translateError(
+        locale,
+        parsed.error.issues[0]?.message ?? 'validation.generic',
+      ),
     })
   }
 
@@ -23,7 +28,7 @@ export default defineEventHandler(async (event) => {
   if (!row) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Link inválido ou expirado. Peça uma nova redefinição.',
+      statusMessage: translateError(locale, 'auth.resetLinkInvalid'),
     })
   }
 

@@ -2,6 +2,8 @@
 // sincronizado com ACCEPTED_TYPES + MAX_UPLOAD_BYTES/MAX_VIDEO_UPLOAD_BYTES no servidor
 type Kind = 'audio' | 'video'
 
+const { t } = useI18n()
+
 const ACCEPTED: Record<string, { ext: string; kind: Kind; label: string }> = {
   'video/mp4': { ext: 'mp4', kind: 'video', label: 'MP4' },
   'video/quicktime': { ext: 'mov', kind: 'video', label: 'MOV' },
@@ -52,17 +54,20 @@ function validate(
 ): { contentType: string; kind: Kind } | { error: string } {
   const contentType = detectType(file)
   if (!contentType) {
-    return {
-      error:
-        'Formato não suportado. Aceitamos MP4, MOV, WEBM, MP3, WAV, M4A ou AAC.',
-    }
+    return { error: t('mediaUploader.unsupportedFormat') }
   }
   const { kind } = ACCEPTED[contentType]!
-  if (file.size === 0) return { error: 'O arquivo está vazio.' }
+  if (file.size === 0) return { error: t('mediaUploader.emptyFile') }
   const max = MAX_BYTES[kind]
   if (file.size > max) {
     return {
-      error: `Arquivo muito grande (máx. ${Math.floor(max / 1024 / 1024)} MB para ${kind === 'video' ? 'vídeo' : 'áudio'}).`,
+      error: t('mediaUploader.tooLarge', {
+        max: Math.floor(max / 1024 / 1024),
+        kind:
+          kind === 'video'
+            ? t('mediaUploader.kindVideo')
+            : t('mediaUploader.kindAudio'),
+      }),
     }
   }
   return { contentType, kind }
@@ -85,8 +90,10 @@ function putWithProgress(
     xhr.onload = () =>
       xhr.status >= 200 && xhr.status < 300
         ? resolve()
-        : reject(new Error(`O storage respondeu ${xhr.status}`))
-    xhr.onerror = () => reject(new Error('Erro de rede durante o upload'))
+        : reject(
+            new Error(t('mediaUploader.storageError', { status: xhr.status })),
+          )
+    xhr.onerror = () => reject(new Error(t('mediaUploader.networkError')))
     xhr.send(file)
   })
 }
@@ -117,7 +124,7 @@ async function handleFile(file: File) {
     emit('uploaded', id)
     await router.push(`/app/videos/${id}`)
   } catch (e: unknown) {
-    error.value = extractError(e) ?? 'Falha no upload.'
+    error.value = extractError(e) ?? t('mediaUploader.uploadFailed')
   } finally {
     uploading.value = false
   }
@@ -166,7 +173,9 @@ function onDrop(e: DragEvent) {
     />
 
     <template v-if="uploading">
-      <p class="text-sm font-medium text-ink">Enviando… {{ progress }}%</p>
+      <p class="text-sm font-medium text-ink">
+        {{ $t('mediaUploader.uploading', { progress }) }}
+      </p>
       <div
         class="mx-auto mt-3 h-2 w-full max-w-sm overflow-hidden rounded-full bg-paper-3"
       >
@@ -175,25 +184,27 @@ function onDrop(e: DragEvent) {
           :style="{ width: `${progress}%` }"
         />
       </div>
-      <p class="mt-2 text-xs text-ink-soft">Não feche esta aba até concluir.</p>
+      <p class="mt-2 text-xs text-ink-soft">
+        {{ $t('mediaUploader.dontClose') }}
+      </p>
     </template>
 
     <template v-else>
       <AppIcon name="upload" class="mx-auto size-8 text-ink-soft" />
       <p class="mt-3 text-sm font-medium text-ink">
-        Arraste um vídeo ou áudio aqui
+        {{ $t('mediaUploader.dropHint') }}
       </p>
-      <p class="mt-1 text-xs text-ink-soft">ou</p>
+      <p class="mt-1 text-xs text-ink-soft">{{ $t('common.or') }}</p>
       <BaseButton
         variant="primary"
         size="md"
         class="mt-3"
         @click="inputEl?.click()"
       >
-        Escolher arquivo
+        {{ $t('mediaUploader.chooseFile') }}
       </BaseButton>
       <p class="mt-3 text-xs text-ink-soft">
-        MP4 · MOV · WEBM (até 2 GB) · MP3 · WAV · M4A · AAC (até 25 MB)
+        {{ $t('mediaUploader.acceptedFormats') }}
       </p>
     </template>
 

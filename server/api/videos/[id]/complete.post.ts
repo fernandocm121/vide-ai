@@ -4,6 +4,7 @@ import { videos } from '../../../db/schema'
 /** Confirma que o PUT no storage foi concluído; move o status para `queued`. */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
+  const locale = getRequestLocale(event)
   const id = getRouterParam(event, 'id')!
   const db = useDrizzle()
 
@@ -11,7 +12,10 @@ export default defineEventHandler(async (event) => {
     where: and(eq(videos.id, id), eq(videos.userId, user.id)),
   })
   if (!video) {
-    throw createError({ statusCode: 404, statusMessage: 'Não encontrado' })
+    throw createError({
+      statusCode: 404,
+      statusMessage: translateError(locale, 'videos.notFound'),
+    })
   }
   if (video.status !== 'uploading') {
     return { status: video.status } // idempotente
@@ -24,8 +28,7 @@ export default defineEventHandler(async (event) => {
   } catch {
     throw createError({
       statusCode: 409,
-      statusMessage:
-        'Arquivo não encontrado no storage — o upload não foi concluído',
+      statusMessage: translateError(locale, 'videos.uploadNotFound'),
     })
   }
 

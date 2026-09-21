@@ -70,9 +70,19 @@ uma, quando não é óbvio:
   (botões, inputs, dialogs, dropdowns, tabelas, toast) — checar o catálogo
   da lib antes de criar um componente novo do zero. Tailwind 4 (via
   `@tailwindcss/vite`) fica pra layout, espaçamento e os design tokens do
-  projeto (`app/assets/css/main.css`). Hoje só o Toast está registrado
-  (`app/plugins/primevue.ts`); registrar ali os demais componentes do
-  PrimeVue conforme forem sendo adotados.
+  projeto (`app/assets/css/main.css`). Hoje só Toast e TabView/TabPanel
+  estão registrados (`app/plugins/primevue.ts`); registrar ali os demais
+  componentes do PrimeVue conforme forem sendo adotados — e, se o
+  componente ler strings de `PrimeVue.config.locale` (Calendar, DataTable
+  paginado etc.), adicionar o preset do idioma no `LOCALES` do mesmo
+  arquivo. Importante: o watcher de locale precisa ficar na mesma chamada
+  síncrona do `.use(PrimeVue, ...)` — `usePrimeVue()` usa `inject()` puro do
+  Vue, que quebra ("Must be called at the top of a `setup` function") se
+  isolado num plugin à parte com `dependsOn` (a espera pela dependência tira
+  a chamada do topo do `setup` síncrono).
+- **i18n**: `@nuxtjs/i18n`, estratégia `no_prefix` (URL não leva prefixo de
+  idioma, mantém a convenção de URL em português). Ver seção **i18n** mais
+  abaixo.
 - **Banco**: Drizzle ORM + PostgreSQL, `casing: 'snake_case'`
   (`drizzle.config.ts`) — colunas em snake_case no banco, camelCase no
   TypeScript, tradução automática pelo Drizzle.
@@ -119,9 +129,59 @@ uma, quando não é óbvio:
 - **Identificadores de código** (componentes, composables, variáveis,
   colunas do banco, rotas de API): inglês.
 - **Texto voltado ao usuário** (URLs de página, comentários, mensagens de
-  commit, `statusMessage` de erro, labels de UI): português.
+  commit, `statusMessage` de erro): português. **Texto de UI que aparece na
+  tela** (labels, botões, mensagens de validação client-side) não fica
+  hardcoded no componente — vai em `i18n/locales/pt-BR.json` (chave em
+  inglês, valor em português) e é puxado via `$t()`/`useI18n()`. Ver seção
+  **i18n** abaixo.
 - Componente Vue: `PascalCase.vue`. Composable: `useAlgo.ts` exportando
   `useAlgo()`.
+
+## i18n
+
+`@nuxtjs/i18n`, 8 idiomas (`pt-BR` padrão, `en`, `es`, `fr`, `de`, `it`,
+`ja`, `ko`), estratégia `no_prefix` — mesma URL pra todo idioma, sem prefixo
+(`/en/...`), por causa da convenção de URL em português do projeto. Trade-off
+consciente: sem hreflang por URL distinta.
+
+- **Arquivos de tradução**: `i18n/locales/<code>.json`. Chave em inglês,
+  namespaced por página/componente (`auth.login.title`,
+  `app.videoDetail.deleteConfirm`). `pt-BR.json` é a fonte — qualquer chave
+  nova entra lá primeiro e precisa existir, com o mesmo formato de
+  interpolação (`{year}`, `{email}`...), nos outros 7 arquivos. Literal `@`
+  dentro de uma string quebra o compilador de mensagens do vue-i18n (ele lê
+  como link `@:`) — escapar como `{'@'}` (ex.: placeholder de e-mail).
+- **Dados estruturados** (features de plano, steps do "como funciona" etc.):
+  o texto vai pro JSON, só campos não-textuais (id, ícone, preço) ficam em
+  `app/data/*.ts` — o componente junta os dois via chave/id.
+- **Fora do escopo de UI**: conteúdo transcrito pelo usuário (produto, não
+  localização) e e-mails transacionais (`server/utils/mailer.ts`, ainda em
+  português direto).
+- **Seletor de idioma**: `AppLanguageSwitcher.vue` (bandeiras do pacote
+  `flag-icons`, registrado em `nuxt.config.ts`). Anônimo persiste em cookie
+  (automático, via `setLocale()` do módulo); logado também salva em
+  `users.preferredLocale` (`PATCH /api/auth/locale`).
+- **Ordem dos módulos no `nuxt.config.ts` importa**: `@nuxtjs/i18n` precisa
+  vir antes de `@nuxtjs/seo` — o SEO detecta o i18n instalado
+  (`hasNuxtModule`) durante o próprio setup; se rodar antes, não o enxerga e
+  registra um `useI18n()` stub (fallback pra quando não há módulo de i18n)
+  que ganha do de verdade no auto-import.
+- **`useI18n()` (Composition API do vue-i18n) só funciona dentro do `setup`
+  de um componente** — chamado num plugin, lança "Must be called at the top
+  of a `setup` function". Em plugins (ex.: `app/plugins/primevue.ts`), usar
+  `nuxtApp.$i18n` em vez disso.
+- **Mensagens de erro da API** (`statusMessage` de `createError`) são
+  traduzidas no server, não no client: `translateError(locale, chave, params?)`
+  de `server/utils/i18n.ts`, com dicionários em `server/i18n/errors/<code>.json`
+  (separados de `i18n/locales/` — client e server não compartilham o mesmo
+  JSON, pra não inflar o bundle do client com chave que ele nunca usa). Zod
+  schemas inline (`server/api/**`) passam a **chave** de tradução como
+  mensagem custom (ex.: `z.string().email('validation.invalidEmail')`), não
+  o texto — o handler resolve com `translateError(locale, issue.message)`.
+  `locale` vem de `getRequestLocale(event)`: cookie do `@nuxtjs/i18n`
+  (`i18n_redirected`) > header `Accept-Language` > `pt-BR`. Erros 5xx **não**
+  passam por tradução (ficam em português — o client já cai no fallback
+  genérico pra esses, ver `apiErrorMessage()`).
 
 ## Padrões de API (server/api)
 

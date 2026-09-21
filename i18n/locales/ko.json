@@ -1,0 +1,447 @@
+{
+  "common": {
+    "or": "또는",
+    "showPassword": "비밀번호 표시",
+    "hidePassword": "비밀번호 숨기기",
+    "toast": {
+      "success": "성공",
+      "error": "오류",
+      "info": "알림",
+      "warn": "주의"
+    },
+    "languageSwitcher": {
+      "label": "언어",
+      "names": {
+        "pt-BR": "포르투갈어",
+        "en": "영어",
+        "es": "스페인어",
+        "fr": "프랑스어",
+        "de": "독일어",
+        "it": "이탈리아어",
+        "ja": "일본어",
+        "ko": "한국어"
+      }
+    }
+  },
+  "nav": {
+    "problem": "문제",
+    "howItWorks": "작동 방식",
+    "features": "기능",
+    "pricing": "요금제",
+    "login": "로그인",
+    "startFree": "무료로 시작하기",
+    "openMenu": "메뉴 열기"
+  },
+  "footer": {
+    "tagline": "Video Intelligence. 모든 영상을 텍스트, 지식, 그리고 바로 게시할 수 있는 콘텐츠로 바꿔드립니다.",
+    "groups": {
+      "product": {
+        "title": "제품",
+        "howItWorks": "작동 방식",
+        "features": "기능",
+        "pricing": "요금제",
+        "roadmap": "로드맵"
+      },
+      "audience": {
+        "title": "이런 분들께",
+        "youtubers": "유튜버",
+        "podcasters": "팟캐스터",
+        "teachers": "교사",
+        "companies": "기업"
+      },
+      "company": {
+        "title": "회사",
+        "contact": "문의하기",
+        "terms": "이용약관",
+        "privacy": "개인정보처리방침"
+      }
+    },
+    "copyright": "© {year} Vide AI. All rights reserved.",
+    "madeFor": "영상으로 살아가는 모든 분들을 위해 만들었습니다."
+  },
+  "home": {
+    "seo": {
+      "title": "영상을 인텔리전스로 바꾸세요",
+      "description": "영상을 업로드하면 스크립트, 챕터, 요약, 클립, 검색 가능한 지식 베이스를 받을 수 있습니다. 크리에이터를 위해 만들었습니다."
+    },
+    "hero": {
+      "eyebrow": "Video Intelligence",
+      "titleLine1": "영상을",
+      "titleHighlight": "인텔리전스",
+      "subtitle": "영상이나 오디오를 업로드하면 스크립트, 챕터, 요약, 클립을 받고, 질문만으로 정확한 순간을 찾아주는 지식 베이스를 사용할 수 있습니다.",
+      "ctaPrimary": "무료로 시작하기",
+      "ctaSecondary": "작동 방식 보기",
+      "bullet1": "타임스탬프가 포함된 스크립트",
+      "bullet2": "SRT·VTT 자막",
+      "bullet3": "신용카드 필요 없음",
+      "output1": "전체 스크립트",
+      "output2": "자동 챕터 및 요약",
+      "output3": "Shorts용 베스트 모먼트",
+      "output4": "48분 처리 완료",
+      "cardLabel": "새 처리 작업",
+      "cardStatus": "처리 중",
+      "cardFilename": "podcast-interview-42.mp4",
+      "cardFileMeta": "MP4 · 1080p · 52:14",
+      "momentFoundLabel": "찾은 순간",
+      "momentFoundExample": "\"GTA 6\" · 04:31"
+    },
+    "problem": {
+      "eyebrow": "문제",
+      "title": "당신의 영상에는 숨겨진 가치가 있습니다",
+      "subtitle": "매일 수백만 시간의 영상이 촬영되지만, 대부분의 콘텐츠는 활용되지 못합니다. 녹화본을 자막, 기사, 클립, 요약으로 바꾸는 데는 너무 많은 시간이 걸립니다.",
+      "beforeLabel": "이전",
+      "beforeTitle": "2시간짜리 영상",
+      "beforeDesc": "하드디스크에 묵혀둔 채 활용되지 못함",
+      "afterLabel": "이후",
+      "afterTitle": "10개 이상의 콘텐츠",
+      "afterDesc": "단 하나의 녹화본에서 파생",
+      "derivedLabel": "영상 하나가 이렇게 됩니다",
+      "derived1": "자막",
+      "derived2": "기사",
+      "derived3": "Shorts 5개",
+      "derived4": "A/B 제목",
+      "derived5": "설명",
+      "derived6": "쇼노트",
+      "derived7": "스레드",
+      "derived8": "뉴스레터",
+      "derived9": "챕터",
+      "derived10": "베스트 모먼트"
+    },
+    "howItWorks": {
+      "eyebrow": "작동 방식",
+      "title": "원본 영상에서 완성된 콘텐츠까지",
+      "subtitle": "자동화된 4단계. 녹화본을 업로드하면 나머지는 플랫폼이 처리합니다.",
+      "steps": {
+        "01": {
+          "title": "Upload",
+          "desc": "MP4, MOV, MP3, WAV, WEBM 파일을 업로드하세요. 오디오는 FFmpeg로 자동 추출됩니다."
+        },
+        "02": {
+          "title": "Understand",
+          "desc": "Speech-to-Text가 단어 단위의 정확한 타임스탬프와 함께 전체 스크립트를 생성합니다."
+        },
+        "03": {
+          "title": "Extract",
+          "desc": "AI가 콘텐츠를 분석하여 요약, 챕터, 키워드, 베스트 모먼트를 추출합니다."
+        },
+        "04": {
+          "title": "Create",
+          "desc": "제목, 설명, Shorts 대본, 게시 준비가 끝난 클립을 생성합니다."
+        }
+      }
+    },
+    "differential": {
+      "eyebrow": "차별점",
+      "title": "단순한 스크립트가 아닙니다. 영상에 대한 인텔리전스입니다",
+      "subtitle": "처리된 모든 영상은 검색 가능한 지식 베이스의 일부가 됩니다 — 정확한 순간부터 바로 쓸 수 있는 답변까지.",
+      "askYourVideoTitle": "Ask Your Video",
+      "askYourVideoDesc": "자연어로 질문하면 영상, 순간, 답변을 받을 수 있습니다.",
+      "askYourVideoExampleQuestion": "\"GTA 6에 대해 이야기한 순간은 언제인가요?\"",
+      "askYourVideoResultTitle": "GTA 6 게임플레이",
+      "askYourVideoResultTime": "04:31",
+      "askYourVideoResultDesc": "크리에이터가 새 트레일러에 대해 이야기하며 커뮤니티의 기대와 비교하는 부분에서 이 주제가 등장합니다.",
+      "libraryTitle": "스마트 라이브러리",
+      "libraryDesc": "당신의 영상을 위한 구글: 주제를 검색하면 어떤 녹화본에서 이미 언급했는지 알 수 있습니다.",
+      "librarySearchPlaceholder": "OAuth 인증에 대해 이야기한 영상은 어디인가요?",
+      "libraryResult1Video": "팟캐스트 #12 — 테크 커리어",
+      "libraryResult1Match": "OAuth 인증",
+      "libraryResult2Video": "React 강의 — 3주차",
+      "libraryResult2Match": "리프레시 토큰을 사용한 OAuth 흐름",
+      "libraryResult3Video": "인터뷰 — 보안",
+      "libraryResult3Match": "OAuth vs. 세션"
+    },
+    "audience": {
+      "eyebrow": "이런 분들께",
+      "title": "영상으로 살아가는 모든 분들을 위해",
+      "subtitle": "모든 녹화본을 최대한 활용하고 싶은 유튜버, 팟캐스터, 교사, 저널리스트를 위해.",
+      "items": {
+        "youtubers": {
+          "tag": "유튜버",
+          "title": "긴 영상을 완성된 콘텐츠로",
+          "desc": "제목, 설명, 챕터, 클립을 녹화본마다 자동으로 생성합니다."
+        },
+        "podcasters": {
+          "tag": "팟캐스터",
+          "title": "쇼노트, 클립, 하이라이트",
+          "desc": "2시간짜리 대화에서 몇 분 만에 완전한 쇼노트와 베스트 클립을 얻으세요."
+        },
+        "teachers": {
+          "tag": "교사",
+          "title": "수업이 학습 자료가 됩니다",
+          "desc": "수업 녹화본에서 바로 요약, 주제, 보조 자료를 생성합니다."
+        }
+      }
+    },
+    "pipeline": {
+      "eyebrow": "콘텐츠 파이프라인",
+      "title": "영상 하나. 다양한 콘텐츠",
+      "subtitle": "같은 녹화본 하나로 콘텐츠 일정 전체를 채울 수 있습니다.",
+      "recordingLabel": "30분",
+      "recordingCaption": "녹화",
+      "outputs": {
+        "transcript": "스크립트",
+        "summary": "요약",
+        "chapters": "챕터",
+        "subtitles": "SRT/VTT 자막",
+        "keywords": "키워드",
+        "bestMoments": "베스트 모먼트",
+        "titles": "제목과 설명",
+        "shorts": "Shorts용 클립"
+      },
+      "footer": "YouTube, TikTok, Instagram, 뉴스레터에 게시할 준비가 모두 끝났습니다."
+    },
+    "pricing": {
+      "eyebrow": "요금제",
+      "title": "나에게 맞는 요금제를 선택하세요",
+      "subtitle": "저희는 스크립트 가격으로 경쟁하지 않습니다. 완성된 콘텐츠와 검색 가능한 지식이라는 가치에 비용을 지불하시는 겁니다.",
+      "mostPopular": "가장 인기",
+      "plans": {
+        "starter": {
+          "tagline": "이제 막 성장을 시작하는 소규모 크리에이터를 위한 플랜.",
+          "features": [
+            "월 10시간 처리",
+            "자동 스크립트 + 타임스탬프",
+            "SRT / VTT 자막",
+            "요약 및 챕터",
+            "TXT / SRT 내보내기"
+          ],
+          "cta": "시작하기"
+        },
+        "pro": {
+          "tagline": "매주 게시하는 전문 크리에이터를 위한 플랜.",
+          "features": [
+            "월 40시간 처리",
+            "Starter의 모든 기능",
+            "Ask Your Video(영상에 질문하기)",
+            "모든 영상 전체 검색",
+            "베스트 모먼트 추천",
+            "Shorts 및 대본 생성",
+            "최적화된 제목과 설명"
+          ],
+          "cta": "시작하기"
+        },
+        "agency": {
+          "tagline": "여러 채널을 관리하는 에이전시와 팀을 위한 플랜.",
+          "features": [
+            "월 150시간 처리",
+            "Pro의 모든 기능",
+            "다수의 팀원",
+            "클라이언트별 워크스페이스",
+            "우선 지원"
+          ],
+          "cta": "영업팀에 문의"
+        }
+      },
+      "enterpriseNote": "더 필요하신가요? {plan} 플랜은 대용량과 특정 요구사항이 있는 기업을 위한 플랜입니다.",
+      "enterpriseName": "Enterprise"
+    },
+    "finalCta": {
+      "title": "다음 영상으로 훨씬 더 많은 것을 만들 수 있습니다.",
+      "subtitle": "몇 시간의 녹화본을 지능적인 콘텐츠로 바꿔보세요. 신용카드 없이 무료로 시작하세요.",
+      "ctaPrimary": "지금 시작하기",
+      "ctaSecondary": "요금제 보기"
+    }
+  },
+  "appHeader": {
+    "myTranscriptions": "내 스크립트",
+    "myAccount": "내 계정",
+    "logout": "로그아웃"
+  },
+  "auth": {
+    "emailLabel": "이메일",
+    "emailPlaceholder": "you{'@'}company.com",
+    "passwordLabel": "비밀번호",
+    "continueWithGoogle": "Google로 계속하기",
+    "login": {
+      "seoTitle": "로그인",
+      "eyebrow": "다시 오신 것을 환영합니다",
+      "title": "계정에 로그인",
+      "subtitle": "스크립트, 요약, 클립을 한곳에서 확인하세요.",
+      "forgotPassword": "비밀번호를 잊으셨나요?",
+      "remember": "로그인 상태 유지",
+      "submit": "로그인",
+      "noAccount": "계정이 없으신가요?",
+      "signupLink": "무료로 시작하기",
+      "googleNotConfigured": "Google 로그인은 아직 사용할 수 없습니다 — 이메일과 비밀번호로 로그인해 주세요.",
+      "googleCancelled": "Google 로그인이 취소되었습니다.",
+      "googleFailed": "Google로 로그인할 수 없습니다. 다시 시도해 주세요.",
+      "genericError": "로그인할 수 없습니다. 다시 시도해 주세요."
+    },
+    "signup": {
+      "seoTitle": "계정 만들기",
+      "seoDescription": "Vide AI 계정을 만들고 영상을 스크립트, 지식, 게시 가능한 콘텐츠로 바꿔보세요.",
+      "eyebrow": "무료로 시작하기",
+      "title": "계정 만들기",
+      "subtitle": "몇 분 만에 첫 영상을 스크립트로 변환하세요. 신용카드 필요 없음.",
+      "nameLabel": "이름",
+      "namePlaceholder": "이름을 입력하세요",
+      "passwordPlaceholder": "강력한 비밀번호를 만드세요",
+      "termsPrefix": "다음에 동의합니다:",
+      "termsLink": "이용약관",
+      "termsAnd": "및",
+      "privacyLink": "개인정보처리방침",
+      "submit": "계정 만들기",
+      "hasAccount": "이미 계정이 있으신가요?",
+      "loginLink": "로그인",
+      "googleNotConfigured": "Google 로그인은 아직 사용할 수 없습니다 — 이메일과 비밀번호로 계정을 만들어 주세요.",
+      "passwordInvalid": "비밀번호가 모든 보안 요건을 충족하지 않습니다.",
+      "termsRequired": "이용약관과 개인정보처리방침에 동의해야 합니다.",
+      "genericError": "계정을 만들 수 없습니다. 다시 시도해 주세요."
+    },
+    "forgotPassword": {
+      "seoTitle": "비밀번호를 잊으셨나요",
+      "eyebrow": "비밀번호 재설정",
+      "title": "비밀번호를 잊으셨나요?",
+      "subtitle": "이메일을 입력하시면 새 비밀번호를 만들 수 있는 링크를 보내드립니다.",
+      "submit": "링크 보내기",
+      "backToLogin": "로그인으로 돌아가기",
+      "genericError": "이메일을 보낼 수 없습니다. 다시 시도해 주세요.",
+      "doneTitle": "이메일을 확인해 주세요",
+      "doneSubtitle": "{email} 주소로 비밀번호 재설정 링크를 보냈습니다.",
+      "devNote": "(개발 환경 — 이메일 제공자가 설정되지 않음)",
+      "devLink": "재설정 링크 열기"
+    },
+    "resetPassword": {
+      "seoTitle": "비밀번호 재설정",
+      "invalidToken": "유효하지 않은 재설정 링크입니다.",
+      "passwordInvalid": "비밀번호가 모든 보안 요건을 충족하지 않습니다.",
+      "passwordMismatch": "비밀번호가 일치하지 않습니다.",
+      "genericError": "비밀번호를 재설정할 수 없습니다.",
+      "doneTitle": "비밀번호가 재설정되었습니다",
+      "doneSubtitle": "새 비밀번호로 이미 로그인되어 있습니다.",
+      "goToDashboard": "대시보드로 이동",
+      "eyebrow": "새 비밀번호",
+      "title": "새 비밀번호 만들기",
+      "newPasswordLabel": "새 비밀번호",
+      "passwordPlaceholder": "강력한 비밀번호를 만드세요",
+      "confirmLabel": "비밀번호 확인",
+      "confirmPlaceholder": "비밀번호를 다시 입력하세요",
+      "submit": "비밀번호 재설정"
+    },
+    "confirmYourEmail": {
+      "seoTitle": "이메일을 확인해 주세요",
+      "title": "이메일을 확인해 주세요",
+      "subtitle": "{email} 주소로 확인 링크를 보냈습니다. 이메일을 열고 링크를 클릭하면 접근할 수 있습니다 — 확인이 완료되면 이 페이지는 자동으로 새로고침됩니다.",
+      "resend": "확인 이메일 다시 보내기",
+      "resendCooldown": "{seconds}초 후 다시 보내기",
+      "resendSuccess": "확인 이메일을 다시 보냈습니다 — 받은편지함을 확인해 주세요.",
+      "resendError": "이메일을 다시 보낼 수 없습니다. 다시 시도해 주세요.",
+      "logoutAndUseOther": "로그아웃하고 다른 이메일 사용하기"
+    },
+    "verifyEmail": {
+      "seoTitle": "이메일 확인",
+      "invalidToken": "유효하지 않은 확인 링크입니다.",
+      "genericError": "이메일을 확인할 수 없습니다.",
+      "pendingTitle": "이메일을 확인하는 중…",
+      "successTitle": "이메일이 확인되었습니다",
+      "successWithEmail": "{email} 확인이 완료되었습니다.",
+      "successGeneric": "계정 준비가 완료되었습니다.",
+      "errorTitle": "확인할 수 없습니다",
+      "goToDashboard": "대시보드로 이동"
+    }
+  },
+  "passwordStrength": {
+    "levels": {
+      "weak": "약함",
+      "medium": "보통",
+      "strong": "강함"
+    },
+    "criteria": {
+      "length": "최소 8자",
+      "lower": "소문자 1개",
+      "upper": "대문자 1개",
+      "number": "숫자 1개",
+      "special": "특수문자 1개({'@'}, #, $ 등)"
+    }
+  },
+  "app": {
+    "transcriptions": {
+      "seoTitle": "내 스크립트 — Vide AI",
+      "title": "내 스크립트",
+      "subtitle": "영상이나 오디오를 업로드해 타임스탬프가 포함된 텍스트로 변환하세요.",
+      "sentSectionTitle": "업로드됨",
+      "refresh": "새로고침",
+      "loadError": "영상을 불러올 수 없습니다. 로컬 인프라가 실행 중인가요? (npm run services:up)",
+      "loading": "불러오는 중…",
+      "empty": "아직 업로드된 영상이 없습니다."
+    },
+    "account": {
+      "seoTitle": "내 계정 — Vide AI",
+      "title": "내 계정",
+      "subtitle": "프로필, 요금제, 보안.",
+      "profileSection": "프로필",
+      "nameLabel": "이름",
+      "emailLabel": "이메일",
+      "verified": "인증됨",
+      "notVerified": "인증되지 않음",
+      "planLabel": "요금제",
+      "save": "저장",
+      "profileSaved": "프로필이 업데이트되었습니다.",
+      "profileSaveError": "저장할 수 없습니다. 다시 시도해 주세요.",
+      "changePasswordSection": "비밀번호 변경",
+      "currentPasswordLabel": "현재 비밀번호",
+      "newPasswordLabel": "새 비밀번호",
+      "confirmNewPasswordLabel": "새 비밀번호 확인",
+      "changePassword": "비밀번호 변경",
+      "passwordChanged": "비밀번호가 성공적으로 변경되었습니다.",
+      "passwordInvalid": "새 비밀번호가 모든 보안 요건을 충족하지 않습니다.",
+      "passwordMismatch": "비밀번호가 일치하지 않습니다.",
+      "passwordSameAsCurrent": "새 비밀번호는 현재 비밀번호와 달라야 합니다.",
+      "passwordChangeError": "비밀번호를 변경할 수 없습니다."
+    },
+    "videoDetail": {
+      "backLink": "← 내 스크립트",
+      "loadError": "이 영상을 불러올 수 없습니다.",
+      "back": "뒤로",
+      "audioReady": "오디오가 스크립트 변환 준비가 되었습니다.",
+      "videoReady": "영상이 처리 준비가 되었습니다(오디오 추출 + 스크립트 변환).",
+      "estimatedCost": "예상 비용: 분당 {cost}.",
+      "transcribeAudio": "오디오 스크립트 변환",
+      "processVideo": "영상 처리",
+      "processingHint": "— 몇 분 정도 걸릴 수 있습니다.",
+      "processingFailed": "처리에 실패했습니다.",
+      "retry": "다시 시도",
+      "transcriptReady": "스크립트가 준비되었습니다.",
+      "downloadTxt": ".TXT 다운로드",
+      "downloadJson": ".JSON 다운로드",
+      "downloadSrt": ".SRT 다운로드",
+      "downloadVtt": ".VTT 다운로드",
+      "uploadProcessing": "업로드 처리 중…",
+      "startError": "처리를 시작할 수 없습니다.",
+      "deleteConfirm": "이 영상과 스크립트를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "delete": "영상 삭제"
+    }
+  },
+  "mediaUploader": {
+    "unsupportedFormat": "지원하지 않는 형식입니다. MP4, MOV, WEBM, MP3, WAV, M4A, AAC를 지원합니다.",
+    "emptyFile": "파일이 비어 있습니다.",
+    "tooLarge": "파일이 너무 큽니다({kind} 최대 {max}MB).",
+    "kindVideo": "영상",
+    "kindAudio": "오디오",
+    "storageError": "스토리지 응답 코드 {status}",
+    "networkError": "업로드 중 네트워크 오류가 발생했습니다",
+    "uploadFailed": "업로드에 실패했습니다.",
+    "uploading": "업로드 중… {progress}%",
+    "dontClose": "완료될 때까지 이 탭을 닫지 마세요.",
+    "dropHint": "영상이나 오디오를 여기로 드래그하세요",
+    "chooseFile": "파일 선택",
+    "acceptedFormats": "MP4 · MOV · WEBM(최대 2GB) · MP3 · WAV · M4A · AAC(최대 25MB)"
+  },
+  "transcriptView": {
+    "fullText": "전체 텍스트",
+    "segmented": "구간별",
+    "searchPlaceholder": "스크립트 검색…",
+    "copyText": "텍스트 복사",
+    "label": "스크립트"
+  },
+  "statusBadge": {
+    "uploading": "업로드 중",
+    "uploaded": "확인 대기 중",
+    "queued": "대기 중",
+    "extracting": "오디오 변환 중",
+    "transcribing": "스크립트 변환 중",
+    "analyzing": "분석 중",
+    "ready": "완료",
+    "failed": "실패"
+  }
+}

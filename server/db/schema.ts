@@ -79,6 +79,9 @@ export const users = pgTable('users', {
   emailVerifiedAt: timestamp({ withTimezone: true }),
   googleId: text().unique(), // sub do Google — null se a conta nunca usou OAuth
   plan: planEnum().notNull().default('free'),
+  // idioma da interface (código do @nuxtjs/i18n, ex. 'pt-BR', 'en') — aplicado
+  // no login/fetchUser; visitante anônimo usa o cookie do módulo em vez disso
+  preferredLocale: text().notNull().default('pt-BR'),
   ...timestamps,
 })
 

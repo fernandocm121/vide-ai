@@ -1,9 +1,47 @@
 <script setup lang="ts">
 import { plans } from '~/data/home'
 
+const { t, tm, rt } = useI18n()
 const { track } = useAnalytics()
 
-const planSlug = (name: string) => name.toLowerCase()
+const PLAN_TEXT: Record<
+  string,
+  { tagline: string; features: string; cta: string }
+> = {
+  starter: {
+    tagline: 'home.pricing.plans.starter.tagline',
+    features: 'home.pricing.plans.starter.features',
+    cta: 'home.pricing.plans.starter.cta',
+  },
+  pro: {
+    tagline: 'home.pricing.plans.pro.tagline',
+    features: 'home.pricing.plans.pro.features',
+    cta: 'home.pricing.plans.pro.cta',
+  },
+  agency: {
+    tagline: 'home.pricing.plans.agency.tagline',
+    features: 'home.pricing.plans.agency.features',
+    cta: 'home.pricing.plans.agency.cta',
+  },
+}
+
+const items = computed(() =>
+  plans.map((plan) => {
+    const keys = PLAN_TEXT[plan.id]!
+    return {
+      ...plan,
+      tagline: t(keys.tagline as 'home.pricing.plans.starter.tagline'),
+      // `tm()` devolve o recurso "cru" (pode ser nó compilado, não string
+      // pronta) — `rt()` resolve cada item pro texto final. Usar o array
+      // direto quebrava a hidratação (SSR resolvia string, client devolvia
+      // o nó da AST).
+      features: (
+        tm(keys.features as 'home.pricing.plans.starter.features') as unknown[]
+      ).map((item) => rt(item as never)),
+      cta: t(keys.cta as 'home.pricing.plans.starter.cta'),
+    }
+  }),
+)
 </script>
 
 <template>
@@ -11,15 +49,15 @@ const planSlug = (name: string) => name.toLowerCase()
     <div class="container-page py-16 lg:py-24">
       <SectionHeading
         align="center"
-        eyebrow="Planos"
-        title="Escolha o plano certo para você"
-        subtitle="Não competimos por preço de transcrição. Você paga por valor: conteúdo pronto e conhecimento pesquisável."
+        :eyebrow="$t('home.pricing.eyebrow')"
+        :title="$t('home.pricing.title')"
+        :subtitle="$t('home.pricing.subtitle')"
       />
 
       <div class="mt-12 grid gap-6 lg:grid-cols-3">
         <article
-          v-for="plan in plans"
-          :key="plan.name"
+          v-for="plan in items"
+          :key="plan.id"
           :class="[
             'flex flex-col rounded-2xl border bg-paper p-7',
             plan.highlight
@@ -35,7 +73,7 @@ const planSlug = (name: string) => name.toLowerCase()
               v-if="plan.highlight"
               class="rounded-full bg-brand-500 px-2.5 py-1 text-xs font-semibold text-white"
             >
-              Mais popular
+              {{ $t('home.pricing.mostPopular') }}
             </span>
           </div>
 
@@ -50,13 +88,13 @@ const planSlug = (name: string) => name.toLowerCase()
           <BaseButton
             :variant="plan.highlight ? 'primary' : 'outline'"
             size="md"
-            :to="`/signup?plan=${planSlug(plan.name)}`"
+            :to="`/signup?plan=${plan.id}`"
             block
             class="mt-6"
             @click="
               track('cta_click', {
                 location: 'pricing',
-                plan: planSlug(plan.name),
+                plan: plan.id,
               })
             "
           >
@@ -79,11 +117,17 @@ const planSlug = (name: string) => name.toLowerCase()
         </article>
       </div>
 
-      <p class="mt-8 text-center text-sm text-ink-soft">
-        Precisa de mais? O plano
-        <span class="font-semibold text-ink">Enterprise</span>
-        atende empresas com volume alto e necessidades específicas.
-      </p>
+      <i18n-t
+        keypath="home.pricing.enterpriseNote"
+        tag="p"
+        class="mt-8 text-center text-sm text-ink-soft"
+      >
+        <template #plan>
+          <span class="font-semibold text-ink">{{
+            $t('home.pricing.enterpriseName')
+          }}</span>
+        </template>
+      </i18n-t>
     </div>
   </section>
 </template>

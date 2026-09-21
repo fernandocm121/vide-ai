@@ -1,0 +1,33 @@
+{
+  "validation.required": "Pflichtfeld",
+  "validation.invalidEmail": "Ungültige E-Mail",
+  "validation.generic": "Ungültige Daten",
+  "validation.invalidRequest": "Ungültige Anfrage",
+  "validation.invalidLocale": "Ungültige Sprache",
+  "validation.password.tooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
+  "validation.password.needsLower": "Das Passwort braucht mindestens einen Kleinbuchstaben",
+  "validation.password.needsUpper": "Das Passwort braucht mindestens einen Großbuchstaben",
+  "validation.password.needsNumber": "Das Passwort braucht mindestens eine Zahl",
+  "validation.password.needsSpecial": "Das Passwort braucht mindestens ein Sonderzeichen (z. B.: @, #, $, %)",
+
+  "auth.notAuthenticated": "Nicht angemeldet",
+  "auth.invalidCredentials": "E-Mail oder Passwort falsch",
+  "auth.emailTaken": "Es existiert bereits ein Konto mit dieser E-Mail",
+  "auth.wrongCurrentPassword": "Aktuelles Passwort ist falsch",
+  "auth.newPasswordSameAsCurrent": "Das neue Passwort muss sich vom aktuellen unterscheiden",
+  "auth.emailNotFound": "Es gibt kein Konto mit dieser E-Mail",
+  "auth.emailSendFailed": "Die E-Mail konnte nicht gesendet werden. Bitte erneut versuchen.",
+  "auth.resetLinkInvalid": "Ungültiger oder abgelaufener Link. Fordern Sie eine neue Zurücksetzung an.",
+  "auth.tokenMissing": "Token fehlt",
+  "auth.verifyLinkInvalid": "Ungültiger oder abgelaufener Link. Fordern Sie eine neue Bestätigungs-E-Mail an.",
+
+  "videos.notFound": "Nicht gefunden",
+  "videos.fileTooLarge": "Datei überschreitet das Limit von {max} MB",
+  "videos.uploadNotFound": "Datei im Speicher nicht gefunden — der Upload wurde nicht abgeschlossen",
+  "videos.invalidExportFormat": "Ungültiges Format. Verwenden Sie txt, json, srt oder vtt.",
+  "videos.transcriptNotReady": "Die Transkription ist noch nicht bereit zum Exportieren.",
+  "videos.transcriptNotFound": "Transkription nicht gefunden",
+  "videos.noTimestampsForSubtitles": "Diese Transkription wurde ohne Zeitstempel erstellt und kann nicht in Untertitel umgewandelt werden. Transkribieren Sie die Datei erneut, um SRT/VTT zu erzeugen.",
+  "videos.invalidStatusForProcessing": "Verarbeitung im Status „{status}“ nicht möglich",
+  "videos.planLimitReached": "Monatliches Limit des Plans „{plan}“ erreicht: Sie haben bereits {used} von {limit} verfügbaren Minuten in diesem Monat genutzt. Upgraden Sie, um weiter zu transkribieren."
+}

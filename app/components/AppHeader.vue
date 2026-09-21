@@ -1,10 +1,12 @@
 <script setup lang="ts">
-const links = [
-  { label: 'O problema', href: '#problema' },
-  { label: 'Como funciona', href: '#como-funciona' },
-  { label: 'Recursos', href: '#diferencial' },
-  { label: 'Preços', href: '#planos' },
-]
+const { t } = useI18n()
+
+const links = computed(() => [
+  { label: t('nav.problem'), href: '#problema' },
+  { label: t('nav.howItWorks'), href: '#como-funciona' },
+  { label: t('nav.features'), href: '#diferencial' },
+  { label: t('nav.pricing'), href: '#planos' },
+])
 
 const { track } = useAnalytics()
 
@@ -34,22 +36,25 @@ watch(
         </a>
       </nav>
 
-      <div class="hidden items-center gap-2 md:flex">
-        <BaseButton variant="ghost" size="md" to="/login">Entrar</BaseButton>
+      <div class="hidden items-center gap-3 md:flex">
+        <AppLanguageSwitcher />
+        <BaseButton variant="ghost" size="md" to="/login">{{
+          $t('nav.login')
+        }}</BaseButton>
         <BaseButton
           variant="primary"
           size="md"
           to="/signup"
           @click="track('cta_click', { location: 'header' })"
         >
-          Começar gratuitamente
+          {{ $t('nav.startFree') }}
         </BaseButton>
       </div>
 
       <button
         class="grid size-10 place-items-center rounded-lg border border-line text-ink md:hidden"
         :aria-expanded="open"
-        aria-label="Abrir menu"
+        :aria-label="$t('nav.openMenu')"
         @click="open = !open"
       >
         <AppIcon :name="open ? 'x' : 'menu'" class="size-5" />
@@ -69,9 +74,10 @@ watch(
         </a>
       </nav>
       <div class="mt-3 flex flex-col gap-2">
-        <BaseButton variant="outline" size="md" to="/login" block
-          >Entrar</BaseButton
-        >
+        <AppLanguageSwitcher class="mb-1 self-start" />
+        <BaseButton variant="outline" size="md" to="/login" block>{{
+          $t('nav.login')
+        }}</BaseButton>
         <BaseButton
           variant="primary"
           size="md"
@@ -79,7 +85,7 @@ watch(
           block
           @click="track('cta_click', { location: 'header_mobile' })"
         >
-          Começar gratuitamente
+          {{ $t('nav.startFree') }}
         </BaseButton>
       </div>
     </div>

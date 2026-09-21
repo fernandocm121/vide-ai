@@ -1,0 +1,447 @@
+{
+  "common": {
+    "or": "ou",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "toast": {
+      "success": "Succès",
+      "error": "Erreur",
+      "info": "Info",
+      "warn": "Attention"
+    },
+    "languageSwitcher": {
+      "label": "Langue",
+      "names": {
+        "pt-BR": "Portugais",
+        "en": "Anglais",
+        "es": "Espagnol",
+        "fr": "Français",
+        "de": "Allemand",
+        "it": "Italien",
+        "ja": "Japonais",
+        "ko": "Coréen"
+      }
+    }
+  },
+  "nav": {
+    "problem": "Le problème",
+    "howItWorks": "Comment ça marche",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "login": "Se connecter",
+    "startFree": "Commencer gratuitement",
+    "openMenu": "Ouvrir le menu"
+  },
+  "footer": {
+    "tagline": "Video Intelligence. Transformez n'importe quelle vidéo en texte, en connaissance et en contenu prêt à publier.",
+    "groups": {
+      "product": {
+        "title": "Produit",
+        "howItWorks": "Comment ça marche",
+        "features": "Fonctionnalités",
+        "pricing": "Tarifs",
+        "roadmap": "Feuille de route"
+      },
+      "audience": {
+        "title": "Pour qui",
+        "youtubers": "YouTubeurs",
+        "podcasters": "Podcasteurs",
+        "teachers": "Enseignants",
+        "companies": "Entreprises"
+      },
+      "company": {
+        "title": "Entreprise",
+        "contact": "Contact",
+        "terms": "Conditions",
+        "privacy": "Confidentialité"
+      }
+    },
+    "copyright": "© {year} Vide AI. Tous droits réservés.",
+    "madeFor": "Conçu pour ceux qui vivent de la vidéo."
+  },
+  "home": {
+    "seo": {
+      "title": "Transformez vos vidéos en intelligence",
+      "description": "Envoyez n'importe quelle vidéo et obtenez transcription, chapitres, résumé, extraits et une base de connaissances consultable. Conçu pour les créateurs."
+    },
+    "hero": {
+      "eyebrow": "Video Intelligence",
+      "titleLine1": "Transformez vos vidéos en",
+      "titleHighlight": "intelligence",
+      "subtitle": "Envoyez n'importe quelle vidéo ou audio et obtenez transcription, chapitres, résumé, extraits et une base de connaissances où vous posez une question et trouvez le moment exact.",
+      "ctaPrimary": "Commencer gratuitement",
+      "ctaSecondary": "Voir comment ça marche",
+      "bullet1": "Transcription avec horodatage",
+      "bullet2": "Sous-titres SRT et VTT",
+      "bullet3": "Sans carte bancaire",
+      "output1": "Transcription complète",
+      "output2": "Chapitres et résumé automatiques",
+      "output3": "Meilleurs moments pour les Shorts",
+      "output4": "48 min traitées",
+      "cardLabel": "Nouveau traitement",
+      "cardStatus": "en cours",
+      "cardFilename": "interview-podcast-42.mp4",
+      "cardFileMeta": "MP4 · 1080p · 52:14",
+      "momentFoundLabel": "Moment trouvé",
+      "momentFoundExample": "« GTA 6 » · 04:31"
+    },
+    "problem": {
+      "eyebrow": "Le problème",
+      "title": "Vos vidéos ont une valeur cachée",
+      "subtitle": "Des millions d'heures de vidéo sont enregistrées chaque jour, mais la majorité de ce contenu n'est jamais exploitée. Transformer un enregistrement en sous-titres, articles, extraits et résumés prend trop de temps.",
+      "beforeLabel": "Avant",
+      "beforeTitle": "Vidéo de 2 heures",
+      "beforeDesc": "qui dort sur le disque, inexploitée",
+      "afterLabel": "Après",
+      "afterTitle": "10+ contenus",
+      "afterDesc": "issus d'un seul enregistrement",
+      "derivedLabel": "Une vidéo devient",
+      "derived1": "Sous-titres",
+      "derived2": "Article",
+      "derived3": "5 Shorts",
+      "derived4": "Titres A/B",
+      "derived5": "Description",
+      "derived6": "Show notes",
+      "derived7": "Fil de discussion",
+      "derived8": "Newsletter",
+      "derived9": "Chapitres",
+      "derived10": "Meilleurs moments"
+    },
+    "howItWorks": {
+      "eyebrow": "Comment ça marche",
+      "title": "De la vidéo brute au contenu prêt",
+      "subtitle": "Quatre étapes automatiques. Vous envoyez l'enregistrement, la plateforme fait le reste.",
+      "steps": {
+        "01": {
+          "title": "Upload",
+          "desc": "Envoyez du MP4, MOV, MP3, WAV ou WEBM. L'audio est extrait automatiquement avec FFmpeg."
+        },
+        "02": {
+          "title": "Understand",
+          "desc": "La reconnaissance vocale génère la transcription complète avec un horodatage précis, mot par mot."
+        },
+        "03": {
+          "title": "Extract",
+          "desc": "L'IA analyse le contenu et en extrait un résumé, des chapitres, des mots-clés et les meilleurs moments."
+        },
+        "04": {
+          "title": "Create",
+          "desc": "Générez des titres, descriptions, scripts de Shorts et extraits prêts à publier."
+        }
+      }
+    },
+    "differential": {
+      "eyebrow": "Ce qui nous distingue",
+      "title": "Pas seulement de la transcription. De l'intelligence sur vos vidéos",
+      "subtitle": "Chaque vidéo traitée devient partie d'une base de connaissances consultable — du moment exact à la réponse toute prête.",
+      "askYourVideoTitle": "Ask Your Video",
+      "askYourVideoDesc": "Posez votre question en langage naturel et obtenez la vidéo, le moment et la réponse.",
+      "askYourVideoExampleQuestion": "« À quel moment a-t-on parlé de GTA 6 ? »",
+      "askYourVideoResultTitle": "Gameplay GTA 6",
+      "askYourVideoResultTime": "04:31",
+      "askYourVideoResultDesc": "Le sujet apparaît lorsque le créateur commente la nouvelle bande-annonce et la compare aux attentes de la communauté.",
+      "libraryTitle": "Bibliothèque intelligente",
+      "libraryDesc": "Le Google de vos vidéos : recherchez un sujet et découvrez dans quels enregistrements vous en avez déjà parlé.",
+      "librarySearchPlaceholder": "Dans quelle vidéo ai-je parlé de l'authentification OAuth ?",
+      "libraryResult1Video": "Podcast #12 — Carrière tech",
+      "libraryResult1Match": "authentification OAuth",
+      "libraryResult2Video": "Cours React — Semaine 3",
+      "libraryResult2Match": "flux OAuth avec refresh token",
+      "libraryResult3Video": "Interview — Sécurité",
+      "libraryResult3Match": "OAuth vs. session"
+    },
+    "audience": {
+      "eyebrow": "Pour qui",
+      "title": "Conçu pour ceux qui vivent de la vidéo",
+      "subtitle": "YouTubeurs, podcasteurs, enseignants et journalistes qui veulent tirer le meilleur parti de chaque enregistrement.",
+      "items": {
+        "youtubers": {
+          "tag": "YouTubeurs",
+          "title": "Transformez vos longues vidéos en contenu prêt à l'emploi",
+          "desc": "Titres, descriptions, chapitres et extraits générés automatiquement à partir de chaque enregistrement."
+        },
+        "podcasters": {
+          "tag": "Podcasteurs",
+          "title": "Show notes, extraits et temps forts",
+          "desc": "D'une conversation de deux heures à des show notes complètes et les meilleurs extraits en quelques minutes."
+        },
+        "teachers": {
+          "tag": "Enseignants",
+          "title": "Les cours deviennent du matériel d'étude",
+          "desc": "Résumé, thèmes et supports générés directement à partir de l'enregistrement du cours."
+        }
+      }
+    },
+    "pipeline": {
+      "eyebrow": "Pipeline de contenu",
+      "title": "Une vidéo. Plusieurs contenus",
+      "subtitle": "Le même enregistrement alimente tout votre calendrier éditorial.",
+      "recordingLabel": "30 min",
+      "recordingCaption": "d'enregistrement",
+      "outputs": {
+        "transcript": "Transcription",
+        "summary": "Résumé",
+        "chapters": "Chapitres",
+        "subtitles": "Sous-titres SRT/VTT",
+        "keywords": "Mots-clés",
+        "bestMoments": "Meilleurs moments",
+        "titles": "Titres et descriptions",
+        "shorts": "Extraits pour Shorts"
+      },
+      "footer": "Tout est prêt à publier sur YouTube, TikTok, Instagram et votre newsletter."
+    },
+    "pricing": {
+      "eyebrow": "Offres",
+      "title": "Choisissez l'offre qui vous convient",
+      "subtitle": "Nous ne rivalisons pas sur le prix de la transcription. Vous payez pour de la valeur : du contenu prêt et des connaissances consultables.",
+      "mostPopular": "Le plus populaire",
+      "plans": {
+        "starter": {
+          "tagline": "Pour les petits créateurs qui commencent à se développer.",
+          "features": [
+            "10 heures de traitement par mois",
+            "Transcription automatique + horodatage",
+            "Sous-titres SRT / VTT",
+            "Résumé et chapitres",
+            "Export TXT / SRT"
+          ],
+          "cta": "Commencer"
+        },
+        "pro": {
+          "tagline": "Pour les créateurs professionnels qui publient chaque semaine.",
+          "features": [
+            "40 heures de traitement par mois",
+            "Tout de l'offre Starter",
+            "Ask Your Video (interrogez votre vidéo)",
+            "Recherche dans toutes vos vidéos",
+            "Suggestions des meilleurs moments",
+            "Génération de Shorts et de scripts",
+            "Titres et descriptions optimisés"
+          ],
+          "cta": "Commencer"
+        },
+        "agency": {
+          "tagline": "Pour les agences et équipes qui gèrent plusieurs chaînes.",
+          "features": [
+            "150 heures de traitement par mois",
+            "Tout de l'offre Pro",
+            "Plusieurs membres d'équipe",
+            "Espaces de travail par client",
+            "Support prioritaire"
+          ],
+          "cta": "Contacter les ventes"
+        }
+      },
+      "enterpriseNote": "Besoin de plus ? L'offre {plan} s'adresse aux entreprises à fort volume avec des besoins spécifiques.",
+      "enterpriseName": "Enterprise"
+    },
+    "finalCta": {
+      "title": "Votre prochaine vidéo peut créer bien plus.",
+      "subtitle": "Transformez des heures d'enregistrement en contenu intelligent. Commencez gratuitement, sans carte bancaire.",
+      "ctaPrimary": "Commencer maintenant",
+      "ctaSecondary": "Voir les offres"
+    }
+  },
+  "appHeader": {
+    "myTranscriptions": "Mes transcriptions",
+    "myAccount": "Mon compte",
+    "logout": "Se déconnecter"
+  },
+  "auth": {
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous{'@'}entreprise.com",
+    "passwordLabel": "Mot de passe",
+    "continueWithGoogle": "Continuer avec Google",
+    "login": {
+      "seoTitle": "Se connecter",
+      "eyebrow": "Content de vous revoir",
+      "title": "Connectez-vous à votre compte",
+      "subtitle": "Accédez à vos transcriptions, résumés et extraits au même endroit.",
+      "forgotPassword": "Mot de passe oublié ?",
+      "remember": "Rester connecté",
+      "submit": "Se connecter",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signupLink": "Commencez gratuitement",
+      "googleNotConfigured": "La connexion avec Google n'est pas encore disponible — connectez-vous avec e-mail et mot de passe.",
+      "googleCancelled": "Connexion Google annulée.",
+      "googleFailed": "Impossible de se connecter avec Google. Réessayez.",
+      "genericError": "Impossible de se connecter. Réessayez."
+    },
+    "signup": {
+      "seoTitle": "Créer un compte",
+      "seoDescription": "Créez votre compte Vide AI et transformez vos vidéos en transcription, connaissance et contenu prêt à publier.",
+      "eyebrow": "Commencez gratuitement",
+      "title": "Créez votre compte",
+      "subtitle": "Transcrivez votre première vidéo en quelques minutes. Sans carte bancaire.",
+      "nameLabel": "Nom complet",
+      "namePlaceholder": "Votre nom",
+      "passwordPlaceholder": "Créez un mot de passe fort",
+      "termsPrefix": "J'accepte les",
+      "termsLink": "Conditions d'utilisation",
+      "termsAnd": "et la",
+      "privacyLink": "Politique de confidentialité",
+      "submit": "Créer un compte",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "loginLink": "Se connecter",
+      "googleNotConfigured": "La connexion avec Google n'est pas encore disponible — créez votre compte avec e-mail et mot de passe.",
+      "passwordInvalid": "Le mot de passe ne respecte pas tous les critères de sécurité.",
+      "termsRequired": "Vous devez accepter les Conditions d'utilisation et la Politique de confidentialité.",
+      "genericError": "Impossible de créer votre compte. Réessayez."
+    },
+    "forgotPassword": {
+      "seoTitle": "Mot de passe oublié",
+      "eyebrow": "Réinitialiser le mot de passe",
+      "title": "Mot de passe oublié ?",
+      "subtitle": "Indiquez votre e-mail et nous vous enverrons un lien pour créer un nouveau mot de passe.",
+      "submit": "Envoyer le lien",
+      "backToLogin": "Retour à la connexion",
+      "genericError": "Impossible d'envoyer l'e-mail. Réessayez.",
+      "doneTitle": "Vérifiez votre e-mail",
+      "doneSubtitle": "Nous avons envoyé un lien de réinitialisation à {email}.",
+      "devNote": "(dev, aucun fournisseur d'e-mail configuré)",
+      "devLink": "ouvrir le lien de réinitialisation"
+    },
+    "resetPassword": {
+      "seoTitle": "Réinitialiser le mot de passe",
+      "invalidToken": "Lien de réinitialisation invalide.",
+      "passwordInvalid": "Le mot de passe ne respecte pas tous les critères de sécurité.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas.",
+      "genericError": "Impossible de réinitialiser votre mot de passe.",
+      "doneTitle": "Mot de passe réinitialisé",
+      "doneSubtitle": "Vous êtes maintenant connecté avec le nouveau mot de passe.",
+      "goToDashboard": "Aller au tableau de bord",
+      "eyebrow": "Nouveau mot de passe",
+      "title": "Créez un nouveau mot de passe",
+      "newPasswordLabel": "Nouveau mot de passe",
+      "passwordPlaceholder": "Créez un mot de passe fort",
+      "confirmLabel": "Confirmer le mot de passe",
+      "confirmPlaceholder": "Répétez le mot de passe",
+      "submit": "Réinitialiser le mot de passe"
+    },
+    "confirmYourEmail": {
+      "seoTitle": "Confirmez votre e-mail",
+      "title": "Confirmez votre e-mail",
+      "subtitle": "Nous avons envoyé un lien de confirmation à {email}. Ouvrez votre e-mail et cliquez sur le lien pour débloquer l'accès — cette page se met à jour automatiquement dès la confirmation.",
+      "resend": "Renvoyer l'e-mail de confirmation",
+      "resendCooldown": "Renvoyer dans {seconds}s",
+      "resendSuccess": "E-mail de confirmation renvoyé — vérifiez votre boîte de réception.",
+      "resendError": "Impossible de renvoyer l'e-mail. Réessayez.",
+      "logoutAndUseOther": "Se déconnecter et utiliser un autre e-mail"
+    },
+    "verifyEmail": {
+      "seoTitle": "Confirmer l'e-mail",
+      "invalidToken": "Lien de confirmation invalide.",
+      "genericError": "Impossible de confirmer votre e-mail.",
+      "pendingTitle": "Confirmation de votre e-mail…",
+      "successTitle": "E-mail confirmé",
+      "successWithEmail": "{email} est confirmé.",
+      "successGeneric": "Votre compte est prêt.",
+      "errorTitle": "Confirmation impossible",
+      "goToDashboard": "Aller au tableau de bord"
+    }
+  },
+  "passwordStrength": {
+    "levels": {
+      "weak": "Faible",
+      "medium": "Moyen",
+      "strong": "Fort"
+    },
+    "criteria": {
+      "length": "Au moins 8 caractères",
+      "lower": "Une lettre minuscule",
+      "upper": "Une lettre majuscule",
+      "number": "Un chiffre",
+      "special": "Un caractère spécial ({'@'}, #, $...)"
+    }
+  },
+  "app": {
+    "transcriptions": {
+      "seoTitle": "Mes transcriptions — Vide AI",
+      "title": "Mes transcriptions",
+      "subtitle": "Envoyez une vidéo ou un audio et transformez-le en texte avec horodatage.",
+      "sentSectionTitle": "Envoyés",
+      "refresh": "Actualiser",
+      "loadError": "Impossible de charger vos vidéos. L'infrastructure locale est-elle démarrée ? (npm run services:up)",
+      "loading": "Chargement…",
+      "empty": "Aucune vidéo envoyée pour le moment."
+    },
+    "account": {
+      "seoTitle": "Mon compte — Vide AI",
+      "title": "Mon compte",
+      "subtitle": "Profil, offre et sécurité.",
+      "profileSection": "Profil",
+      "nameLabel": "Nom",
+      "emailLabel": "E-mail",
+      "verified": "Vérifié",
+      "notVerified": "Non vérifié",
+      "planLabel": "Offre",
+      "save": "Enregistrer",
+      "profileSaved": "Profil mis à jour.",
+      "profileSaveError": "Impossible d'enregistrer. Réessayez.",
+      "changePasswordSection": "Changer le mot de passe",
+      "currentPasswordLabel": "Mot de passe actuel",
+      "newPasswordLabel": "Nouveau mot de passe",
+      "confirmNewPasswordLabel": "Confirmer le nouveau mot de passe",
+      "changePassword": "Changer le mot de passe",
+      "passwordChanged": "Mot de passe changé avec succès.",
+      "passwordInvalid": "Le nouveau mot de passe ne respecte pas tous les critères de sécurité.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas.",
+      "passwordSameAsCurrent": "Le nouveau mot de passe doit être différent de l'actuel.",
+      "passwordChangeError": "Impossible de changer le mot de passe."
+    },
+    "videoDetail": {
+      "backLink": "← Mes transcriptions",
+      "loadError": "Impossible de charger cette vidéo.",
+      "back": "Retour",
+      "audioReady": "L'audio est prêt à être transcrit.",
+      "videoReady": "La vidéo est prête à être traitée (extraction audio + transcription).",
+      "estimatedCost": "Coût estimé : {cost} / minute.",
+      "transcribeAudio": "Transcrire l'audio",
+      "processVideo": "Traiter la vidéo",
+      "processingHint": "— cela peut prendre quelques minutes.",
+      "processingFailed": "Le traitement a échoué.",
+      "retry": "Réessayer",
+      "transcriptReady": "Transcription prête.",
+      "downloadTxt": "Télécharger .TXT",
+      "downloadJson": "Télécharger .JSON",
+      "downloadSrt": "Télécharger .SRT",
+      "downloadVtt": "Télécharger .VTT",
+      "uploadProcessing": "Traitement de l'envoi…",
+      "startError": "Échec du démarrage du traitement.",
+      "deleteConfirm": "Supprimer cette vidéo et sa transcription ? Cette action est irréversible.",
+      "delete": "Supprimer la vidéo"
+    }
+  },
+  "mediaUploader": {
+    "unsupportedFormat": "Format non pris en charge. Nous acceptons MP4, MOV, WEBM, MP3, WAV, M4A ou AAC.",
+    "emptyFile": "Le fichier est vide.",
+    "tooLarge": "Fichier trop volumineux (max {max} Mo pour {kind}).",
+    "kindVideo": "vidéo",
+    "kindAudio": "audio",
+    "storageError": "Le stockage a répondu {status}",
+    "networkError": "Erreur réseau pendant l'envoi",
+    "uploadFailed": "Échec de l'envoi.",
+    "uploading": "Envoi… {progress}%",
+    "dontClose": "Ne fermez pas cet onglet tant que ce n'est pas terminé.",
+    "dropHint": "Glissez une vidéo ou un audio ici",
+    "chooseFile": "Choisir un fichier",
+    "acceptedFormats": "MP4 · MOV · WEBM (jusqu'à 2 Go) · MP3 · WAV · M4A · AAC (jusqu'à 25 Mo)"
+  },
+  "transcriptView": {
+    "fullText": "Texte intégral",
+    "segmented": "Segmenté",
+    "searchPlaceholder": "Rechercher dans la transcription…",
+    "copyText": "Copier le texte",
+    "label": "Transcription"
+  },
+  "statusBadge": {
+    "uploading": "Envoi en cours",
+    "uploaded": "En attente de confirmation",
+    "queued": "En file d'attente",
+    "extracting": "Conversion de l'audio",
+    "transcribing": "Transcription en cours",
+    "analyzing": "Analyse en cours",
+    "ready": "Prêt",
+    "failed": "Échec"
+  }
+}

@@ -1,0 +1,447 @@
+{
+  "common": {
+    "or": "または",
+    "showPassword": "パスワードを表示",
+    "hidePassword": "パスワードを隠す",
+    "toast": {
+      "success": "成功",
+      "error": "エラー",
+      "info": "お知らせ",
+      "warn": "注意"
+    },
+    "languageSwitcher": {
+      "label": "言語",
+      "names": {
+        "pt-BR": "ポルトガル語",
+        "en": "英語",
+        "es": "スペイン語",
+        "fr": "フランス語",
+        "de": "ドイツ語",
+        "it": "イタリア語",
+        "ja": "日本語",
+        "ko": "韓国語"
+      }
+    }
+  },
+  "nav": {
+    "problem": "課題",
+    "howItWorks": "仕組み",
+    "features": "機能",
+    "pricing": "料金",
+    "login": "ログイン",
+    "startFree": "無料で始める",
+    "openMenu": "メニューを開く"
+  },
+  "footer": {
+    "tagline": "Video Intelligence。あらゆる動画をテキスト・ナレッジ・公開できるコンテンツに変換します。",
+    "groups": {
+      "product": {
+        "title": "プロダクト",
+        "howItWorks": "仕組み",
+        "features": "機能",
+        "pricing": "料金",
+        "roadmap": "ロードマップ"
+      },
+      "audience": {
+        "title": "対象ユーザー",
+        "youtubers": "YouTuber",
+        "podcasters": "ポッドキャスター",
+        "teachers": "教師",
+        "companies": "企業"
+      },
+      "company": {
+        "title": "会社情報",
+        "contact": "お問い合わせ",
+        "terms": "利用規約",
+        "privacy": "プライバシー"
+      }
+    },
+    "copyright": "© {year} Vide AI. All rights reserved.",
+    "madeFor": "動画で生きるすべての人のために。"
+  },
+  "home": {
+    "seo": {
+      "title": "動画をインテリジェンスに変える",
+      "description": "動画をアップロードするだけで、文字起こし、チャプター、要約、クリップ、検索可能なナレッジベースが手に入ります。クリエイターのために作られました。"
+    },
+    "hero": {
+      "eyebrow": "Video Intelligence",
+      "titleLine1": "動画を",
+      "titleHighlight": "インテリジェンス",
+      "subtitle": "動画や音声をアップロードするだけで、文字起こし、チャプター、要約、クリップ、そして質問すれば正確な瞬間を見つけられるナレッジベースが手に入ります。",
+      "ctaPrimary": "無料で始める",
+      "ctaSecondary": "仕組みを見る",
+      "bullet1": "タイムスタンプ付きの文字起こし",
+      "bullet2": "SRT・VTT字幕",
+      "bullet3": "クレジットカード不要",
+      "output1": "完全な文字起こし",
+      "output2": "自動チャプターと要約",
+      "output3": "Shorts向けのベストモーメント",
+      "output4": "48分処理済み",
+      "cardLabel": "新しい処理",
+      "cardStatus": "処理中",
+      "cardFilename": "podcast-interview-42.mp4",
+      "cardFileMeta": "MP4 · 1080p · 52:14",
+      "momentFoundLabel": "見つかった瞬間",
+      "momentFoundExample": "「GTA 6」· 04:31"
+    },
+    "problem": {
+      "eyebrow": "課題",
+      "title": "あなたの動画には隠れた価値がある",
+      "subtitle": "毎日何百万時間もの動画が録画されていますが、そのほとんどは活用されていません。録画を字幕、記事、クリップ、要約に変えるには時間がかかりすぎます。",
+      "beforeLabel": "Before",
+      "beforeTitle": "2時間の動画",
+      "beforeDesc": "HDDに眠ったまま、活用されない",
+      "afterLabel": "After",
+      "afterTitle": "10以上のコンテンツ",
+      "afterDesc": "1本の録画から生成",
+      "derivedLabel": "1本の動画がこう変わる",
+      "derived1": "字幕",
+      "derived2": "記事",
+      "derived3": "Shorts 5本",
+      "derived4": "A/Bタイトル",
+      "derived5": "概要欄",
+      "derived6": "ショーノート",
+      "derived7": "スレッド",
+      "derived8": "ニュースレター",
+      "derived9": "チャプター",
+      "derived10": "ベストモーメント"
+    },
+    "howItWorks": {
+      "eyebrow": "仕組み",
+      "title": "素材動画から完成コンテンツへ",
+      "subtitle": "自動化された4ステップ。あなたは録画をアップロードするだけ、あとはプラットフォームにお任せください。",
+      "steps": {
+        "01": {
+          "title": "Upload",
+          "desc": "MP4、MOV、MP3、WAV、WEBMをアップロード。音声はFFmpegで自動的に抽出されます。"
+        },
+        "02": {
+          "title": "Understand",
+          "desc": "Speech-to-Textが単語単位の正確なタイムスタンプ付きで完全な文字起こしを生成します。"
+        },
+        "03": {
+          "title": "Extract",
+          "desc": "AIがコンテンツを分析し、要約・チャプター・キーワード・ベストモーメントを抽出します。"
+        },
+        "04": {
+          "title": "Create",
+          "desc": "タイトル、概要、Shorts台本、公開準備の整ったクリップを生成します。"
+        }
+      }
+    },
+    "differential": {
+      "eyebrow": "私たちの強み",
+      "title": "文字起こしだけではない。動画そのものへのインテリジェンス",
+      "subtitle": "処理された動画はすべて検索可能なナレッジベースの一部になります — 正確な瞬間から、すぐに使える答えまで。",
+      "askYourVideoTitle": "Ask Your Video",
+      "askYourVideoDesc": "自然な言葉で質問すると、動画・瞬間・答えが返ってきます。",
+      "askYourVideoExampleQuestion": "「GTA 6について話したのはいつ?」",
+      "askYourVideoResultTitle": "GTA 6 ゲームプレイ",
+      "askYourVideoResultTime": "04:31",
+      "askYourVideoResultDesc": "クリエイターが新しいトレーラーについてコメントし、コミュニティの期待と比較している場面で話題になっています。",
+      "libraryTitle": "スマートライブラリ",
+      "libraryDesc": "あなたの動画のGoogle検索:トピックを検索して、どの録画で話したかを確認できます。",
+      "librarySearchPlaceholder": "OAuth認証について話した動画はどれ?",
+      "libraryResult1Video": "ポッドキャスト #12 — テックキャリア",
+      "libraryResult1Match": "OAuth認証",
+      "libraryResult2Video": "Reactクラス — 第3週",
+      "libraryResult2Match": "リフレッシュトークンを使ったOAuthフロー",
+      "libraryResult3Video": "インタビュー — セキュリティ",
+      "libraryResult3Match": "OAuth vs. セッション"
+    },
+    "audience": {
+      "eyebrow": "対象ユーザー",
+      "title": "動画で生きるすべての人のために",
+      "subtitle": "YouTuber、ポッドキャスター、教師、ジャーナリストなど、録画を最大限に活用したいすべての人へ。",
+      "items": {
+        "youtubers": {
+          "tag": "YouTuber",
+          "title": "長編動画を完成コンテンツに変える",
+          "desc": "タイトル、概要、チャプター、クリップを各録画から自動生成します。"
+        },
+        "podcasters": {
+          "tag": "ポッドキャスター",
+          "title": "ショーノート、クリップ、ハイライト",
+          "desc": "2時間の会話から、数分で完全なショーノートと最高の抜粋が手に入ります。"
+        },
+        "teachers": {
+          "tag": "教師",
+          "title": "授業が学習教材になる",
+          "desc": "授業の録画から直接、要約・トピック・補助教材を生成します。"
+        }
+      }
+    },
+    "pipeline": {
+      "eyebrow": "コンテンツパイプライン",
+      "title": "1本の動画。複数のコンテンツ",
+      "subtitle": "同じ録画がコンテンツカレンダー全体を支えます。",
+      "recordingLabel": "30分",
+      "recordingCaption": "の録画",
+      "outputs": {
+        "transcript": "文字起こし",
+        "summary": "要約",
+        "chapters": "チャプター",
+        "subtitles": "SRT/VTT字幕",
+        "keywords": "キーワード",
+        "bestMoments": "ベストモーメント",
+        "titles": "タイトルと概要",
+        "shorts": "Shorts用クリップ"
+      },
+      "footer": "YouTube、TikTok、Instagram、ニュースレターへの公開準備が整っています。"
+    },
+    "pricing": {
+      "eyebrow": "料金プラン",
+      "title": "あなたに合ったプランを選ぶ",
+      "subtitle": "文字起こしの価格では競いません。価値に対してお支払いいただきます:完成コンテンツと検索可能なナレッジです。",
+      "mostPopular": "人気No.1",
+      "plans": {
+        "starter": {
+          "tagline": "これから成長を始める小規模クリエイター向け。",
+          "features": [
+            "月10時間の処理",
+            "自動文字起こし + タイムスタンプ",
+            "SRT / VTT字幕",
+            "要約とチャプター",
+            "TXT / SRTエクスポート"
+          ],
+          "cta": "始める"
+        },
+        "pro": {
+          "tagline": "毎週公開するプロクリエイター向け。",
+          "features": [
+            "月40時間の処理",
+            "Starterのすべての機能",
+            "Ask Your Video(動画に質問する)",
+            "全動画を横断検索",
+            "ベストモーメントの提案",
+            "Shorts・台本の生成",
+            "最適化されたタイトルと概要"
+          ],
+          "cta": "始める"
+        },
+        "agency": {
+          "tagline": "複数チャンネルを管理する代理店・チーム向け。",
+          "features": [
+            "月150時間の処理",
+            "Proのすべての機能",
+            "複数のチームメンバー",
+            "クライアントごとのワークスペース",
+            "優先サポート"
+          ],
+          "cta": "営業に問い合わせる"
+        }
+      },
+      "enterpriseNote": "もっと必要ですか?{plan}プランは、大容量かつ特定のニーズを持つ企業に対応します。",
+      "enterpriseName": "Enterprise"
+    },
+    "finalCta": {
+      "title": "次の動画は、もっと多くを生み出せます。",
+      "subtitle": "何時間もの録画をインテリジェントなコンテンツに変えましょう。クレジットカード不要、無料で始められます。",
+      "ctaPrimary": "今すぐ始める",
+      "ctaSecondary": "プランを見る"
+    }
+  },
+  "appHeader": {
+    "myTranscriptions": "文字起こし一覧",
+    "myAccount": "アカウント",
+    "logout": "ログアウト"
+  },
+  "auth": {
+    "emailLabel": "メールアドレス",
+    "emailPlaceholder": "you{'@'}company.com",
+    "passwordLabel": "パスワード",
+    "continueWithGoogle": "Googleで続ける",
+    "login": {
+      "seoTitle": "ログイン",
+      "eyebrow": "おかえりなさい",
+      "title": "アカウントにログイン",
+      "subtitle": "文字起こし、要約、クリップに一か所からアクセス。",
+      "forgotPassword": "パスワードをお忘れですか?",
+      "remember": "ログイン状態を保持する",
+      "submit": "ログイン",
+      "noAccount": "アカウントをお持ちでないですか?",
+      "signupLink": "無料で始める",
+      "googleNotConfigured": "Googleログインはまだ利用できません — メールとパスワードでログインしてください。",
+      "googleCancelled": "Googleログインがキャンセルされました。",
+      "googleFailed": "Googleでのログインに失敗しました。もう一度お試しください。",
+      "genericError": "ログインできませんでした。もう一度お試しください。"
+    },
+    "signup": {
+      "seoTitle": "アカウント作成",
+      "seoDescription": "Vide AIのアカウントを作成し、動画を文字起こし・ナレッジ・公開できるコンテンツに変えましょう。",
+      "eyebrow": "無料で始める",
+      "title": "アカウントを作成",
+      "subtitle": "数分で最初の動画を文字起こし。クレジットカード不要。",
+      "nameLabel": "氏名",
+      "namePlaceholder": "お名前",
+      "passwordPlaceholder": "強力なパスワードを作成",
+      "termsPrefix": "以下に同意します:",
+      "termsLink": "利用規約",
+      "termsAnd": "および",
+      "privacyLink": "プライバシーポリシー",
+      "submit": "アカウントを作成",
+      "hasAccount": "すでにアカウントをお持ちですか?",
+      "loginLink": "ログイン",
+      "googleNotConfigured": "Googleログインはまだ利用できません — メールとパスワードでアカウントを作成してください。",
+      "passwordInvalid": "パスワードがセキュリティ要件をすべて満たしていません。",
+      "termsRequired": "利用規約とプライバシーポリシーへの同意が必要です。",
+      "genericError": "アカウントを作成できませんでした。もう一度お試しください。"
+    },
+    "forgotPassword": {
+      "seoTitle": "パスワードをお忘れですか",
+      "eyebrow": "パスワードの再設定",
+      "title": "パスワードをお忘れですか?",
+      "subtitle": "メールアドレスを入力すると、新しいパスワードを作成するためのリンクをお送りします。",
+      "submit": "リンクを送信",
+      "backToLogin": "ログインに戻る",
+      "genericError": "メールを送信できませんでした。もう一度お試しください。",
+      "doneTitle": "メールをご確認ください",
+      "doneSubtitle": "{email} 宛にパスワード再設定用のリンクを送信しました。",
+      "devNote": "(開発環境 — メールプロバイダー未設定)",
+      "devLink": "再設定リンクを開く"
+    },
+    "resetPassword": {
+      "seoTitle": "パスワードの再設定",
+      "invalidToken": "無効な再設定リンクです。",
+      "passwordInvalid": "パスワードがセキュリティ要件をすべて満たしていません。",
+      "passwordMismatch": "パスワードが一致しません。",
+      "genericError": "パスワードを再設定できませんでした。",
+      "doneTitle": "パスワードを再設定しました",
+      "doneSubtitle": "新しいパスワードで既にログインしています。",
+      "goToDashboard": "ダッシュボードへ",
+      "eyebrow": "新しいパスワード",
+      "title": "新しいパスワードを作成",
+      "newPasswordLabel": "新しいパスワード",
+      "passwordPlaceholder": "強力なパスワードを作成",
+      "confirmLabel": "パスワードを確認",
+      "confirmPlaceholder": "パスワードを再入力",
+      "submit": "パスワードを再設定"
+    },
+    "confirmYourEmail": {
+      "seoTitle": "メールを確認してください",
+      "title": "メールを確認してください",
+      "subtitle": "{email} 宛に確認リンクを送信しました。メールを開いてリンクをクリックするとアクセスできます — 確認が完了すると、このページは自動的に更新されます。",
+      "resend": "確認メールを再送信",
+      "resendCooldown": "{seconds}秒後に再送信",
+      "resendSuccess": "確認メールを再送信しました — 受信トレイをご確認ください。",
+      "resendError": "メールを再送信できませんでした。もう一度お試しください。",
+      "logoutAndUseOther": "ログアウトして別のメールアドレスを使う"
+    },
+    "verifyEmail": {
+      "seoTitle": "メールを確認",
+      "invalidToken": "無効な確認リンクです。",
+      "genericError": "メールを確認できませんでした。",
+      "pendingTitle": "メールを確認しています…",
+      "successTitle": "メールが確認されました",
+      "successWithEmail": "{email} は確認済みです。",
+      "successGeneric": "アカウントの準備ができました。",
+      "errorTitle": "確認できませんでした",
+      "goToDashboard": "ダッシュボードへ"
+    }
+  },
+  "passwordStrength": {
+    "levels": {
+      "weak": "弱い",
+      "medium": "普通",
+      "strong": "強い"
+    },
+    "criteria": {
+      "length": "8文字以上",
+      "lower": "小文字を1つ含む",
+      "upper": "大文字を1つ含む",
+      "number": "数字を1つ含む",
+      "special": "特殊文字を1つ含む({'@'}, #, $など)"
+    }
+  },
+  "app": {
+    "transcriptions": {
+      "seoTitle": "文字起こし一覧 — Vide AI",
+      "title": "文字起こし一覧",
+      "subtitle": "動画や音声をアップロードして、タイムスタンプ付きのテキストに変換します。",
+      "sentSectionTitle": "アップロード済み",
+      "refresh": "更新",
+      "loadError": "動画を読み込めませんでした。ローカル環境は起動していますか?(npm run services:up)",
+      "loading": "読み込み中…",
+      "empty": "まだアップロードされた動画がありません。"
+    },
+    "account": {
+      "seoTitle": "アカウント — Vide AI",
+      "title": "アカウント",
+      "subtitle": "プロフィール、プラン、セキュリティ。",
+      "profileSection": "プロフィール",
+      "nameLabel": "名前",
+      "emailLabel": "メールアドレス",
+      "verified": "確認済み",
+      "notVerified": "未確認",
+      "planLabel": "プラン",
+      "save": "保存",
+      "profileSaved": "プロフィールを更新しました。",
+      "profileSaveError": "保存できませんでした。もう一度お試しください。",
+      "changePasswordSection": "パスワードを変更",
+      "currentPasswordLabel": "現在のパスワード",
+      "newPasswordLabel": "新しいパスワード",
+      "confirmNewPasswordLabel": "新しいパスワードの確認",
+      "changePassword": "パスワードを変更",
+      "passwordChanged": "パスワードを変更しました。",
+      "passwordInvalid": "新しいパスワードがセキュリティ要件をすべて満たしていません。",
+      "passwordMismatch": "パスワードが一致しません。",
+      "passwordSameAsCurrent": "新しいパスワードは現在のパスワードと異なる必要があります。",
+      "passwordChangeError": "パスワードを変更できませんでした。"
+    },
+    "videoDetail": {
+      "backLink": "← 文字起こし一覧",
+      "loadError": "この動画を読み込めませんでした。",
+      "back": "戻る",
+      "audioReady": "音声の文字起こしの準備ができています。",
+      "videoReady": "動画の処理準備ができています(音声抽出+文字起こし)。",
+      "estimatedCost": "推定コスト:{cost} / 分。",
+      "transcribeAudio": "音声を文字起こし",
+      "processVideo": "動画を処理",
+      "processingHint": "— 数分かかる場合があります。",
+      "processingFailed": "処理に失敗しました。",
+      "retry": "再試行",
+      "transcriptReady": "文字起こしが完成しました。",
+      "downloadTxt": ".TXTをダウンロード",
+      "downloadJson": ".JSONをダウンロード",
+      "downloadSrt": ".SRTをダウンロード",
+      "downloadVtt": ".VTTをダウンロード",
+      "uploadProcessing": "アップロードを処理中…",
+      "startError": "処理を開始できませんでした。",
+      "deleteConfirm": "この動画と文字起こしを削除しますか?この操作は取り消せません。",
+      "delete": "動画を削除"
+    }
+  },
+  "mediaUploader": {
+    "unsupportedFormat": "サポートされていない形式です。MP4、MOV、WEBM、MP3、WAV、M4A、AACに対応しています。",
+    "emptyFile": "ファイルが空です。",
+    "tooLarge": "ファイルが大きすぎます({kind}の上限は{max}MB)。",
+    "kindVideo": "動画",
+    "kindAudio": "音声",
+    "storageError": "ストレージの応答:{status}",
+    "networkError": "アップロード中にネットワークエラーが発生しました",
+    "uploadFailed": "アップロードに失敗しました。",
+    "uploading": "アップロード中… {progress}%",
+    "dontClose": "完了するまでこのタブを閉じないでください。",
+    "dropHint": "動画や音声をここにドラッグ",
+    "chooseFile": "ファイルを選択",
+    "acceptedFormats": "MP4 · MOV · WEBM(2GBまで)· MP3 · WAV · M4A · AAC(25MBまで)"
+  },
+  "transcriptView": {
+    "fullText": "全文",
+    "segmented": "セグメント表示",
+    "searchPlaceholder": "文字起こしを検索…",
+    "copyText": "テキストをコピー",
+    "label": "文字起こし"
+  },
+  "statusBadge": {
+    "uploading": "アップロード中",
+    "uploaded": "確認待ち",
+    "queued": "待機中",
+    "extracting": "音声を変換中",
+    "transcribing": "文字起こし中",
+    "analyzing": "分析中",
+    "ready": "完了",
+    "failed": "失敗"
+  }
+}

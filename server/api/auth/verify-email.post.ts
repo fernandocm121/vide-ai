@@ -5,17 +5,21 @@ import { users } from '../../db/schema'
 const Body = z.object({ token: z.string().min(1) })
 
 export default defineEventHandler(async (event) => {
+  const locale = getRequestLocale(event)
+
   const parsed = Body.safeParse(await readBody(event))
   if (!parsed.success) {
-    throw createError({ statusCode: 400, statusMessage: 'Token ausente' })
+    throw createError({
+      statusCode: 400,
+      statusMessage: translateError(locale, 'auth.tokenMissing'),
+    })
   }
 
   const row = await consumeVerificationToken(parsed.data.token, 'email_verify')
   if (!row) {
     throw createError({
       statusCode: 400,
-      statusMessage:
-        'Link inválido ou expirado. Peça um novo e-mail de confirmação.',
+      statusMessage: translateError(locale, 'auth.verifyLinkInvalid'),
     })
   }
 

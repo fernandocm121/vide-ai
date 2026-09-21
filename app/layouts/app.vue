@@ -23,17 +23,18 @@ async function onLogout() {
               to="/app"
               class="text-sm font-medium text-ink-soft transition-colors hover:text-ink"
             >
-              Minhas transcrições
+              {{ $t('appHeader.myTranscriptions') }}
             </NuxtLink>
             <NuxtLink
               to="/app/conta"
               class="text-sm font-medium text-ink-soft transition-colors hover:text-ink"
             >
-              Minha conta
+              {{ $t('appHeader.myAccount') }}
             </NuxtLink>
           </nav>
         </div>
         <div class="flex items-center gap-4 text-sm text-ink-soft">
+          <AppLanguageSwitcher />
           <span class="hidden sm:inline">{{ user?.email }}</span>
           <button
             type="button"
@@ -41,7 +42,7 @@ async function onLogout() {
             :disabled="loggingOut"
             @click="onLogout"
           >
-            Sair
+            {{ $t('appHeader.logout') }}
           </button>
         </div>
       </div>

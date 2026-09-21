@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
-useSeoMeta({ title: 'Confirmar e-mail', robots: 'noindex' })
+const { t } = useI18n()
+useSeoMeta({ title: () => t('auth.verifyEmail.seoTitle'), robots: 'noindex' })
 
 const route = useRoute()
 const { user, fetchUser } = useAuth()
@@ -12,7 +13,7 @@ onMounted(async () => {
   const token = String(route.query.token ?? '')
   if (!token) {
     status.value = 'error'
-    errorMsg.value = 'Link de confirmação inválido.'
+    errorMsg.value = t('auth.verifyEmail.invalidToken')
     return
   }
   try {
@@ -21,8 +22,7 @@ onMounted(async () => {
     status.value = 'ok'
   } catch (err: unknown) {
     const data = (err as { data?: { statusMessage?: string } }).data
-    errorMsg.value =
-      data?.statusMessage ?? 'Não foi possível confirmar seu e-mail.'
+    errorMsg.value = data?.statusMessage ?? t('auth.verifyEmail.genericError')
     status.value = 'error'
   }
 })
@@ -40,7 +40,9 @@ onMounted(async () => {
           class="size-5 animate-spin rounded-full border-2 border-current border-t-transparent"
         />
       </span>
-      <h1 class="mt-4 text-xl font-bold text-ink">Confirmando seu e-mail…</h1>
+      <h1 class="mt-4 text-xl font-bold text-ink">
+        {{ $t('auth.verifyEmail.pendingTitle') }}
+      </h1>
     </template>
 
     <template v-else-if="status === 'ok'">
@@ -49,16 +51,18 @@ onMounted(async () => {
       >
         <AppIcon name="check" class="size-6" />
       </span>
-      <h1 class="mt-4 text-xl font-bold text-ink">E-mail confirmado</h1>
+      <h1 class="mt-4 text-xl font-bold text-ink">
+        {{ $t('auth.verifyEmail.successTitle') }}
+      </h1>
       <p class="mt-2 text-sm text-ink-soft">
         {{
           user?.email
-            ? `${user.email} está confirmado.`
-            : 'Sua conta está pronta.'
+            ? $t('auth.verifyEmail.successWithEmail', { email: user.email })
+            : $t('auth.verifyEmail.successGeneric')
         }}
       </p>
       <BaseButton to="/app" variant="primary" size="md" class="mt-5">
-        Ir para o painel
+        {{ $t('auth.verifyEmail.goToDashboard') }}
       </BaseButton>
     </template>
 
@@ -69,11 +73,11 @@ onMounted(async () => {
         <AppIcon name="x" class="size-6" />
       </span>
       <h1 class="mt-4 text-xl font-bold text-ink">
-        Não foi possível confirmar
+        {{ $t('auth.verifyEmail.errorTitle') }}
       </h1>
       <p class="mt-2 text-sm text-ink-soft">{{ errorMsg }}</p>
       <BaseButton to="/app" variant="outline" size="md" class="mt-5">
-        Ir para o painel
+        {{ $t('auth.verifyEmail.goToDashboard') }}
       </BaseButton>
     </template>
   </div>

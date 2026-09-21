@@ -11,26 +11,32 @@ export type PasswordStrengthLevel = 'empty' | 'weak' | 'medium' | 'strong'
  * pra feedback visual em tempo real, a validação de verdade continua na API.
  */
 export function usePasswordStrength(password: Ref<string>) {
+  const { t } = useI18n()
+
   const criteria = computed<PasswordCriterion[]>(() => [
     {
       key: 'length',
-      label: 'Mínimo de 8 caracteres',
+      label: t('passwordStrength.criteria.length'),
       met: password.value.length >= 8,
     },
     {
       key: 'lower',
-      label: 'Uma letra minúscula',
+      label: t('passwordStrength.criteria.lower'),
       met: /[a-z]/.test(password.value),
     },
     {
       key: 'upper',
-      label: 'Uma letra maiúscula',
+      label: t('passwordStrength.criteria.upper'),
       met: /[A-Z]/.test(password.value),
     },
-    { key: 'number', label: 'Um número', met: /[0-9]/.test(password.value) },
+    {
+      key: 'number',
+      label: t('passwordStrength.criteria.number'),
+      met: /[0-9]/.test(password.value),
+    },
     {
       key: 'special',
-      label: 'Um caractere especial (@, #, $...)',
+      label: t('passwordStrength.criteria.special'),
       met: /[^A-Za-z0-9]/.test(password.value),
     },
   ])

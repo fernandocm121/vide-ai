@@ -2,25 +2,26 @@
 const props = defineProps<{ password: string }>()
 const password = toRef(props, 'password')
 const { criteria, level } = usePasswordStrength(password)
+const { t } = useI18n()
 
 const LEVEL_META: Record<
   string,
-  { label: string; bar: string; width: string; text: string }
+  { label: () => string; bar: string; width: string; text: string }
 > = {
   weak: {
-    label: 'Fraca',
+    label: () => t('passwordStrength.levels.weak'),
     bar: 'bg-red-500',
     width: 'w-1/3',
     text: 'text-red-600',
   },
   medium: {
-    label: 'Média',
+    label: () => t('passwordStrength.levels.medium'),
     bar: 'bg-amber-500',
     width: 'w-2/3',
     text: 'text-amber-600',
   },
   strong: {
-    label: 'Forte',
+    label: () => t('passwordStrength.levels.strong'),
     bar: 'bg-emerald-500',
     width: 'w-full',
     text: 'text-emerald-600',
@@ -41,7 +42,7 @@ const LEVEL_META: Record<
         class="w-12 shrink-0 text-xs font-medium"
         :class="LEVEL_META[level]?.text"
       >
-        {{ LEVEL_META[level]?.label }}
+        {{ LEVEL_META[level]?.label() }}
       </span>
     </div>
 

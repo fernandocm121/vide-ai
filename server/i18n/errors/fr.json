@@ -1,0 +1,33 @@
+{
+  "validation.required": "Champ obligatoire",
+  "validation.invalidEmail": "E-mail invalide",
+  "validation.generic": "Données invalides",
+  "validation.invalidRequest": "Requête invalide",
+  "validation.invalidLocale": "Langue invalide",
+  "validation.password.tooShort": "Le mot de passe doit comporter au moins 8 caractères",
+  "validation.password.needsLower": "Le mot de passe doit contenir au moins une lettre minuscule",
+  "validation.password.needsUpper": "Le mot de passe doit contenir au moins une lettre majuscule",
+  "validation.password.needsNumber": "Le mot de passe doit contenir au moins un chiffre",
+  "validation.password.needsSpecial": "Le mot de passe doit contenir au moins un caractère spécial (ex. : @, #, $, %)",
+
+  "auth.notAuthenticated": "Non authentifié",
+  "auth.invalidCredentials": "E-mail ou mot de passe incorrect",
+  "auth.emailTaken": "Un compte existe déjà avec cet e-mail",
+  "auth.wrongCurrentPassword": "Le mot de passe actuel est incorrect",
+  "auth.newPasswordSameAsCurrent": "Le nouveau mot de passe doit être différent de l'actuel",
+  "auth.emailNotFound": "Aucun compte n'existe avec cet e-mail",
+  "auth.emailSendFailed": "Impossible d'envoyer l'e-mail. Réessayez.",
+  "auth.resetLinkInvalid": "Lien invalide ou expiré. Demandez une nouvelle réinitialisation.",
+  "auth.tokenMissing": "Jeton manquant",
+  "auth.verifyLinkInvalid": "Lien invalide ou expiré. Demandez un nouvel e-mail de confirmation.",
+
+  "videos.notFound": "Introuvable",
+  "videos.fileTooLarge": "Fichier au-delà de la limite de {max} Mo",
+  "videos.uploadNotFound": "Fichier introuvable dans le stockage — l'envoi n'a pas été terminé",
+  "videos.invalidExportFormat": "Format invalide. Utilisez txt, json, srt ou vtt.",
+  "videos.transcriptNotReady": "La transcription n'est pas encore prête à être exportée.",
+  "videos.transcriptNotFound": "Transcription introuvable",
+  "videos.noTimestampsForSubtitles": "Cette transcription a été faite sans horodatage et ne peut pas devenir des sous-titres. Retranscrivez le fichier pour générer du SRT/VTT.",
+  "videos.invalidStatusForProcessing": "Impossible de traiter dans le statut « {status} »",
+  "videos.planLimitReached": "Limite mensuelle du forfait « {plan} » atteinte : vous avez déjà utilisé {used} des {limit} minutes disponibles ce mois-ci. Passez à un forfait supérieur pour continuer à transcrire."
+}

@@ -1,23 +1,25 @@
 <script setup lang="ts">
-const outputs = [
-  { label: 'Transcrição', icon: 'file' },
-  { label: 'Resumo', icon: 'brain' },
-  { label: 'Capítulos', icon: 'layers' },
-  { label: 'Legendas SRT/VTT', icon: 'file' },
-  { label: 'Palavras-chave', icon: 'search' },
-  { label: 'Melhores momentos', icon: 'bolt' },
-  { label: 'Títulos e descrições', icon: 'sparkles' },
-  { label: 'Cortes para Shorts', icon: 'scissors' },
-]
+const { t } = useI18n()
+
+const outputs = computed(() => [
+  { label: t('home.pipeline.outputs.transcript'), icon: 'file' },
+  { label: t('home.pipeline.outputs.summary'), icon: 'brain' },
+  { label: t('home.pipeline.outputs.chapters'), icon: 'layers' },
+  { label: t('home.pipeline.outputs.subtitles'), icon: 'file' },
+  { label: t('home.pipeline.outputs.keywords'), icon: 'search' },
+  { label: t('home.pipeline.outputs.bestMoments'), icon: 'bolt' },
+  { label: t('home.pipeline.outputs.titles'), icon: 'sparkles' },
+  { label: t('home.pipeline.outputs.shorts'), icon: 'scissors' },
+])
 </script>
 
 <template>
   <section class="border-b border-line bg-paper">
     <div class="container-page py-16 lg:py-24">
       <SectionHeading
-        eyebrow="Pipeline de conteúdo"
-        title="Um vídeo. Múltiplos conteúdos"
-        subtitle="A mesma gravação alimenta todo o seu calendário editorial."
+        :eyebrow="$t('home.pipeline.eyebrow')"
+        :title="$t('home.pipeline.title')"
+        :subtitle="$t('home.pipeline.subtitle')"
       />
 
       <div
@@ -27,8 +29,12 @@ const outputs = [
           class="flex shrink-0 flex-col items-center justify-center gap-1 rounded-2xl bg-ink px-8 py-6 text-center text-white lg:w-56"
         >
           <AppIcon name="video" class="size-6" />
-          <p class="mt-1 text-lg font-bold">30 min</p>
-          <p class="text-xs text-white/70">de gravação</p>
+          <p class="mt-1 text-lg font-bold">
+            {{ $t('home.pipeline.recordingLabel') }}
+          </p>
+          <p class="text-xs text-white/70">
+            {{ $t('home.pipeline.recordingCaption') }}
+          </p>
         </div>
 
         <div class="hidden shrink-0 text-ink-soft lg:block">
@@ -53,7 +59,7 @@ const outputs = [
       <div
         class="mt-6 flex items-center justify-center rounded-2xl bg-brand-500 px-6 py-5 text-center text-sm font-semibold text-white"
       >
-        Tudo pronto para publicar no YouTube, TikTok, Instagram e newsletter.
+        {{ $t('home.pipeline.footer') }}
       </div>
     </div>
   </section>

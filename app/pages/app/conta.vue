@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'app' })
-useHead({ title: 'Minha conta — Vide AI' })
+const { t } = useI18n()
+useHead({ title: () => t('app.account.seoTitle') })
 
 const { user, fetchUser } = useAuth()
 const notify = useNotify()
@@ -26,9 +27,9 @@ async function saveProfile() {
       body: { name: name.value },
     })
     await fetchUser()
-    notify.success('Perfil atualizado.')
+    notify.success(t('app.account.profileSaved'))
   } catch {
-    notify.error('Não foi possível salvar. Tente de novo.')
+    notify.error(t('app.account.profileSaveError'))
   } finally {
     savingProfile.value = false
   }
@@ -46,15 +47,15 @@ const { isValid: newPasswordIsValid } = usePasswordStrength(newPassword)
 
 async function changePassword() {
   if (!newPasswordIsValid.value) {
-    notify.error('A nova senha não atende a todos os critérios de segurança.')
+    notify.error(t('app.account.passwordInvalid'))
     return
   }
   if (newPassword.value !== confirmPassword.value) {
-    notify.error('As senhas não coincidem.')
+    notify.error(t('app.account.passwordMismatch'))
     return
   }
   if (newPassword.value === currentPassword.value) {
-    notify.error('A nova senha deve ser diferente da senha atual.')
+    notify.error(t('app.account.passwordSameAsCurrent'))
     return
   }
   savingPassword.value = true
@@ -69,9 +70,9 @@ async function changePassword() {
     currentPassword.value = ''
     newPassword.value = ''
     confirmPassword.value = ''
-    notify.success('Senha alterada com sucesso.')
+    notify.success(t('app.account.passwordChanged'))
   } catch (err: unknown) {
-    notify.error(apiErrorMessage(err, 'Não foi possível trocar a senha.'))
+    notify.error(apiErrorMessage(err, t('app.account.passwordChangeError')))
   } finally {
     savingPassword.value = false
   }
@@ -82,19 +83,21 @@ async function changePassword() {
   <div class="flex flex-col gap-8">
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight text-ink">
-        Minha conta
+        {{ $t('app.account.title') }}
       </h1>
-      <p class="mt-1 text-sm text-ink-soft">Perfil, plano e segurança.</p>
+      <p class="mt-1 text-sm text-ink-soft">{{ $t('app.account.subtitle') }}</p>
     </div>
 
     <section class="rounded-2xl border border-line bg-paper p-6">
       <h2 class="text-sm font-semibold uppercase tracking-wider text-ink-soft">
-        Perfil
+        {{ $t('app.account.profileSection') }}
       </h2>
 
       <div class="mt-4 flex flex-col gap-4 sm:max-w-sm">
         <div class="flex flex-col gap-1.5">
-          <label for="name" class="text-sm font-medium text-ink">Nome</label>
+          <label for="name" class="text-sm font-medium text-ink">{{
+            $t('app.account.nameLabel')
+          }}</label>
           <input
             id="name"
             v-model="name"
@@ -104,26 +107,30 @@ async function changePassword() {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <span class="text-sm font-medium text-ink">E-mail</span>
+          <span class="text-sm font-medium text-ink">{{
+            $t('app.account.emailLabel')
+          }}</span>
           <div class="flex items-center gap-2">
             <span class="text-sm text-ink-soft">{{ user?.email }}</span>
             <span
               v-if="user?.emailVerifiedAt"
               class="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600"
             >
-              Verificado
+              {{ $t('app.account.verified') }}
             </span>
             <span
               v-else
               class="rounded-full bg-paper-3 px-2 py-0.5 text-xs font-medium text-ink-soft"
             >
-              Não verificado
+              {{ $t('app.account.notVerified') }}
             </span>
           </div>
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <span class="text-sm font-medium text-ink">Plano</span>
+          <span class="text-sm font-medium text-ink">{{
+            $t('app.account.planLabel')
+          }}</span>
           <span class="text-sm text-ink-soft">
             {{ planLabels[user?.plan ?? 'free'] }}
           </span>
@@ -136,14 +143,14 @@ async function changePassword() {
           class="self-start"
           @click="saveProfile"
         >
-          Salvar
+          {{ $t('app.account.save') }}
         </BaseButton>
       </div>
     </section>
 
     <section class="rounded-2xl border border-line bg-paper p-6">
       <h2 class="text-sm font-semibold uppercase tracking-wider text-ink-soft">
-        Trocar senha
+        {{ $t('app.account.changePasswordSection') }}
       </h2>
 
       <form
@@ -151,9 +158,9 @@ async function changePassword() {
         @submit.prevent="changePassword"
       >
         <div class="flex flex-col gap-1.5">
-          <label for="current" class="text-sm font-medium text-ink"
-            >Senha atual</label
-          >
+          <label for="current" class="text-sm font-medium text-ink">{{
+            $t('app.account.currentPasswordLabel')
+          }}</label>
           <div class="relative">
             <input
               id="current"
@@ -167,7 +174,9 @@ async function changePassword() {
               type="button"
               class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
               :aria-label="
-                showCurrentPassword ? 'Ocultar senha' : 'Mostrar senha'
+                showCurrentPassword
+                  ? $t('common.hidePassword')
+                  : $t('common.showPassword')
               "
               @click="showCurrentPassword = !showCurrentPassword"
             >
@@ -180,9 +189,9 @@ async function changePassword() {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="new" class="text-sm font-medium text-ink"
-            >Nova senha</label
-          >
+          <label for="new" class="text-sm font-medium text-ink">{{
+            $t('app.account.newPasswordLabel')
+          }}</label>
           <div class="relative">
             <input
               id="new"
@@ -196,7 +205,11 @@ async function changePassword() {
             <button
               type="button"
               class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
-              :aria-label="showNewPassword ? 'Ocultar senha' : 'Mostrar senha'"
+              :aria-label="
+                showNewPassword
+                  ? $t('common.hidePassword')
+                  : $t('common.showPassword')
+              "
               @click="showNewPassword = !showNewPassword"
             >
               <AppIcon
@@ -209,9 +222,9 @@ async function changePassword() {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="confirm" class="text-sm font-medium text-ink"
-            >Confirmar nova senha</label
-          >
+          <label for="confirm" class="text-sm font-medium text-ink">{{
+            $t('app.account.confirmNewPasswordLabel')
+          }}</label>
           <div class="relative">
             <input
               id="confirm"
@@ -226,7 +239,9 @@ async function changePassword() {
               type="button"
               class="absolute inset-y-0 right-3 flex items-center text-ink-soft hover:text-ink"
               :aria-label="
-                showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'
+                showConfirmPassword
+                  ? $t('common.hidePassword')
+                  : $t('common.showPassword')
               "
               @click="showConfirmPassword = !showConfirmPassword"
             >
@@ -245,7 +260,7 @@ async function changePassword() {
           :loading="savingPassword"
           class="self-start"
         >
-          Trocar senha
+          {{ $t('app.account.changePassword') }}
         </BaseButton>
       </form>
     </section>

@@ -1,0 +1,33 @@
+{
+  "validation.required": "Campo obbligatorio",
+  "validation.invalidEmail": "E-mail non valida",
+  "validation.generic": "Dati non validi",
+  "validation.invalidRequest": "Richiesta non valida",
+  "validation.invalidLocale": "Lingua non valida",
+  "validation.password.tooShort": "La password deve avere almeno 8 caratteri",
+  "validation.password.needsLower": "La password deve contenere almeno una lettera minuscola",
+  "validation.password.needsUpper": "La password deve contenere almeno una lettera maiuscola",
+  "validation.password.needsNumber": "La password deve contenere almeno un numero",
+  "validation.password.needsSpecial": "La password deve contenere almeno un carattere speciale (es.: @, #, $, %)",
+
+  "auth.notAuthenticated": "Non autenticato",
+  "auth.invalidCredentials": "E-mail o password errati",
+  "auth.emailTaken": "Esiste già un account con questa e-mail",
+  "auth.wrongCurrentPassword": "La password attuale non è corretta",
+  "auth.newPasswordSameAsCurrent": "La nuova password deve essere diversa da quella attuale",
+  "auth.emailNotFound": "Non esiste nessun account con questa e-mail",
+  "auth.emailSendFailed": "Impossibile inviare l'e-mail. Riprova.",
+  "auth.resetLinkInvalid": "Link non valido o scaduto. Richiedi una nuova reimpostazione.",
+  "auth.tokenMissing": "Token mancante",
+  "auth.verifyLinkInvalid": "Link non valido o scaduto. Richiedi una nuova e-mail di conferma.",
+
+  "videos.notFound": "Non trovato",
+  "videos.fileTooLarge": "File oltre il limite di {max} MB",
+  "videos.uploadNotFound": "File non trovato nello storage — il caricamento non è stato completato",
+  "videos.invalidExportFormat": "Formato non valido. Usa txt, json, srt o vtt.",
+  "videos.transcriptNotReady": "La trascrizione non è ancora pronta per l'esportazione.",
+  "videos.transcriptNotFound": "Trascrizione non trovata",
+  "videos.noTimestampsForSubtitles": "Questa trascrizione è stata fatta senza timestamp e non può diventare sottotitoli. Ritrascrivi il file per generare SRT/VTT.",
+  "videos.invalidStatusForProcessing": "Impossibile elaborare nello stato \"{status}\"",
+  "videos.planLimitReached": "Limite mensile del piano \"{plan}\" raggiunto: hai già usato {used} dei {limit} minuti disponibili questo mese. Esegui l'upgrade per continuare a trascrivere."
+}

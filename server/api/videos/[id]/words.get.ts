@@ -15,6 +15,7 @@ const Query = z.object({
  */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
+  const locale = getRequestLocale(event)
   const id = getRouterParam(event, 'id')!
   const db = useDrizzle()
 
@@ -22,7 +23,7 @@ export default defineEventHandler(async (event) => {
   if (!parsed.success) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Requisição inválida',
+      statusMessage: translateError(locale, 'validation.invalidRequest'),
       data: parsed.error.issues,
     })
   }
@@ -33,7 +34,10 @@ export default defineEventHandler(async (event) => {
     columns: { id: true },
   })
   if (!video) {
-    throw createError({ statusCode: 404, statusMessage: 'Não encontrado' })
+    throw createError({
+      statusCode: 404,
+      statusMessage: translateError(locale, 'videos.notFound'),
+    })
   }
 
   const transcript = await db.query.transcripts.findFirst({
@@ -43,7 +47,7 @@ export default defineEventHandler(async (event) => {
   if (!transcript) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Transcrição não encontrada',
+      statusMessage: translateError(locale, 'videos.transcriptNotFound'),
     })
   }
 

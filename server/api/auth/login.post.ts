@@ -3,19 +3,22 @@ import { z } from 'zod'
 import { users } from '../../db/schema'
 
 const Body = z.object({
-  email: z.string().email('e-mail inválido').toLowerCase(),
-  password: z.string().min(1, 'obrigatório'),
+  email: z.string().email('validation.invalidEmail').toLowerCase(),
+  password: z.string().min(1, 'validation.required'),
   remember: z.boolean().optional(),
 })
 
-const INVALID_CREDENTIALS = 'E-mail ou senha incorretos'
-
 export default defineEventHandler(async (event) => {
+  const locale = getRequestLocale(event)
+
   const parsed = Body.safeParse(await readBody(event))
   if (!parsed.success) {
     throw createError({
       statusCode: 400,
-      statusMessage: parsed.error.issues[0]?.message ?? 'Dados inválidos',
+      statusMessage: translateError(
+        locale,
+        parsed.error.issues[0]?.message ?? 'validation.generic',
+      ),
       data: parsed.error.issues,
     })
   }
@@ -28,7 +31,10 @@ export default defineEventHandler(async (event) => {
     !user?.passwordHash ||
     !(await verifyPassword(user.passwordHash, password))
   ) {
-    throw createError({ statusCode: 401, statusMessage: INVALID_CREDENTIALS })
+    throw createError({
+      statusCode: 401,
+      statusMessage: translateError(locale, 'auth.invalidCredentials'),
+    })
   }
 
   await createSession(event, user.id, { remember })

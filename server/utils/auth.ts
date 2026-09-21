@@ -25,7 +25,13 @@ export async function getSessionUser(event: H3Event): Promise<User | null> {
 export async function getCurrentUser(event: H3Event): Promise<User> {
   const user = await getSessionUser(event)
   if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'Não autenticado' })
+    throw createError({
+      statusCode: 401,
+      statusMessage: translateError(
+        getRequestLocale(event),
+        'auth.notAuthenticated',
+      ),
+    })
   }
   return user
 }
@@ -38,6 +44,7 @@ export function toPublicUser(user: User) {
     email: user.email,
     plan: user.plan,
     emailVerifiedAt: user.emailVerifiedAt,
+    preferredLocale: user.preferredLocale,
   }
 }
 

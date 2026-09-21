@@ -16,7 +16,10 @@ export default defineEventHandler(async (event) => {
     where: and(eq(videos.id, id), eq(videos.userId, user.id)),
   })
   if (!video) {
-    throw createError({ statusCode: 404, statusMessage: 'Não encontrado' })
+    throw createError({
+      statusCode: 404,
+      statusMessage: translateError(getRequestLocale(event), 'videos.notFound'),
+    })
   }
 
   // só oferece a URL de mídia depois que o upload foi confirmado

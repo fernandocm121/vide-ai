@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import {
-  IN_PROGRESS,
-  STATUS_META,
-  formatDuration,
-  type VideoStatus,
-} from '~/utils/media'
+import { IN_PROGRESS, formatDuration, type VideoStatus } from '~/utils/media'
 
 definePageMeta({ layout: 'app' })
+const { t } = useI18n()
 
 interface VideoDetail {
   id: string
@@ -45,7 +41,15 @@ const {
   error,
 } = await useFetch<VideoDetail>(() => `/api/videos/${id}`)
 
-useHead(() => ({ title: `${video.value?.title ?? 'Vídeo'} — Vide AI` }))
+useHead(() => ({
+  title: `${video.value?.title ?? t('app.videoDetail.back')} — Vide AI`,
+}))
+
+const statusLabel = computed(() => {
+  if (!video.value) return ''
+  const key = `statusBadge.${video.value.status}` as 'statusBadge.queued'
+  return t(key)
+})
 
 // transcrições feitas antes da migração para o Scribe v2 não têm timestamps,
 // então não dá para gerar legenda a partir delas
@@ -81,7 +85,7 @@ async function transcribe() {
     actionError.value =
       err?.data?.statusMessage ??
       err?.message ??
-      'Falha ao iniciar o processamento.'
+      t('app.videoDetail.startError')
   } finally {
     busy.value = false
   }
@@ -97,12 +101,7 @@ function seekTo(ms: number) {
 }
 
 async function remove() {
-  if (
-    !confirm(
-      'Excluir este vídeo e a transcrição? Esta ação não pode ser desfeita.',
-    )
-  )
-    return
+  if (!confirm(t('app.videoDetail.deleteConfirm'))) return
   busy.value = true
   try {
     await $fetch(`/api/videos/${id}`, { method: 'DELETE' })
@@ -118,8 +117,10 @@ async function remove() {
     v-if="error"
     class="rounded-xl border border-line bg-paper p-6 text-sm text-ink-soft"
   >
-    Não foi possível carregar este vídeo.
-    <NuxtLink to="/app" class="font-medium text-brand-600">Voltar</NuxtLink>
+    {{ $t('app.videoDetail.loadError') }}
+    <NuxtLink to="/app" class="font-medium text-brand-600">{{
+      $t('app.videoDetail.back')
+    }}</NuxtLink>
   </div>
 
   <div v-else-if="video" class="flex flex-col gap-6">
@@ -129,7 +130,7 @@ async function remove() {
           to="/app"
           class="text-xs font-medium text-ink-soft hover:text-ink"
         >
-          ← Minhas transcrições
+          {{ $t('app.videoDetail.backLink') }}
         </NuxtLink>
         <h1
           class="mt-1 truncate text-2xl font-extrabold tracking-tight text-ink"
@@ -163,16 +164,16 @@ async function remove() {
         <p class="text-sm text-ink">
           {{
             video.mediaKind === 'audio'
-              ? 'O áudio está pronto para transcrever.'
-              : 'O vídeo está pronto para processar (extração de áudio + transcrição).'
+              ? $t('app.videoDetail.audioReady')
+              : $t('app.videoDetail.videoReady')
           }}
-          Custo estimado: <span class="font-medium">US$ 0,006 / minuto</span>.
+          {{ $t('app.videoDetail.estimatedCost', { cost: 'US$ 0,006' }) }}
         </p>
         <BaseButton class="mt-3" :loading="busy" @click="transcribe">
           {{
             video.mediaKind === 'audio'
-              ? 'Transcrever áudio'
-              : 'Processar vídeo'
+              ? $t('app.videoDetail.transcribeAudio')
+              : $t('app.videoDetail.processVideo')
           }}
         </BaseButton>
       </template>
@@ -186,14 +187,16 @@ async function remove() {
       >
         <div class="flex items-center gap-3 text-sm text-ink">
           <span class="size-2 animate-pulse rounded-full bg-amber-500" />
-          {{ STATUS_META[video.status].label }}…
-          <span class="text-ink-soft">— isso pode levar alguns minutos.</span>
+          {{ statusLabel }}…
+          <span class="text-ink-soft">{{
+            $t('app.videoDetail.processingHint')
+          }}</span>
         </div>
       </template>
 
       <template v-else-if="video.status === 'failed'">
         <p class="text-sm font-medium text-brand-600">
-          O processamento falhou.
+          {{ $t('app.videoDetail.processingFailed') }}
         </p>
         <p v-if="video.error" class="mt-1 text-xs text-ink-soft">
           {{ video.error }}
@@ -204,26 +207,28 @@ async function remove() {
           :loading="busy"
           @click="transcribe"
         >
-          Tentar de novo
+          {{ $t('app.videoDetail.retry') }}
         </BaseButton>
       </template>
 
       <template v-else-if="video.status === 'ready'">
-        <p class="text-sm text-ink">Transcrição pronta.</p>
+        <p class="text-sm text-ink">
+          {{ $t('app.videoDetail.transcriptReady') }}
+        </p>
         <div class="mt-3 flex flex-wrap gap-2">
           <BaseButton
             variant="outline"
             size="md"
             :href="`/api/videos/${id}/export/txt`"
           >
-            Baixar .TXT
+            {{ $t('app.videoDetail.downloadTxt') }}
           </BaseButton>
           <BaseButton
             variant="outline"
             size="md"
             :href="`/api/videos/${id}/export/json`"
           >
-            Baixar .JSON
+            {{ $t('app.videoDetail.downloadJson') }}
           </BaseButton>
           <!-- legendas só existem quando a transcrição tem timestamps -->
           <template v-if="hasSubtitles">
@@ -232,21 +237,23 @@ async function remove() {
               size="md"
               :href="`/api/videos/${id}/export/srt`"
             >
-              Baixar .SRT
+              {{ $t('app.videoDetail.downloadSrt') }}
             </BaseButton>
             <BaseButton
               variant="outline"
               size="md"
               :href="`/api/videos/${id}/export/vtt`"
             >
-              Baixar .VTT
+              {{ $t('app.videoDetail.downloadVtt') }}
             </BaseButton>
           </template>
         </div>
       </template>
 
       <template v-else>
-        <p class="text-sm text-ink-soft">Processando o upload…</p>
+        <p class="text-sm text-ink-soft">
+          {{ $t('app.videoDetail.uploadProcessing') }}
+        </p>
       </template>
 
       <p v-if="actionError" class="mt-3 text-sm text-brand-600">
@@ -269,7 +276,7 @@ async function remove() {
         :disabled="busy"
         @click="remove"
       >
-        Excluir vídeo
+        {{ $t('app.videoDetail.delete') }}
       </button>
     </div>
   </div>

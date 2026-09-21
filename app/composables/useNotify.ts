@@ -6,20 +6,21 @@ import { useToast } from 'primevue/usetoast'
  */
 export function useNotify() {
   const toast = useToast()
+  const { t } = useI18n()
 
-  function success(detail: string, summary = 'Sucesso') {
+  function success(detail: string, summary = t('common.toast.success')) {
     toast.add({ severity: 'success', summary, detail, life: 3500 })
   }
 
-  function error(detail: string, summary = 'Erro') {
+  function error(detail: string, summary = t('common.toast.error')) {
     toast.add({ severity: 'error', summary, detail, life: 4500 })
   }
 
-  function info(detail: string, summary = 'Aviso') {
+  function info(detail: string, summary = t('common.toast.info')) {
     toast.add({ severity: 'info', summary, detail, life: 3500 })
   }
 
-  function warn(detail: string, summary = 'Atenção') {
+  function warn(detail: string, summary = t('common.toast.warn')) {
     toast.add({ severity: 'warn', summary, detail, life: 4000 })
   }
 

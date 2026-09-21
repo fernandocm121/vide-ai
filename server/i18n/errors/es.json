@@ -1,0 +1,33 @@
+{
+  "validation.required": "Campo obligatorio",
+  "validation.invalidEmail": "Correo electrónico no válido",
+  "validation.generic": "Datos no válidos",
+  "validation.invalidRequest": "Solicitud no válida",
+  "validation.invalidLocale": "Idioma no válido",
+  "validation.password.tooShort": "La contraseña debe tener al menos 8 caracteres",
+  "validation.password.needsLower": "La contraseña necesita al menos una letra minúscula",
+  "validation.password.needsUpper": "La contraseña necesita al menos una letra mayúscula",
+  "validation.password.needsNumber": "La contraseña necesita al menos un número",
+  "validation.password.needsSpecial": "La contraseña necesita al menos un carácter especial (ej.: @, #, $, %)",
+
+  "auth.notAuthenticated": "No autenticado",
+  "auth.invalidCredentials": "Correo o contraseña incorrectos",
+  "auth.emailTaken": "Ya existe una cuenta con este correo",
+  "auth.wrongCurrentPassword": "La contraseña actual es incorrecta",
+  "auth.newPasswordSameAsCurrent": "La nueva contraseña debe ser diferente de la actual",
+  "auth.emailNotFound": "No existe ninguna cuenta con este correo",
+  "auth.emailSendFailed": "No se pudo enviar el correo. Inténtalo de nuevo.",
+  "auth.resetLinkInvalid": "Enlace no válido o caducado. Solicita un nuevo restablecimiento.",
+  "auth.tokenMissing": "Falta el token",
+  "auth.verifyLinkInvalid": "Enlace no válido o caducado. Solicita un nuevo correo de confirmación.",
+
+  "videos.notFound": "No encontrado",
+  "videos.fileTooLarge": "Archivo por encima del límite de {max} MB",
+  "videos.uploadNotFound": "Archivo no encontrado en el almacenamiento — la subida no se completó",
+  "videos.invalidExportFormat": "Formato no válido. Usa txt, json, srt o vtt.",
+  "videos.transcriptNotReady": "La transcripción aún no está lista para exportar.",
+  "videos.transcriptNotFound": "Transcripción no encontrada",
+  "videos.noTimestampsForSubtitles": "Esta transcripción se hizo sin marcas de tiempo y no puede convertirse en subtítulos. Vuelve a transcribir el archivo para generar SRT/VTT.",
+  "videos.invalidStatusForProcessing": "No se puede procesar en el estado \"{status}\"",
+  "videos.planLimitReached": "Límite mensual del plan \"{plan}\" alcanzado: ya usaste {used} de {limit} minutos disponibles este mes. Mejora tu plan para seguir transcribiendo."
+}

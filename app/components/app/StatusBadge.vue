@@ -2,9 +2,11 @@
 import { STATUS_META, type VideoStatus } from '~/utils/media'
 
 const props = defineProps<{ status: VideoStatus }>()
+const { t } = useI18n()
 
-const meta = computed(
-  () => STATUS_META[props.status] ?? { label: props.status, tone: 'neutral' },
+const tone = computed(() => STATUS_META[props.status]?.tone ?? 'neutral')
+const label = computed(() =>
+  t(`statusBadge.${props.status}` as 'statusBadge.queued'),
 )
 
 const tones: Record<string, string> = {
@@ -18,12 +20,12 @@ const tones: Record<string, string> = {
 <template>
   <span
     class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold"
-    :class="tones[meta.tone]"
+    :class="tones[tone]"
   >
     <span
-      v-if="meta.tone === 'progress'"
+      v-if="tone === 'progress'"
       class="size-1.5 animate-pulse rounded-full bg-current"
     />
-    {{ meta.label }}
+    {{ label }}
   </span>
 </template>

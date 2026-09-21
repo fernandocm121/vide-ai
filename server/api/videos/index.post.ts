@@ -15,13 +15,14 @@ const Body = z.object({
  */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
+  const locale = getRequestLocale(event)
   const { MAX_UPLOAD_BYTES, MAX_VIDEO_UPLOAD_BYTES } = useEnv()
 
   const parsed = Body.safeParse(await readBody(event))
   if (!parsed.success) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Requisição inválida',
+      statusMessage: translateError(locale, 'validation.invalidRequest'),
       data: parsed.error.issues,
     })
   }
@@ -32,9 +33,9 @@ export default defineEventHandler(async (event) => {
   if (sizeBytes > maxBytes) {
     throw createError({
       statusCode: 413,
-      statusMessage: `Arquivo acima do limite de ${Math.floor(
-        maxBytes / 1024 / 1024,
-      )} MB`,
+      statusMessage: translateError(locale, 'videos.fileTooLarge', {
+        max: Math.floor(maxBytes / 1024 / 1024),
+      }),
     })
   }
 

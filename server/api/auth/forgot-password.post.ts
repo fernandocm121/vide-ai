@@ -3,13 +3,18 @@ import { z } from 'zod'
 import { users } from '../../db/schema'
 
 const Body = z.object({
-  email: z.string().email('e-mail inválido').toLowerCase(),
+  email: z.string().email('validation.invalidEmail').toLowerCase(),
 })
 
 export default defineEventHandler(async (event) => {
+  const locale = getRequestLocale(event)
+
   const parsed = Body.safeParse(await readBody(event))
   if (!parsed.success) {
-    throw createError({ statusCode: 400, statusMessage: 'E-mail inválido' })
+    throw createError({
+      statusCode: 400,
+      statusMessage: translateError(locale, 'validation.invalidEmail'),
+    })
   }
 
   const db = useDrizzle()
@@ -20,7 +25,7 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Não existe uma conta com este e-mail',
+      statusMessage: translateError(locale, 'auth.emailNotFound'),
     })
   }
 

@@ -3,8 +3,8 @@ import { z } from 'zod'
 import { users } from '../../db/schema'
 
 const Body = z.object({
-  name: z.string().min(1, 'obrigatório').max(120),
-  email: z.string().email('e-mail inválido').toLowerCase(),
+  name: z.string().min(1, 'validation.required').max(120),
+  email: z.string().email('validation.invalidEmail').toLowerCase(),
   password: passwordSchema,
 })
 
@@ -15,11 +15,16 @@ const Body = z.object({
  * pendência no dashboard até ser confirmada.
  */
 export default defineEventHandler(async (event) => {
+  const locale = getRequestLocale(event)
+
   const parsed = Body.safeParse(await readBody(event))
   if (!parsed.success) {
     throw createError({
       statusCode: 400,
-      statusMessage: parsed.error.issues[0]?.message ?? 'Dados inválidos',
+      statusMessage: translateError(
+        locale,
+        parsed.error.issues[0]?.message ?? 'validation.generic',
+      ),
       data: parsed.error.issues,
     })
   }
@@ -32,7 +37,7 @@ export default defineEventHandler(async (event) => {
   if (existing) {
     throw createError({
       statusCode: 409,
-      statusMessage: 'Já existe uma conta com este e-mail',
+      statusMessage: translateError(locale, 'auth.emailTaken'),
     })
   }
 

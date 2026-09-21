@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { formatTimestamp } from '~/utils/media'
 
+const { t } = useI18n()
+
 interface Segment {
   id: string
   idx: number
@@ -54,19 +56,19 @@ async function copyText() {
 <template>
   <div class="rounded-2xl border border-line bg-paper">
     <TabView v-if="hasSegments">
-      <TabPanel header="Texto corrido">
+      <TabPanel :header="t('transcriptView.fullText')">
         <div class="flex flex-wrap items-center justify-end gap-2">
           <input
             v-model="query"
             type="search"
-            placeholder="Buscar na transcrição…"
+            :placeholder="t('transcriptView.searchPlaceholder')"
             class="h-8 w-44 rounded-lg border border-line bg-paper px-3 text-xs text-ink outline-none transition-colors focus:border-brand-500 sm:w-56"
           />
           <button
             class="whitespace-nowrap text-xs font-medium text-ink-soft transition-colors hover:text-ink"
             @click="copyText"
           >
-            Copiar texto
+            {{ $t('transcriptView.copyText') }}
           </button>
         </div>
 
@@ -76,7 +78,7 @@ async function copyText() {
         />
       </TabPanel>
 
-      <TabPanel header="Segmentado">
+      <TabPanel :header="t('transcriptView.segmented')">
         <ul class="max-h-128 overflow-y-auto">
           <li
             v-for="seg in segments"
@@ -97,20 +99,22 @@ async function copyText() {
       <div
         class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3"
       >
-        <span class="text-xs font-semibold text-ink-soft">Transcrição</span>
+        <span class="text-xs font-semibold text-ink-soft">{{
+          $t('transcriptView.label')
+        }}</span>
 
         <div class="flex items-center gap-2">
           <input
             v-model="query"
             type="search"
-            placeholder="Buscar na transcrição…"
+            :placeholder="$t('transcriptView.searchPlaceholder')"
             class="h-8 w-44 rounded-lg border border-line bg-paper px-3 text-xs text-ink outline-none transition-colors focus:border-brand-500 sm:w-56"
           />
           <button
             class="whitespace-nowrap text-xs font-medium text-ink-soft transition-colors hover:text-ink"
             @click="copyText"
           >
-            Copiar texto
+            {{ $t('transcriptView.copyText') }}
           </button>
         </div>
       </div>

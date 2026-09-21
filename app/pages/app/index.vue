@@ -2,7 +2,8 @@
 import { formatDuration, type VideoStatus } from '~/utils/media'
 
 definePageMeta({ layout: 'app' })
-useHead({ title: 'Minhas transcrições — Vide AI' })
+const { t, locale } = useI18n()
+useHead({ title: () => t('app.transcriptions.seoTitle') })
 
 interface VideoRow {
   id: string
@@ -22,22 +23,25 @@ const {
   error,
 } = await useFetch<VideoRow[]>('/api/videos')
 
-const dateFmt = new Intl.DateTimeFormat('pt-BR', {
-  day: '2-digit',
-  month: 'short',
-  hour: '2-digit',
-  minute: '2-digit',
-})
+const dateFmt = computed(
+  () =>
+    new Intl.DateTimeFormat(locale.value, {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+)
 </script>
 
 <template>
   <div class="flex flex-col gap-8">
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight text-ink">
-        Minhas transcrições
+        {{ $t('app.transcriptions.title') }}
       </h1>
       <p class="mt-1 text-sm text-ink-soft">
-        Envie um vídeo ou áudio e transforme em texto com timestamps.
+        {{ $t('app.transcriptions.subtitle') }}
       </p>
     </div>
 
@@ -48,13 +52,13 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
         <h2
           class="text-sm font-semibold uppercase tracking-wider text-ink-soft"
         >
-          Enviados
+          {{ $t('app.transcriptions.sentSectionTitle') }}
         </h2>
         <button
           class="text-xs font-medium text-ink-soft transition-colors hover:text-ink"
           @click="refresh()"
         >
-          Atualizar
+          {{ $t('app.transcriptions.refresh') }}
         </button>
       </div>
 
@@ -62,17 +66,18 @@ const dateFmt = new Intl.DateTimeFormat('pt-BR', {
         v-if="error"
         class="rounded-2xl border border-line bg-paper px-6 py-12 text-center text-sm text-brand-600"
       >
-        Não foi possível carregar seus vídeos. A infra local está de pé? (<code
-          class="text-xs"
-          >npm run services:up</code
-        >)
+        {{ $t('app.transcriptions.loadError') }}
       </div>
 
       <div
         v-else-if="!videos?.length"
         class="rounded-2xl border border-line bg-paper px-6 py-12 text-center text-sm text-ink-soft"
       >
-        {{ pending ? 'Carregando…' : 'Nenhum vídeo enviado ainda.' }}
+        {{
+          pending
+            ? $t('app.transcriptions.loading')
+            : $t('app.transcriptions.empty')
+        }}
       </div>
 
       <ul v-else class="flex flex-col gap-2">

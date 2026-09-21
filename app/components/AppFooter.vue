@@ -1,34 +1,35 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const year = new Date().getFullYear()
 
-const groups = [
+const groups = computed(() => [
   {
-    title: 'Produto',
+    title: t('footer.groups.product.title'),
     links: [
-      { label: 'Como funciona', href: '#como-funciona' },
-      { label: 'Recursos', href: '#diferencial' },
-      { label: 'Preços', href: '#planos' },
-      { label: 'Roadmap', href: '#' },
+      { label: t('footer.groups.product.howItWorks'), href: '#como-funciona' },
+      { label: t('footer.groups.product.features'), href: '#diferencial' },
+      { label: t('footer.groups.product.pricing'), href: '#planos' },
+      { label: t('footer.groups.product.roadmap'), href: '#' },
     ],
   },
   {
-    title: 'Para quem',
+    title: t('footer.groups.audience.title'),
     links: [
-      { label: 'YouTubers', href: '#publico' },
-      { label: 'Podcasters', href: '#publico' },
-      { label: 'Professores', href: '#publico' },
-      { label: 'Empresas', href: '#planos' },
+      { label: t('footer.groups.audience.youtubers'), href: '#publico' },
+      { label: t('footer.groups.audience.podcasters'), href: '#publico' },
+      { label: t('footer.groups.audience.teachers'), href: '#publico' },
+      { label: t('footer.groups.audience.companies'), href: '#planos' },
     ],
   },
   {
-    title: 'Empresa',
+    title: t('footer.groups.company.title'),
     links: [
-      { label: 'Contato', href: '#' },
-      { label: 'Termos', href: '#' },
-      { label: 'Privacidade', href: '#' },
+      { label: t('footer.groups.company.contact'), href: '#' },
+      { label: t('footer.groups.company.terms'), href: '#' },
+      { label: t('footer.groups.company.privacy'), href: '#' },
     ],
   },
-]
+])
 </script>
 
 <template>
@@ -39,8 +40,7 @@ const groups = [
       <div class="flex flex-col gap-4">
         <AppLogo />
         <p class="max-w-xs text-sm leading-relaxed text-ink-soft">
-          Video Intelligence. Transforme qualquer vídeo em texto, conhecimento e
-          conteúdo pronto para publicar.
+          {{ $t('footer.tagline') }}
         </p>
       </div>
 
@@ -67,8 +67,8 @@ const groups = [
       <div
         class="container-page flex flex-col gap-2 py-6 text-xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
       >
-        <p>© {{ year }} Vide AI. Todos os direitos reservados.</p>
-        <p>Feito para quem vive de vídeo.</p>
+        <p>{{ $t('footer.copyright', { year }) }}</p>
+        <p>{{ $t('footer.madeFor') }}</p>
       </div>
     </div>
   </footer>

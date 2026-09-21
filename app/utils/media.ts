@@ -9,19 +9,20 @@ export type VideoStatus =
   | 'failed'
 
 type StatusMeta = {
-  label: string
   tone: 'neutral' | 'progress' | 'success' | 'error'
 }
 
+// Label vem de i18n (`statusBadge.<status>` em i18n/locales/*.json) — aqui só
+// fica o `tone` (cor/estilo), que não é texto.
 export const STATUS_META: Record<VideoStatus, StatusMeta> = {
-  uploading: { label: 'Enviando', tone: 'neutral' },
-  uploaded: { label: 'Aguardando confirmação', tone: 'neutral' },
-  queued: { label: 'Na fila', tone: 'progress' },
-  extracting: { label: 'Convertendo áudio', tone: 'progress' },
-  transcribing: { label: 'Transcrevendo', tone: 'progress' },
-  analyzing: { label: 'Analisando', tone: 'progress' },
-  ready: { label: 'Pronto', tone: 'success' },
-  failed: { label: 'Falhou', tone: 'error' },
+  uploading: { tone: 'neutral' },
+  uploaded: { tone: 'neutral' },
+  queued: { tone: 'progress' },
+  extracting: { tone: 'progress' },
+  transcribing: { tone: 'progress' },
+  analyzing: { tone: 'progress' },
+  ready: { tone: 'success' },
+  failed: { tone: 'error' },
 }
 
 export const IN_PROGRESS: VideoStatus[] = [

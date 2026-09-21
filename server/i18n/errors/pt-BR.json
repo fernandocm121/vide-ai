@@ -1,0 +1,33 @@
+{
+  "validation.required": "Campo obrigatório",
+  "validation.invalidEmail": "E-mail inválido",
+  "validation.generic": "Dados inválidos",
+  "validation.invalidRequest": "Requisição inválida",
+  "validation.invalidLocale": "Idioma inválido",
+  "validation.password.tooShort": "A senha precisa ter no mínimo 8 caracteres",
+  "validation.password.needsLower": "A senha precisa de pelo menos uma letra minúscula",
+  "validation.password.needsUpper": "A senha precisa de pelo menos uma letra maiúscula",
+  "validation.password.needsNumber": "A senha precisa de pelo menos um número",
+  "validation.password.needsSpecial": "A senha precisa de pelo menos um caractere especial (ex.: @, #, $, %)",
+
+  "auth.notAuthenticated": "Não autenticado",
+  "auth.invalidCredentials": "E-mail ou senha incorretos",
+  "auth.emailTaken": "Já existe uma conta com este e-mail",
+  "auth.wrongCurrentPassword": "Senha atual incorreta",
+  "auth.newPasswordSameAsCurrent": "A nova senha deve ser diferente da senha atual",
+  "auth.emailNotFound": "Não existe uma conta com este e-mail",
+  "auth.emailSendFailed": "Não foi possível enviar o e-mail. Tente de novo.",
+  "auth.resetLinkInvalid": "Link inválido ou expirado. Peça uma nova redefinição.",
+  "auth.tokenMissing": "Token ausente",
+  "auth.verifyLinkInvalid": "Link inválido ou expirado. Peça um novo e-mail de confirmação.",
+
+  "videos.notFound": "Não encontrado",
+  "videos.fileTooLarge": "Arquivo acima do limite de {max} MB",
+  "videos.uploadNotFound": "Arquivo não encontrado no storage — o upload não foi concluído",
+  "videos.invalidExportFormat": "Formato inválido. Use txt, json, srt ou vtt.",
+  "videos.transcriptNotReady": "A transcrição ainda não está pronta para exportar.",
+  "videos.transcriptNotFound": "Transcrição não encontrada",
+  "videos.noTimestampsForSubtitles": "Esta transcrição foi feita sem timestamps e não pode virar legenda. Transcreva o arquivo novamente para gerar SRT/VTT.",
+  "videos.invalidStatusForProcessing": "Não é possível processar no status \"{status}\"",
+  "videos.planLimitReached": "Limite mensal do plano \"{plan}\" atingido: você já usou {used} de {limit} minutos disponíveis este mês. Faça upgrade para continuar transcrevendo."
+}

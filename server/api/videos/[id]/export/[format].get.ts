@@ -28,13 +28,14 @@ type Format = keyof typeof FORMATS
 /** Exporta a transcrição pronta em TXT, JSON, SRT ou VTT. */
 export default defineEventHandler(async (event) => {
   const user = await getCurrentUser(event)
+  const locale = getRequestLocale(event)
   const id = getRouterParam(event, 'id')!
   const format = (getRouterParam(event, 'format') ?? '') as Format
 
   if (!(format in FORMATS)) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Formato inválido. Use txt, json, srt ou vtt.',
+      statusMessage: translateError(locale, 'videos.invalidExportFormat'),
     })
   }
 
@@ -43,12 +44,15 @@ export default defineEventHandler(async (event) => {
     where: and(eq(videos.id, id), eq(videos.userId, user.id)),
   })
   if (!video) {
-    throw createError({ statusCode: 404, statusMessage: 'Não encontrado' })
+    throw createError({
+      statusCode: 404,
+      statusMessage: translateError(locale, 'videos.notFound'),
+    })
   }
   if (video.status !== 'ready') {
     throw createError({
       statusCode: 409,
-      statusMessage: 'A transcrição ainda não está pronta para exportar.',
+      statusMessage: translateError(locale, 'videos.transcriptNotReady'),
     })
   }
 
@@ -58,7 +62,7 @@ export default defineEventHandler(async (event) => {
   if (!transcript) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Transcrição não encontrada',
+      statusMessage: translateError(locale, 'videos.transcriptNotFound'),
     })
   }
 
@@ -96,8 +100,10 @@ export default defineEventHandler(async (event) => {
     if (!segments.length) {
       throw createError({
         statusCode: 409,
-        statusMessage:
-          'Esta transcrição foi feita sem timestamps e não pode virar legenda. Transcreva o arquivo novamente para gerar SRT/VTT.',
+        statusMessage: translateError(
+          locale,
+          'videos.noTimestampsForSubtitles',
+        ),
       })
     }
 
