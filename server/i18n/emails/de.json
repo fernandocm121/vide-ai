@@ -1,0 +1,9 @@
+{
+  "emailVerify.subject": "Bestätigen Sie Ihre E-Mail — Vide AI",
+  "emailVerify.greetingWithName": "Hallo, {name}! ",
+  "emailVerify.greetingNoName": "Hallo! ",
+  "emailVerify.body": "Bestätigen Sie Ihre E-Mail, um Ihr Konto zu aktivieren:\n{url}\n\nDer Link läuft in 24 Stunden ab.",
+
+  "passwordReset.subject": "Passwort zurücksetzen — Vide AI",
+  "passwordReset.body": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten:\n{url}\n\nWenn Sie das nicht waren, ignorieren Sie diese E-Mail. Der Link läuft in 30 Minuten ab."
+}

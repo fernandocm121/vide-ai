@@ -41,9 +41,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Usuário ainda não tinha preferência de idioma salva — grava o locale
+  // ativo no momento do cadastro (cookie do @nuxtjs/i18n, já resolvido acima
+  // em `locale`) como ponto de partida; a UI deixa trocar depois.
   const [user] = await db
     .insert(users)
-    .values({ name, email, passwordHash: await hashPassword(password) })
+    .values({
+      name,
+      email,
+      passwordHash: await hashPassword(password),
+      preferredLocale: locale,
+    })
     .returning()
 
   // A conta já existe a partir daqui — gerar/enviar o e-mail de verificação
@@ -52,10 +60,12 @@ export default defineEventHandler(async (event) => {
   let devVerifyUrl: string | undefined
   try {
     const token = await createVerificationToken(user!.id, 'email_verify')
-    await sendMail({
+    await sendVerifyEmail({
       to: user!.email,
-      subject: 'Confirme seu e-mail — Vide AI',
-      text: `Olá${name ? `, ${name}` : ''}! Confirme seu e-mail para ativar sua conta:\n${verifyEmailUrl(token)}\n\nO link expira em 24 horas.`,
+      name,
+      locale,
+      token,
+      greeting: true,
     })
     // sem provedor de e-mail real ainda: devolve o link também na resposta,
     // só em dev, pra dar pra testar o fluxo sem sair do navegador.

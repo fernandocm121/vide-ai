@@ -1,0 +1,9 @@
+{
+  "emailVerify.subject": "Confirmez votre e-mail — Vide AI",
+  "emailVerify.greetingWithName": "Bonjour {name} ! ",
+  "emailVerify.greetingNoName": "Bonjour ! ",
+  "emailVerify.body": "Confirmez votre e-mail pour activer votre compte :\n{url}\n\nLe lien expire dans 24 heures.",
+
+  "passwordReset.subject": "Réinitialiser le mot de passe — Vide AI",
+  "passwordReset.body": "Nous avons reçu une demande de réinitialisation de votre mot de passe :\n{url}\n\nSi ce n'était pas vous, ignorez cet e-mail. Le lien expire dans 30 minutes."
+}

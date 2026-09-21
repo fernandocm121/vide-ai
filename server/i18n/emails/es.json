@@ -1,0 +1,9 @@
+{
+  "emailVerify.subject": "Confirma tu correo — Vide AI",
+  "emailVerify.greetingWithName": "¡Hola, {name}! ",
+  "emailVerify.greetingNoName": "¡Hola! ",
+  "emailVerify.body": "Confirma tu correo para activar tu cuenta:\n{url}\n\nEl enlace caduca en 24 horas.",
+
+  "passwordReset.subject": "Restablecer contraseña — Vide AI",
+  "passwordReset.body": "Recibimos una solicitud para restablecer tu contraseña:\n{url}\n\nSi no fuiste tú, ignora este correo. El enlace caduca en 30 minutos."
+}

@@ -1,0 +1,9 @@
+{
+  "emailVerify.subject": "Confirme seu e-mail — Vide AI",
+  "emailVerify.greetingWithName": "Olá, {name}! ",
+  "emailVerify.greetingNoName": "Olá! ",
+  "emailVerify.body": "Confirme seu e-mail para ativar sua conta:\n{url}\n\nO link expira em 24 horas.",
+
+  "passwordReset.subject": "Redefinir senha — Vide AI",
+  "passwordReset.body": "Recebemos um pedido para redefinir sua senha:\n{url}\n\nSe não foi você, ignore este e-mail. O link expira em 30 minutos."
+}

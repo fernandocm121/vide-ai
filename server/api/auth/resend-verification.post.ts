@@ -7,10 +7,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const token = await createVerificationToken(user.id, 'email_verify')
-  await sendMail({
+  await sendVerifyEmail({
     to: user.email,
-    subject: 'Confirme seu e-mail — Vide AI',
-    text: `Confirme seu e-mail para ativar sua conta:\n${verifyEmailUrl(token)}\n\nO link expira em 24 horas.`,
+    // idioma da requisição atual (ver forgot-password.post.ts pro porquê de
+    // não usar `user.preferredLocale` aqui: o valor salvo na conta fica
+    // desatualizado com facilidade e o usuário está com a tela aberta agora).
+    locale: getRequestLocale(event),
+    token,
   })
 
   return {

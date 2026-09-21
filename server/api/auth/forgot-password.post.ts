@@ -32,10 +32,14 @@ export default defineEventHandler(async (event) => {
   let devResetUrl: string | undefined
   try {
     const token = await createVerificationToken(user.id, 'password_reset')
-    await sendMail({
+    await sendPasswordResetEmail({
       to: user.email,
-      subject: 'Redefinir senha — Vide AI',
-      text: `Recebemos um pedido para redefinir sua senha:\n${resetPasswordUrl(token)}\n\nSe não foi você, ignore este e-mail. O link expira em 30 minutos.`,
+      // idioma da requisição atual, não o salvo na conta: quem pede reset de
+      // senha está com o site aberto na tela agora, naquele idioma — usar o
+      // `preferredLocale` da conta manda o e-mail errado sempre que ele
+      // estiver desatualizado (ex.: usuário nunca trocou de idioma logado).
+      locale,
+      token,
     })
     devResetUrl = import.meta.dev ? resetPasswordUrl(token) : undefined
   } catch (err) {

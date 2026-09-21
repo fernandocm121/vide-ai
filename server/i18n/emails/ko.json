@@ -1,0 +1,9 @@
+{
+  "emailVerify.subject": "이메일을 확인해 주세요 — Vide AI",
+  "emailVerify.greetingWithName": "안녕하세요, {name}님! ",
+  "emailVerify.greetingNoName": "안녕하세요! ",
+  "emailVerify.body": "계정을 활성화하려면 이메일을 확인해 주세요:\n{url}\n\n이 링크는 24시간 후에 만료됩니다.",
+
+  "passwordReset.subject": "비밀번호 재설정 — Vide AI",
+  "passwordReset.body": "비밀번호 재설정 요청을 받았습니다:\n{url}\n\n본인이 요청하지 않았다면 이 이메일을 무시해 주세요. 이 링크는 30분 후에 만료됩니다."
+}

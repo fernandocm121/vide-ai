@@ -155,8 +155,8 @@ consciente: sem hreflang por URL distinta.
   o texto vai pro JSON, só campos não-textuais (id, ícone, preço) ficam em
   `app/data/*.ts` — o componente junta os dois via chave/id.
 - **Fora do escopo de UI**: conteúdo transcrito pelo usuário (produto, não
-  localização) e e-mails transacionais (`server/utils/mailer.ts`, ainda em
-  português direto).
+  localização) e o nome do usuário/qualquer dado dinâmico dentro de um
+  e-mail (não é traduzido, só o texto fixo do template).
 - **Seletor de idioma**: `AppLanguageSwitcher.vue` (bandeiras do pacote
   `flag-icons`, registrado em `nuxt.config.ts`). Anônimo persiste em cookie
   (automático, via `setLocale()` do módulo); logado também salva em
@@ -182,6 +182,25 @@ consciente: sem hreflang por URL distinta.
   (`i18n_redirected`) > header `Accept-Language` > `pt-BR`. Erros 5xx **não**
   passam por tradução (ficam em português — o client já cai no fallback
   genérico pra esses, ver `apiErrorMessage()`).
+- **E-mails transacionais** (`server/utils/mailer.ts`) também traduzidos —
+  mesmo mecanismo dos erros (`translateEmail`, gerado por
+  `createTranslator()` a partir de `server/i18n/emails/<code>.json`).
+  `sendVerifyEmail()`/`sendPasswordResetEmail()` montam assunto/corpo
+  traduzidos e chamam o `sendMail()` genérico; não montar e-mail com texto
+  literal direto num handler de `server/api/**`. Todo fluxo de e-mail usa
+  `getRequestLocale(event)` — o idioma da requisição atual, não
+  `user.preferredLocale` salvo no banco: as três rotas que mandam e-mail
+  (`signup`, `resend-verification`, `forgot-password`) são sempre
+  disparadas por uma requisição ao vivo do próprio usuário, e é o cookie
+  daquela requisição que reflete o que ele está vendo na tela na hora —
+  `preferredLocale` já ficou desatualizado em produção (conta criada antes
+  do usuário trocar de idioma como anônimo) e mandou e-mail no idioma
+  errado. No signup, esse locale também é gravado como `preferredLocale`
+  inicial do novo usuário (define a UI dele daí pra frente, não só aquele
+  e-mail). Note que hoje nada lê `preferredLocale` de volta pra aplicar na
+  UI no login/`fetchUser()` — só o switcher escreve nele; se isso for
+  implementado depois, validar contra `SUPPORTED_LOCALES` antes de usar (a
+  coluna é `text()` livre, sem `pgEnum`).
 
 ## Padrões de API (server/api)
 

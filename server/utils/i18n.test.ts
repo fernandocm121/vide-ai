@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveLocale, translateError } from './i18n'
+import { resolveLocale, translateEmail, translateError } from './i18n'
 
 describe('translateError', () => {
   it('traduz uma chave conhecida no idioma pedido', () => {
@@ -67,5 +67,43 @@ describe('resolveLocale', () => {
   it('cai em pt-BR quando não há cookie nem Accept-Language reconhecível', () => {
     expect(resolveLocale(undefined, undefined)).toBe('pt-BR')
     expect(resolveLocale(undefined, 'zz-ZZ')).toBe('pt-BR')
+  })
+})
+
+describe('translateEmail', () => {
+  it('traduz assunto e corpo de um template com interpolação de URL', () => {
+    expect(translateEmail('pt-BR', 'passwordReset.subject')).toBe(
+      'Redefinir senha — Vide AI',
+    )
+    expect(
+      translateEmail('en', 'passwordReset.body', {
+        url: 'https://videai.app/reset?token=abc',
+      }),
+    ).toContain('https://videai.app/reset?token=abc')
+  })
+
+  it('usa dicionário e chaves independentes do translateError (mesmo idioma, sem colisão)', () => {
+    expect(translateEmail('ja', 'emailVerify.subject')).toBe(
+      'メールアドレスの確認 — Vide AI',
+    )
+    // a mesma chave não existe no dicionário de erros
+    expect(translateError('ja', 'emailVerify.subject')).toBe(
+      'emailVerify.subject',
+    )
+  })
+
+  it('tem uma variante de saudação com nome e outra sem', () => {
+    expect(
+      translateEmail('pt-BR', 'emailVerify.greetingWithName', {
+        name: 'Ana',
+      }),
+    ).toBe('Olá, Ana! ')
+    expect(translateEmail('pt-BR', 'emailVerify.greetingNoName')).toBe('Olá! ')
+  })
+
+  it('cai no pt-BR quando o idioma não tem dicionário de e-mail', () => {
+    expect(translateEmail('fr-CA' as never, 'passwordReset.subject')).toBe(
+      'Redefinir senha — Vide AI',
+    )
   })
 })

@@ -1,5 +1,6 @@
 import { createTransport, type Transporter } from 'nodemailer'
 import { Resend } from 'resend'
+import type { SupportedLocale } from '../../shared/locales'
 
 /**
  * Envio de e-mail transacional. Tenta, nessa ordem:
@@ -87,4 +88,55 @@ export function verifyEmailUrl(token: string): string {
 export function resetPasswordUrl(token: string): string {
   const { public: pub } = useRuntimeConfig()
   return `${pub.siteUrl.replace(/\/$/, '')}/redefinir-senha?token=${token}`
+}
+
+/**
+ * E-mail de confirmação de conta, no idioma do destinatário. Assunto/corpo
+ * vêm de `server/i18n/emails/*.json` (`translateEmail`); só o texto fixo do
+ * template é traduzido — `name`, quando existir, entra como veio (não é
+ * traduzido, é dado do usuário).
+ *
+ * Disparado em dois fluxos com textos hoje ligeiramente diferentes (mantidos
+ * de propósito): signup sempre tem saudação ("Olá[, nome]!"), reenvio não.
+ */
+export async function sendVerifyEmail(opts: {
+  to: string
+  name?: string | null
+  locale: SupportedLocale
+  token: string
+  greeting?: boolean
+}): Promise<void> {
+  const { greeting = false } = opts
+  const prefix = !greeting
+    ? ''
+    : opts.name
+      ? translateEmail(opts.locale, 'emailVerify.greetingWithName', {
+          name: opts.name,
+        })
+      : translateEmail(opts.locale, 'emailVerify.greetingNoName')
+
+  await sendMail({
+    to: opts.to,
+    subject: translateEmail(opts.locale, 'emailVerify.subject'),
+    text:
+      prefix +
+      translateEmail(opts.locale, 'emailVerify.body', {
+        url: verifyEmailUrl(opts.token),
+      }),
+  })
+}
+
+/** E-mail de redefinição de senha, no idioma do destinatário. */
+export async function sendPasswordResetEmail(opts: {
+  to: string
+  locale: SupportedLocale
+  token: string
+}): Promise<void> {
+  await sendMail({
+    to: opts.to,
+    subject: translateEmail(opts.locale, 'passwordReset.subject'),
+    text: translateEmail(opts.locale, 'passwordReset.body', {
+      url: resetPasswordUrl(opts.token),
+    }),
+  })
 }
