@@ -1,9 +1,9 @@
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
+import { zodTextFormat } from 'openai/helpers/zod'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { videoMinutes, videos } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
-import { ANALYSIS_MODEL, claudeClient, recordLlmUsage } from './claude'
+import { ANALYSIS_MODEL, openaiClient, recordLlmUsage } from './openai'
 import { getTranscriptContext } from './context'
 import { failRun, finishRun, startRun } from './runs'
 
@@ -52,25 +52,28 @@ export async function runMinutes(videoId: string): Promise<void> {
       throw new Error('vídeo ou transcrição ausente')
     }
 
-    const response = await claudeClient().messages.parse({
+    const response = await openaiClient().responses.parse({
       model: ANALYSIS_MODEL,
-      max_tokens: 4096,
-      system:
-        'Você transforma transcrições de reuniões/entrevistas de negócio numa ata estruturada: ' +
-        'tópicos discutidos, decisões tomadas e tarefas combinadas. Responda no mesmo idioma da ' +
-        'transcrição. Se a transcrição não for uma reunião de negócio (ex.: entrevista informal, ' +
-        'aula), extraia o que existir de cada categoria e deixe as demais como array vazio — nunca ' +
-        'invente decisões ou tarefas que não foram ditas.',
-      messages: [
+      max_output_tokens: 4096,
+      input: [
+        {
+          role: 'system',
+          content:
+            'Você transforma transcrições de reuniões/entrevistas de negócio numa ata estruturada: ' +
+            'tópicos discutidos, decisões tomadas e tarefas combinadas. Responda no mesmo idioma da ' +
+            'transcrição. Se a transcrição não for uma reunião de negócio (ex.: entrevista informal, ' +
+            'aula), extraia o que existir de cada categoria e deixe as demais como array vazio — nunca ' +
+            'invente decisões ou tarefas que não foram ditas.',
+        },
         {
           role: 'user',
           content: `--- TRANSCRIÇÃO ---\n${context.text}`,
         },
       ],
-      output_config: { format: zodOutputFormat(MinutesSchema) },
+      text: { format: zodTextFormat(MinutesSchema, 'minutes') },
     })
 
-    if (!response.parsed_output) {
+    if (!response.output_parsed) {
       throw new Error('resposta do modelo não pôde ser interpretada')
     }
 
@@ -78,16 +81,18 @@ export async function runMinutes(videoId: string): Promise<void> {
       await tx.delete(videoMinutes).where(eq(videoMinutes.videoId, videoId))
       await tx.insert(videoMinutes).values({
         videoId,
-        topics: response.parsed_output!.topics,
-        decisions: response.parsed_output!.decisions,
-        tasks: response.parsed_output!.tasks,
+        topics: response.output_parsed!.topics,
+        decisions: response.output_parsed!.decisions,
+        tasks: response.output_parsed!.tasks,
       })
     })
 
-    await recordLlmUsage(video.userId, videoId, {
-      inputTokens: response.usage.input_tokens,
-      outputTokens: response.usage.output_tokens,
-    })
+    if (response.usage) {
+      await recordLlmUsage(video.userId, videoId, {
+        inputTokens: response.usage.input_tokens,
+        outputTokens: response.usage.output_tokens,
+      })
+    }
 
     await finishRun(videoId, 'minutes')
   } catch (err) {

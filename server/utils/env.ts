@@ -49,8 +49,9 @@ const EnvSchema = z.object({
   // Limite do plano gratuito — minutos de transcrição por mês (30 min default)
   FREE_PLAN_MONTHLY_SECONDS: z.coerce.number().int().positive().default(1800),
 
-  // Integrações de IA — opcionais até a Fase 6
-  ANTHROPIC_API_KEY: z.string().optional(),
+  // Integrações de IA — resumo, capítulos, tradução, etc. (server/analysis/).
+  // A transcrição (Fase 3) continua sendo a ElevenLabs, sem relação com esta.
+  OPENAI_API_KEY: z.string().optional(),
 
   // E-mail transacional (verificação de conta, redefinição de senha).
   // Sem nenhum provedor configurado, os e-mails só ficam no log (dev).

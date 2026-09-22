@@ -1,9 +1,9 @@
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
+import { zodTextFormat } from 'openai/helpers/zod'
 import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { videos, videoTranslations } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
-import { ANALYSIS_MODEL, claudeClient, recordLlmUsage } from './claude'
+import { ANALYSIS_MODEL, openaiClient, recordLlmUsage } from './openai'
 import { formatSegmentsPrompt, getTranscriptContext, segmentByIdx } from './context'
 import { failRun, finishRun, startRun } from './runs'
 
@@ -53,18 +53,21 @@ export async function runTranslate(
     const languageName = LANGUAGE_NAMES[language] ?? language
     const hasSegments = context.segments.length > 0
 
-    const response = await claudeClient().messages.parse({
+    const response = await openaiClient().responses.parse({
       model: ANALYSIS_MODEL,
-      max_tokens: 8192,
-      system:
-        `Você traduz transcrições de áudio/vídeo para ${languageName}. Devolva o texto corrido ` +
-        'traduzido de forma natural (não é tradução literal palavra-por-palavra), preservando o ' +
-        'sentido e o tom original.' +
-        (hasSegments
-          ? ' Devolva também a tradução de cada segmento numerado da lista abaixo, um item por ' +
-            '#idx, mantendo o mesmo #idx do original — não pule nem combine segmentos.'
-          : ' A transcrição não tem segmentos, então devolva "segments" como array vazio.'),
-      messages: [
+      max_output_tokens: 8192,
+      input: [
+        {
+          role: 'system',
+          content:
+            `Você traduz transcrições de áudio/vídeo para ${languageName}. Devolva o texto corrido ` +
+            'traduzido de forma natural (não é tradução literal palavra-por-palavra), preservando o ' +
+            'sentido e o tom original.' +
+            (hasSegments
+              ? ' Devolva também a tradução de cada segmento numerado da lista abaixo, um item por ' +
+                '#idx, mantendo o mesmo #idx do original — não pule nem combine segmentos.'
+              : ' A transcrição não tem segmentos, então devolva "segments" como array vazio.'),
+        },
         {
           role: 'user',
           content: hasSegments
@@ -72,15 +75,15 @@ export async function runTranslate(
             : `--- TRANSCRIÇÃO ---\n${context.text}`,
         },
       ],
-      output_config: { format: zodOutputFormat(TranslateSchema) },
+      text: { format: zodTextFormat(TranslateSchema, 'translation') },
     })
 
-    if (!response.parsed_output) {
+    if (!response.output_parsed) {
       throw new Error('resposta do modelo não pôde ser interpretada')
     }
 
     const byIdx = segmentByIdx(context.segments)
-    const segments = response.parsed_output.segments
+    const segments = response.output_parsed.segments
       .map((s) => ({ ...s, original: byIdx.get(s.idx) }))
       .filter((s) => s.original !== undefined)
       .sort((a, b) => a.original!.idx - b.original!.idx)
@@ -103,15 +106,17 @@ export async function runTranslate(
       await tx.insert(videoTranslations).values({
         videoId,
         language,
-        text: response.parsed_output!.text,
+        text: response.output_parsed!.text,
         segments: segments.length ? segments : null,
       })
     })
 
-    await recordLlmUsage(video.userId, videoId, {
-      inputTokens: response.usage.input_tokens,
-      outputTokens: response.usage.output_tokens,
-    })
+    if (response.usage) {
+      await recordLlmUsage(video.userId, videoId, {
+        inputTokens: response.usage.input_tokens,
+        outputTokens: response.usage.output_tokens,
+      })
+    }
 
     await finishRun(videoId, 'translate', language)
   } catch (err) {

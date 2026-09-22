@@ -1,9 +1,9 @@
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
+import { zodTextFormat } from 'openai/helpers/zod'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { videoContent, videos } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
-import { ANALYSIS_MODEL, claudeClient, recordLlmUsage } from './claude'
+import { ANALYSIS_MODEL, openaiClient, recordLlmUsage } from './openai'
 import { formatSegmentsPrompt, getTranscriptContext, segmentByIdx } from './context'
 import { failRun, finishRun, startRun } from './runs'
 
@@ -57,22 +57,25 @@ export async function runContent(videoId: string): Promise<void> {
 
     const hasSegments = context.segments.length > 0
 
-    const response = await claudeClient().messages.parse({
+    const response = await openaiClient().responses.parse({
       model: ANALYSIS_MODEL,
-      max_tokens: 8192,
-      system:
-        'Você ajuda criadores a transformar uma transcrição em conteúdo de distribuição: ' +
-        '5-6 títulos com estilos variados (direto, curiosidade, número, pergunta...), uma ' +
-        'descrição pronta pro YouTube, hashtags relevantes, 2-4 ideias de cortes pra Shorts ' +
-        '(com gancho, motivo e roteiro em beats curtos) e um post adaptado ao tom/tamanho de ' +
-        'cada rede social (X/Twitter, Instagram, LinkedIn, TikTok). Responda no mesmo idioma da ' +
-        'transcrição.' +
-        (hasSegments
-          ? ' As ideias de Shorts referenciam #idx de segmentos reais da lista abaixo — use ' +
-            'sempre um #idx existente pro início e pro fim do corte, nunca invente um número.'
-          : ' Esta transcrição não tem segmentos com timestamp, então devolva "shortIdeas" ' +
-            'como array vazio.'),
-      messages: [
+      max_output_tokens: 8192,
+      input: [
+        {
+          role: 'system',
+          content:
+            'Você ajuda criadores a transformar uma transcrição em conteúdo de distribuição: ' +
+            '5-6 títulos com estilos variados (direto, curiosidade, número, pergunta...), uma ' +
+            'descrição pronta pro YouTube, hashtags relevantes, 2-4 ideias de cortes pra Shorts ' +
+            '(com gancho, motivo e roteiro em beats curtos) e um post adaptado ao tom/tamanho de ' +
+            'cada rede social (X/Twitter, Instagram, LinkedIn, TikTok). Responda no mesmo idioma da ' +
+            'transcrição.' +
+            (hasSegments
+              ? ' As ideias de Shorts referenciam #idx de segmentos reais da lista abaixo — use ' +
+                'sempre um #idx existente pro início e pro fim do corte, nunca invente um número.'
+              : ' Esta transcrição não tem segmentos com timestamp, então devolva "shortIdeas" ' +
+                'como array vazio.'),
+        },
         {
           role: 'user',
           content: hasSegments
@@ -80,15 +83,15 @@ export async function runContent(videoId: string): Promise<void> {
             : `--- TRANSCRIÇÃO ---\n${context.text}`,
         },
       ],
-      output_config: { format: zodOutputFormat(ContentSchema) },
+      text: { format: zodTextFormat(ContentSchema, 'content') },
     })
 
-    if (!response.parsed_output) {
+    if (!response.output_parsed) {
       throw new Error('resposta do modelo não pôde ser interpretada')
     }
 
     const byIdx = segmentByIdx(context.segments)
-    const shortIdeas = response.parsed_output.shortIdeas
+    const shortIdeas = response.output_parsed.shortIdeas
       .map((idea) => ({
         ...idea,
         start: byIdx.get(idea.startSegmentIdx),
@@ -107,18 +110,20 @@ export async function runContent(videoId: string): Promise<void> {
       await tx.delete(videoContent).where(eq(videoContent.videoId, videoId))
       await tx.insert(videoContent).values({
         videoId,
-        titles: response.parsed_output!.titles,
-        description: response.parsed_output!.description,
-        hashtags: response.parsed_output!.hashtags,
+        titles: response.output_parsed!.titles,
+        description: response.output_parsed!.description,
+        hashtags: response.output_parsed!.hashtags,
         shortIdeas,
-        socialPosts: response.parsed_output!.socialPosts,
+        socialPosts: response.output_parsed!.socialPosts,
       })
     })
 
-    await recordLlmUsage(video.userId, videoId, {
-      inputTokens: response.usage.input_tokens,
-      outputTokens: response.usage.output_tokens,
-    })
+    if (response.usage) {
+      await recordLlmUsage(video.userId, videoId, {
+        inputTokens: response.usage.input_tokens,
+        outputTokens: response.usage.output_tokens,
+      })
+    }
 
     await finishRun(videoId, 'content')
   } catch (err) {

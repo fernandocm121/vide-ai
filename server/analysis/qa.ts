@@ -1,9 +1,9 @@
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
+import { zodTextFormat } from 'openai/helpers/zod'
 import { asc, desc, eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { videoQaMessages, videos } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
-import { ANALYSIS_MODEL, claudeClient, recordLlmUsage } from './claude'
+import { ANALYSIS_MODEL, openaiClient, recordLlmUsage } from './openai'
 import { formatSegmentsPrompt, getTranscriptContext, segmentByIdx } from './context'
 
 const HISTORY_LIMIT = 20
@@ -69,31 +69,34 @@ export async function answerQuestion(
     citations: null,
   })
 
-  const response = await claudeClient().messages.parse({
+  const response = await openaiClient().responses.parse({
     model: ANALYSIS_MODEL,
-    max_tokens: 2048,
-    system:
-      'Você responde perguntas sobre o conteúdo de uma transcrição de áudio/vídeo, com base ' +
-      'exclusivamente no que foi dito nela — nunca invente informação que não está no conteúdo. ' +
-      'Quando não souber a resposta a partir da transcrição, diga isso claramente. Sempre que ' +
-      'basear a resposta em um trecho específico, cite o #idx do segmento correspondente da lista ' +
-      `numerada abaixo. Responda no mesmo idioma da pergunta.\n\n--- SEGMENTOS ---\n${formatSegmentsPrompt(context.segments)}`,
-    messages: [
+    max_output_tokens: 2048,
+    input: [
+      {
+        role: 'system',
+        content:
+          'Você responde perguntas sobre o conteúdo de uma transcrição de áudio/vídeo, com base ' +
+          'exclusivamente no que foi dito nela — nunca invente informação que não está no conteúdo. ' +
+          'Quando não souber a resposta a partir da transcrição, diga isso claramente. Sempre que ' +
+          'basear a resposta em um trecho específico, cite o #idx do segmento correspondente da lista ' +
+          `numerada abaixo. Responda no mesmo idioma da pergunta.\n\n--- SEGMENTOS ---\n${formatSegmentsPrompt(context.segments)}`,
+      },
       ...history.map((m) => ({
         role: m.role,
         content: m.content,
       })),
       { role: 'user' as const, content: question },
     ],
-    output_config: { format: zodOutputFormat(AnswerSchema) },
+    text: { format: zodTextFormat(AnswerSchema, 'qa_answer') },
   })
 
-  if (!response.parsed_output) {
+  if (!response.output_parsed) {
     throw new Error('resposta do modelo não pôde ser interpretada')
   }
 
   const byIdx = segmentByIdx(context.segments)
-  const citations: QaCitation[] = response.parsed_output.citations
+  const citations: QaCitation[] = response.output_parsed.citations
     .map((c) => ({ ...c, segment: byIdx.get(c.segmentIdx) }))
     .filter((c) => c.segment !== undefined)
     .map((c) => ({
@@ -105,16 +108,18 @@ export async function answerQuestion(
   await db.insert(videoQaMessages).values({
     videoId,
     role: 'assistant',
-    content: response.parsed_output.answer,
+    content: response.output_parsed.answer,
     citations: citations.length ? citations : null,
   })
 
-  await recordLlmUsage(video.userId, videoId, {
-    inputTokens: response.usage.input_tokens,
-    outputTokens: response.usage.output_tokens,
-  })
+  if (response.usage) {
+    await recordLlmUsage(video.userId, videoId, {
+      inputTokens: response.usage.input_tokens,
+      outputTokens: response.usage.output_tokens,
+    })
+  }
 
-  return { answer: response.parsed_output.answer, citations }
+  return { answer: response.output_parsed.answer, citations }
 }
 
 export async function getQaHistory(videoId: string): Promise<QaMessage[]> {

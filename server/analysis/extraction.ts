@@ -1,9 +1,9 @@
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
+import { zodTextFormat } from 'openai/helpers/zod'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { videoExtractions, videos } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
-import { ANALYSIS_MODEL, claudeClient, recordLlmUsage } from './claude'
+import { ANALYSIS_MODEL, openaiClient, recordLlmUsage } from './openai'
 import { getTranscriptContext } from './context'
 import { failRun, finishRun, startRun } from './runs'
 
@@ -37,44 +37,47 @@ export async function runExtraction(
     }
 
     // schema dinâmico: uma tupla de {name, value} por campo pedido, na mesma
-    // ordem — mais confiável que pedir um objeto solto com chaves variáveis
+    // ordem — mais confiável que pedir um objeto solto com chaves variáveis.
+    // Sem `.length()`: structured outputs da OpenAI não garante constraint
+    // de tamanho de array em modo strict — a instrução no prompt já cobre.
     const ResultSchema = z.object({
-      result: z
-        .array(
-          z.object({
-            name: z.string(),
-            value: z
-              .string()
-              .nullable()
-              .describe('null se o campo não foi mencionado na transcrição'),
-          }),
-        )
-        .length(fields.length),
+      result: z.array(
+        z.object({
+          name: z.string(),
+          value: z
+            .string()
+            .nullable()
+            .describe('null se o campo não foi mencionado na transcrição'),
+        }),
+      ),
     })
 
     const fieldsList = fields
       .map((f) => `- "${f.name}" (${TYPE_HINTS[f.type]})`)
       .join('\n')
 
-    const response = await claudeClient().messages.parse({
+    const response = await openaiClient().responses.parse({
       model: ANALYSIS_MODEL,
-      max_tokens: 4096,
-      system:
-        'Você extrai dados estruturados de transcrições de áudio/vídeo, a partir de uma lista de ' +
-        'campos pedidos pelo usuário. Devolva "result" com exatamente um item por campo pedido, na ' +
-        'mesma ordem e com o mesmo "name". Quando o campo não foi mencionado na transcrição, ' +
-        'devolva value: null — nunca invente um valor.',
-      messages: [
+      max_output_tokens: 4096,
+      input: [
+        {
+          role: 'system',
+          content:
+            'Você extrai dados estruturados de transcrições de áudio/vídeo, a partir de uma lista de ' +
+            'campos pedidos pelo usuário. Devolva "result" com exatamente um item por campo pedido, na ' +
+            'mesma ordem e com o mesmo "name". Quando o campo não foi mencionado na transcrição, ' +
+            'devolva value: null — nunca invente um valor.',
+        },
         {
           role: 'user',
           content:
             `Campos pedidos:\n${fieldsList}\n\n--- TRANSCRIÇÃO ---\n${context.text}`,
         },
       ],
-      output_config: { format: zodOutputFormat(ResultSchema) },
+      text: { format: zodTextFormat(ResultSchema, 'extraction') },
     })
 
-    if (!response.parsed_output) {
+    if (!response.output_parsed) {
       throw new Error('resposta do modelo não pôde ser interpretada')
     }
 
@@ -85,14 +88,16 @@ export async function runExtraction(
       await tx.insert(videoExtractions).values({
         videoId,
         fields,
-        result: response.parsed_output!.result,
+        result: response.output_parsed!.result,
       })
     })
 
-    await recordLlmUsage(video.userId, videoId, {
-      inputTokens: response.usage.input_tokens,
-      outputTokens: response.usage.output_tokens,
-    })
+    if (response.usage) {
+      await recordLlmUsage(video.userId, videoId, {
+        inputTokens: response.usage.input_tokens,
+        outputTokens: response.usage.output_tokens,
+      })
+    }
 
     await finishRun(videoId, 'extraction')
   } catch (err) {

@@ -1,9 +1,9 @@
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
+import { zodTextFormat } from 'openai/helpers/zod'
 import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { videos, videoSummaries, type SummaryLength } from '../db/schema'
 import { useDrizzle } from '../utils/drizzle'
-import { ANALYSIS_MODEL, claudeClient, recordLlmUsage } from './claude'
+import { ANALYSIS_MODEL, openaiClient, recordLlmUsage } from './openai'
 import { getTranscriptContext } from './context'
 import { failRun, finishRun, startRun } from './runs'
 
@@ -35,13 +35,16 @@ export async function runSummary(
       throw new Error('vídeo ou transcrição ausente')
     }
 
-    const response = await claudeClient().messages.parse({
+    const response = await openaiClient().responses.parse({
       model: ANALYSIS_MODEL,
-      max_tokens: 4096,
-      system:
-        'Você resume transcrições de áudio/vídeo. Responda no mesmo idioma da transcrição. ' +
-        'Seja direto, sem introduções como "esta transcrição fala sobre" — vá direto ao conteúdo.',
-      messages: [
+      max_output_tokens: 4096,
+      input: [
+        {
+          role: 'system',
+          content:
+            'Você resume transcrições de áudio/vídeo. Responda no mesmo idioma da transcrição. ' +
+            'Seja direto, sem introduções como "esta transcrição fala sobre" — vá direto ao conteúdo.',
+        },
         {
           role: 'user',
           content:
@@ -49,10 +52,10 @@ export async function runSummary(
             `--- TRANSCRIÇÃO ---\n${context.text}`,
         },
       ],
-      output_config: { format: zodOutputFormat(SummarySchema) },
+      text: { format: zodTextFormat(SummarySchema, 'summary') },
     })
 
-    if (!response.parsed_output) {
+    if (!response.output_parsed) {
       throw new Error('resposta do modelo não pôde ser interpretada')
     }
 
@@ -68,14 +71,16 @@ export async function runSummary(
       await tx.insert(videoSummaries).values({
         videoId,
         length,
-        content: response.parsed_output!.content,
+        content: response.output_parsed!.content,
       })
     })
 
-    await recordLlmUsage(video.userId, videoId, {
-      inputTokens: response.usage.input_tokens,
-      outputTokens: response.usage.output_tokens,
-    })
+    if (response.usage) {
+      await recordLlmUsage(video.userId, videoId, {
+        inputTokens: response.usage.input_tokens,
+        outputTokens: response.usage.output_tokens,
+      })
+    }
 
     await finishRun(videoId, 'summary', length)
   } catch (err) {
