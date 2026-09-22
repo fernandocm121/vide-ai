@@ -442,7 +442,13 @@
   "aiFeatures": {
     "nav": {
       "transcript": "文字起こし",
-      "summary": "要約"
+      "summary": "要約",
+      "minutes": "トピックとタスク",
+      "chapters": "チャプター",
+      "translate": "翻訳",
+      "extraction": "データ抽出",
+      "qa": "質問",
+      "content": "コンテンツ"
     },
     "common": {
       "generating": "生成中…",
@@ -459,6 +465,81 @@
       "emptyTitle": "この動画を要約",
       "emptyDescription": "AIで文字起こしの要約を短め・普通・詳細から生成します。",
       "cta": "要約を生成"
+    },
+    "minutes": {
+      "emptyTitle": "議事録にする",
+      "emptyDescription": "文字起こしから主なトピック、決定事項、合意したタスクを抽出します。",
+      "cta": "トピックとタスクを生成",
+      "topicsTitle": "話し合われたトピック",
+      "topicsEmpty": "このコンテンツではトピックが見つかりませんでした。",
+      "decisionsTitle": "決定事項",
+      "decisionsEmpty": "このコンテンツでは決定事項が見つかりませんでした。",
+      "tasksTitle": "タスク",
+      "tasksEmpty": "このコンテンツではタスクが見つかりませんでした。",
+      "noOwner": "未指定"
+    },
+    "chapters": {
+      "emptyTitle": "チャプターに分割",
+      "emptyDescription": "YouTubeのチャプターと同じ形式で、タイトルとタイムスタンプ付きのチャプターを生成します。",
+      "cta": "チャプターを生成"
+    },
+    "translate": {
+      "languageLabel": "翻訳先の言語",
+      "emptyTitle": "この文字起こしを翻訳",
+      "emptyDescription": "AIでテキストと字幕を別の言語に翻訳します。",
+      "cta": "翻訳する",
+      "original": "原文",
+      "translated": "翻訳済み",
+      "downloadTxt": "TXTをダウンロード",
+      "downloadSrt": "SRTをダウンロード",
+      "downloadVtt": "VTTをダウンロード"
+    },
+    "extraction": {
+      "emptyTitle": "構造化データを抽出",
+      "emptyDescription": "文字起こしから抽出したい項目を定義すると、JSONまたは表形式で結果を取得できます。",
+      "cta": "項目を定義",
+      "fieldNamePlaceholder": "項目名",
+      "addField": "項目を追加",
+      "removeField": "項目を削除",
+      "suggestName": "名前",
+      "suggestCompany": "会社名",
+      "suggestValue": "言及された金額",
+      "extractCta": "データを抽出",
+      "editFields": "項目を編集",
+      "view": { "cards": "カード", "table": "表", "json": "JSON" },
+      "notFound": "見つかりません",
+      "copyJson": "JSONをコピー",
+      "types": {
+        "text": "テキスト",
+        "number": "数値",
+        "date": "日付",
+        "currency": "金額"
+      }
+    },
+    "qa": {
+      "loading": "会話を読み込み中…",
+      "emptyTitle": "この動画について質問する",
+      "emptyDescription": "内容について質問すると、根拠になった箇所とともに回答が返ってきます。",
+      "suggestion1": "会議でどんな決定がありましたか?",
+      "suggestion2": "誰が何を担当することになりましたか?",
+      "suggestion3": "会議の結果は何でしたか?",
+      "suggestion4": "決まった期限はありますか?",
+      "error": "現在回答できません。もう一度お試しください。",
+      "inputPlaceholder": "この動画について質問する…",
+      "send": "送信"
+    },
+    "content": {
+      "emptyTitle": "発信用のコンテンツを生成",
+      "emptyDescription": "文字起こしから、タイトル・説明文・Shortsのアイデア・SNS投稿文をまとめて生成します。",
+      "cta": "コンテンツを生成",
+      "titlesTitle": "タイトル候補",
+      "descriptionTitle": "YouTube用の説明文",
+      "copyDescription": "説明文をコピー",
+      "shortsTitle": "Shortsのアイデア",
+      "shortsEmpty": "このコンテンツでは切り抜き案が見つかりませんでした。",
+      "viewScript": "台本を見る",
+      "hideScript": "台本を隠す",
+      "socialTitle": "SNS"
     }
   },
   "statusBadge": {

@@ -442,7 +442,13 @@
   "aiFeatures": {
     "nav": {
       "transcript": "Transcription",
-      "summary": "Résumé"
+      "summary": "Résumé",
+      "minutes": "Sujets & tâches",
+      "chapters": "Chapitres",
+      "translate": "Traduction",
+      "extraction": "Extraction de données",
+      "qa": "Questions",
+      "content": "Contenu"
     },
     "common": {
       "generating": "Génération…",
@@ -459,6 +465,81 @@
       "emptyTitle": "Résumez cette vidéo",
       "emptyDescription": "Générez un résumé court, moyen ou détaillé de la transcription avec l'IA.",
       "cta": "Générer le résumé"
+    },
+    "minutes": {
+      "emptyTitle": "Transformez en compte rendu",
+      "emptyDescription": "Extrayez les principaux sujets, décisions prises et tâches convenues dans la transcription.",
+      "cta": "Générer sujets et tâches",
+      "topicsTitle": "Sujets abordés",
+      "topicsEmpty": "Aucun sujet identifié dans ce contenu.",
+      "decisionsTitle": "Décisions prises",
+      "decisionsEmpty": "Aucune décision identifiée dans ce contenu.",
+      "tasksTitle": "Tâches",
+      "tasksEmpty": "Aucune tâche identifiée dans ce contenu.",
+      "noOwner": "Non spécifié"
+    },
+    "chapters": {
+      "emptyTitle": "Divisez en chapitres",
+      "emptyDescription": "Générez des chapitres avec titre et horodatage à partir du contenu, dans le même format que YouTube.",
+      "cta": "Générer les chapitres"
+    },
+    "translate": {
+      "languageLabel": "Traduire en",
+      "emptyTitle": "Traduisez cette transcription",
+      "emptyDescription": "Traduisez le texte et les sous-titres dans une autre langue avec l'IA.",
+      "cta": "Traduire",
+      "original": "Original",
+      "translated": "Traduit",
+      "downloadTxt": "Télécharger le TXT",
+      "downloadSrt": "Télécharger le SRT",
+      "downloadVtt": "Télécharger le VTT"
+    },
+    "extraction": {
+      "emptyTitle": "Extrayez des données structurées",
+      "emptyDescription": "Définissez les champs à extraire de la transcription et obtenez le résultat en JSON ou en tableau.",
+      "cta": "Définir les champs",
+      "fieldNamePlaceholder": "Nom du champ",
+      "addField": "Ajouter un champ",
+      "removeField": "Supprimer le champ",
+      "suggestName": "Nom",
+      "suggestCompany": "Entreprise",
+      "suggestValue": "Valeur mentionnée",
+      "extractCta": "Extraire les données",
+      "editFields": "Modifier les champs",
+      "view": { "cards": "Cartes", "table": "Tableau", "json": "JSON" },
+      "notFound": "Non trouvé",
+      "copyJson": "Copier le JSON",
+      "types": {
+        "text": "Texte",
+        "number": "Nombre",
+        "date": "Date",
+        "currency": "Valeur monétaire"
+      }
+    },
+    "qa": {
+      "loading": "Chargement de la conversation…",
+      "emptyTitle": "Posez une question sur cette vidéo",
+      "emptyDescription": "Posez des questions sur le contenu et recevez des réponses avec l'extrait d'origine.",
+      "suggestion1": "Quelles décisions ont été prises pendant la réunion ?",
+      "suggestion2": "Qui était responsable de quoi ?",
+      "suggestion3": "Quel a été le résultat de la réunion ?",
+      "suggestion4": "Y a-t-il un délai défini ?",
+      "error": "Impossible de répondre pour le moment. Réessayez.",
+      "inputPlaceholder": "Posez une question sur cette vidéo…",
+      "send": "Envoyer"
+    },
+    "content": {
+      "emptyTitle": "Générez du contenu pour le diffuser",
+      "emptyDescription": "Titres, description, idées de Shorts et posts prêts pour les réseaux sociaux, à partir de la transcription.",
+      "cta": "Générer le contenu",
+      "titlesTitle": "Titres suggérés",
+      "descriptionTitle": "Description pour YouTube",
+      "copyDescription": "Copier la description",
+      "shortsTitle": "Idées de Shorts",
+      "shortsEmpty": "Aucune idée de coupe identifiée dans ce contenu.",
+      "viewScript": "Voir le script",
+      "hideScript": "Masquer le script",
+      "socialTitle": "Réseaux sociaux"
     }
   },
   "statusBadge": {

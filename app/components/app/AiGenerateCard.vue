@@ -29,24 +29,25 @@ const generatedAtLabel = computed(() => {
 
 <template>
   <div class="rounded-2xl border border-line bg-paper">
-    <div
-      v-if="status === 'empty'"
-      class="flex flex-col items-center gap-3 px-6 py-10 text-center"
-    >
-      <span
-        class="grid size-12 place-items-center rounded-full bg-brand-50 text-brand-600"
-      >
-        <AppIcon :name="icon" class="size-6" />
-      </span>
-      <div>
-        <h3 class="text-sm font-semibold text-ink">{{ title }}</h3>
-        <p class="mx-auto mt-1 max-w-sm text-sm text-ink-soft">
-          {{ description }}
-        </p>
-      </div>
-      <BaseButton :loading="busy" @click="emit('generate')">
-        {{ ctaLabel }}
-      </BaseButton>
+    <div v-if="status === 'empty'" class="px-5 py-5">
+      <slot name="empty">
+        <div class="flex flex-col items-center gap-3 py-5 text-center">
+          <span
+            class="grid size-12 place-items-center rounded-full bg-brand-50 text-brand-600"
+          >
+            <AppIcon :name="icon" class="size-6" />
+          </span>
+          <div>
+            <h3 class="text-sm font-semibold text-ink">{{ title }}</h3>
+            <p class="mx-auto mt-1 max-w-sm text-sm text-ink-soft">
+              {{ description }}
+            </p>
+          </div>
+          <BaseButton :loading="busy" @click="emit('generate')">
+            {{ ctaLabel }}
+          </BaseButton>
+        </div>
+      </slot>
     </div>
 
     <div

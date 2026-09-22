@@ -442,7 +442,13 @@
   "aiFeatures": {
     "nav": {
       "transcript": "Transcripción",
-      "summary": "Resumen"
+      "summary": "Resumen",
+      "minutes": "Temas y tareas",
+      "chapters": "Capítulos",
+      "translate": "Traducción",
+      "extraction": "Extracción de Datos",
+      "qa": "Preguntas",
+      "content": "Contenido"
     },
     "common": {
       "generating": "Generando…",
@@ -459,6 +465,81 @@
       "emptyTitle": "Resume este video",
       "emptyDescription": "Genera un resumen corto, medio o detallado de la transcripción con IA.",
       "cta": "Generar resumen"
+    },
+    "minutes": {
+      "emptyTitle": "Convierte esto en un acta",
+      "emptyDescription": "Extrae los temas principales, las decisiones tomadas y las tareas acordadas en la transcripción.",
+      "cta": "Generar temas y tareas",
+      "topicsTitle": "Temas discutidos",
+      "topicsEmpty": "No se identificaron temas en este contenido.",
+      "decisionsTitle": "Decisiones tomadas",
+      "decisionsEmpty": "No se identificaron decisiones en este contenido.",
+      "tasksTitle": "Tareas",
+      "tasksEmpty": "No se identificaron tareas en este contenido.",
+      "noOwner": "No especificado"
+    },
+    "chapters": {
+      "emptyTitle": "Divide en capítulos",
+      "emptyDescription": "Genera capítulos con título y marca de tiempo a partir del contenido, en el mismo formato de YouTube.",
+      "cta": "Generar capítulos"
+    },
+    "translate": {
+      "languageLabel": "Traducir a",
+      "emptyTitle": "Traduce esta transcripción",
+      "emptyDescription": "Traduce el texto y los subtítulos a otro idioma con IA.",
+      "cta": "Traducir",
+      "original": "Original",
+      "translated": "Traducido",
+      "downloadTxt": "Descargar TXT",
+      "downloadSrt": "Descargar SRT",
+      "downloadVtt": "Descargar VTT"
+    },
+    "extraction": {
+      "emptyTitle": "Extrae datos estructurados",
+      "emptyDescription": "Define los campos que quieres extraer de la transcripción y recibe el resultado en JSON o tabla.",
+      "cta": "Definir campos",
+      "fieldNamePlaceholder": "Nombre del campo",
+      "addField": "Agregar campo",
+      "removeField": "Eliminar campo",
+      "suggestName": "Nombre",
+      "suggestCompany": "Empresa",
+      "suggestValue": "Valor mencionado",
+      "extractCta": "Extraer datos",
+      "editFields": "Editar campos",
+      "view": { "cards": "Tarjetas", "table": "Tabla", "json": "JSON" },
+      "notFound": "No encontrado",
+      "copyJson": "Copiar JSON",
+      "types": {
+        "text": "Texto",
+        "number": "Número",
+        "date": "Fecha",
+        "currency": "Valor monetario"
+      }
+    },
+    "qa": {
+      "loading": "Cargando conversación…",
+      "emptyTitle": "Pregunta algo sobre este video",
+      "emptyDescription": "Haz preguntas sobre el contenido y recibe respuestas con el fragmento de donde vinieron.",
+      "suggestion1": "¿Qué decisiones se tomaron en la reunión?",
+      "suggestion2": "¿Quién quedó responsable de qué?",
+      "suggestion3": "¿Cuál fue el resultado de la reunión?",
+      "suggestion4": "¿Hay algún plazo definido?",
+      "error": "No se pudo responder ahora. Inténtalo de nuevo.",
+      "inputPlaceholder": "Pregunta algo sobre este video…",
+      "send": "Enviar"
+    },
+    "content": {
+      "emptyTitle": "Genera contenido para promocionarlo",
+      "emptyDescription": "Títulos, descripción, ideas de Shorts y publicaciones listas para redes sociales, a partir de la transcripción.",
+      "cta": "Generar contenido",
+      "titlesTitle": "Títulos sugeridos",
+      "descriptionTitle": "Descripción para YouTube",
+      "copyDescription": "Copiar descripción",
+      "shortsTitle": "Ideas de Shorts",
+      "shortsEmpty": "No se identificaron ideas de cortes en este contenido.",
+      "viewScript": "Ver guion",
+      "hideScript": "Ocultar guion",
+      "socialTitle": "Redes sociales"
     }
   },
   "statusBadge": {

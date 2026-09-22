@@ -442,7 +442,13 @@
   "aiFeatures": {
     "nav": {
       "transcript": "Transkription",
-      "summary": "Zusammenfassung"
+      "summary": "Zusammenfassung",
+      "minutes": "Themen & Aufgaben",
+      "chapters": "Kapitel",
+      "translate": "Übersetzung",
+      "extraction": "Datenextraktion",
+      "qa": "Fragen",
+      "content": "Inhalt"
     },
     "common": {
       "generating": "Wird generiert…",
@@ -459,6 +465,81 @@
       "emptyTitle": "Dieses Video zusammenfassen",
       "emptyDescription": "Erstellen Sie mit KI eine kurze, mittlere oder ausführliche Zusammenfassung der Transkription.",
       "cta": "Zusammenfassung erstellen"
+    },
+    "minutes": {
+      "emptyTitle": "In ein Protokoll umwandeln",
+      "emptyDescription": "Extrahieren Sie die wichtigsten Themen, getroffenen Entscheidungen und vereinbarten Aufgaben aus der Transkription.",
+      "cta": "Themen und Aufgaben erstellen",
+      "topicsTitle": "Besprochene Themen",
+      "topicsEmpty": "Keine Themen in diesem Inhalt erkannt.",
+      "decisionsTitle": "Getroffene Entscheidungen",
+      "decisionsEmpty": "Keine Entscheidungen in diesem Inhalt erkannt.",
+      "tasksTitle": "Aufgaben",
+      "tasksEmpty": "Keine Aufgaben in diesem Inhalt erkannt.",
+      "noOwner": "Nicht angegeben"
+    },
+    "chapters": {
+      "emptyTitle": "In Kapitel unterteilen",
+      "emptyDescription": "Erstellen Sie Kapitel mit Titel und Zeitstempel aus dem Inhalt, im gleichen Format wie bei YouTube.",
+      "cta": "Kapitel erstellen"
+    },
+    "translate": {
+      "languageLabel": "Übersetzen in",
+      "emptyTitle": "Diese Transkription übersetzen",
+      "emptyDescription": "Übersetzen Sie den Text und die Untertitel mit KI in eine andere Sprache.",
+      "cta": "Übersetzen",
+      "original": "Original",
+      "translated": "Übersetzt",
+      "downloadTxt": "TXT herunterladen",
+      "downloadSrt": "SRT herunterladen",
+      "downloadVtt": "VTT herunterladen"
+    },
+    "extraction": {
+      "emptyTitle": "Strukturierte Daten extrahieren",
+      "emptyDescription": "Legen Sie die Felder fest, die Sie aus der Transkription extrahieren möchten, und erhalten Sie das Ergebnis als JSON oder Tabelle.",
+      "cta": "Felder festlegen",
+      "fieldNamePlaceholder": "Feldname",
+      "addField": "Feld hinzufügen",
+      "removeField": "Feld entfernen",
+      "suggestName": "Name",
+      "suggestCompany": "Unternehmen",
+      "suggestValue": "Genannter Betrag",
+      "extractCta": "Daten extrahieren",
+      "editFields": "Felder bearbeiten",
+      "view": { "cards": "Karten", "table": "Tabelle", "json": "JSON" },
+      "notFound": "Nicht gefunden",
+      "copyJson": "JSON kopieren",
+      "types": {
+        "text": "Text",
+        "number": "Zahl",
+        "date": "Datum",
+        "currency": "Geldbetrag"
+      }
+    },
+    "qa": {
+      "loading": "Unterhaltung wird geladen…",
+      "emptyTitle": "Stellen Sie eine Frage zu diesem Video",
+      "emptyDescription": "Stellen Sie Fragen zum Inhalt und erhalten Sie Antworten mit der Textstelle, aus der sie stammen.",
+      "suggestion1": "Welche Entscheidungen wurden im Meeting getroffen?",
+      "suggestion2": "Wer war wofür verantwortlich?",
+      "suggestion3": "Was war das Ergebnis des Meetings?",
+      "suggestion4": "Gibt es eine festgelegte Frist?",
+      "error": "Konnte gerade nicht antworten. Versuchen Sie es erneut.",
+      "inputPlaceholder": "Stellen Sie eine Frage zu diesem Video…",
+      "send": "Senden"
+    },
+    "content": {
+      "emptyTitle": "Content zur Promotion erstellen",
+      "emptyDescription": "Titel, Beschreibung, Shorts-Ideen und fertige Social-Media-Posts, basierend auf der Transkription.",
+      "cta": "Content erstellen",
+      "titlesTitle": "Vorgeschlagene Titel",
+      "descriptionTitle": "YouTube-Beschreibung",
+      "copyDescription": "Beschreibung kopieren",
+      "shortsTitle": "Shorts-Ideen",
+      "shortsEmpty": "Keine Ausschnitt-Ideen in diesem Inhalt erkannt.",
+      "viewScript": "Skript ansehen",
+      "hideScript": "Skript ausblenden",
+      "socialTitle": "Soziale Medien"
     }
   },
   "statusBadge": {

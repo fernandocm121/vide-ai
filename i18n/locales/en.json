@@ -442,7 +442,13 @@
   "aiFeatures": {
     "nav": {
       "transcript": "Transcript",
-      "summary": "Summary"
+      "summary": "Summary",
+      "minutes": "Topics & Tasks",
+      "chapters": "Chapters",
+      "translate": "Translation",
+      "extraction": "Data Extraction",
+      "qa": "Ask",
+      "content": "Content"
     },
     "common": {
       "generating": "Generating…",
@@ -459,6 +465,81 @@
       "emptyTitle": "Summarize this video",
       "emptyDescription": "Generate a short, medium, or detailed summary of the transcript with AI.",
       "cta": "Generate summary"
+    },
+    "minutes": {
+      "emptyTitle": "Turn this into minutes",
+      "emptyDescription": "Extract the main topics, decisions made, and tasks agreed on in the transcript.",
+      "cta": "Generate topics and tasks",
+      "topicsTitle": "Topics discussed",
+      "topicsEmpty": "No topics identified in this content.",
+      "decisionsTitle": "Decisions made",
+      "decisionsEmpty": "No decisions identified in this content.",
+      "tasksTitle": "Tasks",
+      "tasksEmpty": "No tasks identified in this content.",
+      "noOwner": "Not specified"
+    },
+    "chapters": {
+      "emptyTitle": "Split into chapters",
+      "emptyDescription": "Generate chapters with a title and timestamp from the content, in the same format as YouTube.",
+      "cta": "Generate chapters"
+    },
+    "translate": {
+      "languageLabel": "Translate to",
+      "emptyTitle": "Translate this transcript",
+      "emptyDescription": "Translate the text and subtitles to another language with AI.",
+      "cta": "Translate",
+      "original": "Original",
+      "translated": "Translated",
+      "downloadTxt": "Download TXT",
+      "downloadSrt": "Download SRT",
+      "downloadVtt": "Download VTT"
+    },
+    "extraction": {
+      "emptyTitle": "Extract structured data",
+      "emptyDescription": "Define the fields you want to extract from the transcript and get the result as JSON or a table.",
+      "cta": "Define fields",
+      "fieldNamePlaceholder": "Field name",
+      "addField": "Add field",
+      "removeField": "Remove field",
+      "suggestName": "Name",
+      "suggestCompany": "Company",
+      "suggestValue": "Value mentioned",
+      "extractCta": "Extract data",
+      "editFields": "Edit fields",
+      "view": { "cards": "Cards", "table": "Table", "json": "JSON" },
+      "notFound": "Not found",
+      "copyJson": "Copy JSON",
+      "types": {
+        "text": "Text",
+        "number": "Number",
+        "date": "Date",
+        "currency": "Monetary value"
+      }
+    },
+    "qa": {
+      "loading": "Loading conversation…",
+      "emptyTitle": "Ask something about this video",
+      "emptyDescription": "Ask questions about the content and get answers with the excerpt they came from.",
+      "suggestion1": "What decisions were made in the meeting?",
+      "suggestion2": "Who was responsible for what?",
+      "suggestion3": "What was the outcome of the meeting?",
+      "suggestion4": "Is there a deadline set?",
+      "error": "Couldn't answer right now. Try again.",
+      "inputPlaceholder": "Ask something about this video…",
+      "send": "Send"
+    },
+    "content": {
+      "emptyTitle": "Generate content to promote it",
+      "emptyDescription": "Titles, description, Shorts ideas, and ready-to-post copy for social media, from the transcript.",
+      "cta": "Generate content",
+      "titlesTitle": "Suggested titles",
+      "descriptionTitle": "YouTube description",
+      "copyDescription": "Copy description",
+      "shortsTitle": "Shorts ideas",
+      "shortsEmpty": "No clip ideas identified in this content.",
+      "viewScript": "View script",
+      "hideScript": "Hide script",
+      "socialTitle": "Social media"
     }
   },
   "statusBadge": {

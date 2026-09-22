@@ -128,6 +128,36 @@ const aiSections = computed(() => [
     label: t('aiFeatures.nav.summary'),
     icon: 'file-text',
   },
+  {
+    id: 'minutes',
+    label: t('aiFeatures.nav.minutes'),
+    icon: 'hash',
+  },
+  {
+    id: 'chapters',
+    label: t('aiFeatures.nav.chapters'),
+    icon: 'list',
+  },
+  {
+    id: 'translate',
+    label: t('aiFeatures.nav.translate'),
+    icon: 'languages',
+  },
+  {
+    id: 'extraction',
+    label: t('aiFeatures.nav.extraction'),
+    icon: 'table',
+  },
+  {
+    id: 'qa',
+    label: t('aiFeatures.nav.qa'),
+    icon: 'message-circle',
+  },
+  {
+    id: 'content',
+    label: t('aiFeatures.nav.content'),
+    icon: 'film',
+  },
 ])
 
 /* player ---------------------------------------------------------------- */
@@ -339,6 +369,34 @@ async function remove() {
       <AppAiSummarySection
         v-else-if="activeSection === 'summary'"
         :video-id="id"
+      />
+      <AppAiMinutesSection
+        v-else-if="activeSection === 'minutes'"
+        :video-id="id"
+      />
+      <AppAiChaptersSection
+        v-else-if="activeSection === 'chapters'"
+        :video-id="id"
+        @seek="seekTo"
+      />
+      <AppAiTranslateSection
+        v-else-if="activeSection === 'translate'"
+        :video-id="id"
+        :original-text="video.transcript.text"
+      />
+      <AppAiExtractionSection
+        v-else-if="activeSection === 'extraction'"
+        :video-id="id"
+      />
+      <AppAiQaSection
+        v-else-if="activeSection === 'qa'"
+        :video-id="id"
+        @seek="seekTo"
+      />
+      <AppAiContentSection
+        v-else-if="activeSection === 'content'"
+        :video-id="id"
+        @seek="seekTo"
       />
     </template>
 
