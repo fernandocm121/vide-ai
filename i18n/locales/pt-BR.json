@@ -439,6 +439,28 @@
     "copyText": "Copiar texto",
     "label": "Transcrição"
   },
+  "aiFeatures": {
+    "nav": {
+      "transcript": "Transcrição",
+      "summary": "Resumo"
+    },
+    "common": {
+      "generating": "Gerando…",
+      "genericError": "Não foi possível gerar. Tente de novo.",
+      "retry": "Tentar novamente",
+      "regenerate": "Regenerar",
+      "generatedAt": "Gerado em {date}",
+      "copy": "Copiar"
+    },
+    "summary": {
+      "short": "Curto",
+      "medium": "Médio",
+      "detailed": "Detalhado",
+      "emptyTitle": "Resuma esse vídeo",
+      "emptyDescription": "Gere um resumo curto, médio ou detalhado da transcrição com IA.",
+      "cta": "Gerar resumo"
+    }
+  },
   "statusBadge": {
     "uploading": "Enviando",
     "uploaded": "Aguardando confirmação",

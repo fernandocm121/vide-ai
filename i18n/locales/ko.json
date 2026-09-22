@@ -439,6 +439,28 @@
     "copyText": "텍스트 복사",
     "label": "스크립트"
   },
+  "aiFeatures": {
+    "nav": {
+      "transcript": "스크립트",
+      "summary": "요약"
+    },
+    "common": {
+      "generating": "생성 중…",
+      "genericError": "생성하지 못했습니다. 다시 시도해 주세요.",
+      "retry": "다시 시도",
+      "regenerate": "재생성",
+      "generatedAt": "{date}에 생성됨",
+      "copy": "복사"
+    },
+    "summary": {
+      "short": "짧게",
+      "medium": "보통",
+      "detailed": "상세히",
+      "emptyTitle": "이 영상 요약하기",
+      "emptyDescription": "AI로 스크립트의 짧은/보통/상세 요약을 생성합니다.",
+      "cta": "요약 생성"
+    }
+  },
   "statusBadge": {
     "uploading": "업로드 중",
     "uploaded": "확인 대기 중",

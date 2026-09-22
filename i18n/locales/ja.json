@@ -439,6 +439,28 @@
     "copyText": "テキストをコピー",
     "label": "文字起こし"
   },
+  "aiFeatures": {
+    "nav": {
+      "transcript": "文字起こし",
+      "summary": "要約"
+    },
+    "common": {
+      "generating": "生成中…",
+      "genericError": "生成できませんでした。もう一度お試しください。",
+      "retry": "再試行",
+      "regenerate": "再生成",
+      "generatedAt": "{date}に生成",
+      "copy": "コピー"
+    },
+    "summary": {
+      "short": "短め",
+      "medium": "普通",
+      "detailed": "詳細",
+      "emptyTitle": "この動画を要約",
+      "emptyDescription": "AIで文字起こしの要約を短め・普通・詳細から生成します。",
+      "cta": "要約を生成"
+    }
+  },
   "statusBadge": {
     "uploading": "アップロード中",
     "uploaded": "確認待ち",

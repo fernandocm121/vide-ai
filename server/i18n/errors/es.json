@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "Transcripción no encontrada",
   "videos.noTimestampsForSubtitles": "Esta transcripción se hizo sin marcas de tiempo y no puede convertirse en subtítulos. Vuelve a transcribir el archivo para generar SRT/VTT.",
   "videos.invalidStatusForProcessing": "No se puede procesar en el estado \"{status}\"",
-  "videos.planLimitReached": "Límite mensual del plan \"{plan}\" alcanzado: ya usaste {used} de {limit} minutos disponibles este mes. Mejora tu plan para seguir transcribiendo."
+  "videos.planLimitReached": "Límite mensual del plan \"{plan}\" alcanzado: ya usaste {used} de {limit} minutos disponibles este mes. Mejora tu plan para seguir transcribiendo.",
+  "videos.aiFeatureRequiresTranscript": "Necesitas una transcripción lista para usar esta función."
 }

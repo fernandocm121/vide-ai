@@ -43,6 +43,13 @@
       "when": 1790012017668,
       "tag": "0005_reflective_war_machine",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790097422255,
+      "tag": "0006_mighty_ogun",
+      "breakpoints": true
     }
   ]
 }

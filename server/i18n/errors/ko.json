@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "스크립트를 찾을 수 없습니다",
   "videos.noTimestampsForSubtitles": "이 스크립트는 타임스탬프 없이 생성되어 자막으로 변환할 수 없습니다. 파일을 다시 변환하여 SRT/VTT를 생성해 주세요.",
   "videos.invalidStatusForProcessing": "\"{status}\" 상태에서는 처리할 수 없습니다",
-  "videos.planLimitReached": "\"{plan}\" 플랜의 월간 한도에 도달했습니다: 이번 달 사용 가능한 {limit}분 중 {used}분을 이미 사용했습니다. 계속 변환하려면 업그레이드해 주세요."
+  "videos.planLimitReached": "\"{plan}\" 플랜의 월간 한도에 도달했습니다: 이번 달 사용 가능한 {limit}분 중 {used}분을 이미 사용했습니다. 계속 변환하려면 업그레이드해 주세요.",
+  "videos.aiFeatureRequiresTranscript": "이 기능을 사용하려면 준비된 스크립트가 필요합니다."
 }

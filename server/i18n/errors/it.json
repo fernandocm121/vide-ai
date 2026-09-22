@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "Trascrizione non trovata",
   "videos.noTimestampsForSubtitles": "Questa trascrizione è stata fatta senza timestamp e non può diventare sottotitoli. Ritrascrivi il file per generare SRT/VTT.",
   "videos.invalidStatusForProcessing": "Impossibile elaborare nello stato \"{status}\"",
-  "videos.planLimitReached": "Limite mensile del piano \"{plan}\" raggiunto: hai già usato {used} dei {limit} minuti disponibili questo mese. Esegui l'upgrade per continuare a trascrivere."
+  "videos.planLimitReached": "Limite mensile del piano \"{plan}\" raggiunto: hai già usato {used} dei {limit} minuti disponibili questo mese. Esegui l'upgrade per continuare a trascrivere.",
+  "videos.aiFeatureRequiresTranscript": "È necessaria una trascrizione pronta per usare questa funzione."
 }

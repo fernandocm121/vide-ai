@@ -119,6 +119,17 @@ async function transcribe() {
   }
 }
 
+/* seções de IA sobre a transcrição --------------------------------------- */
+const activeSection = ref('transcript')
+const aiSections = computed(() => [
+  { id: 'transcript', label: t('aiFeatures.nav.transcript'), icon: 'file' },
+  {
+    id: 'summary',
+    label: t('aiFeatures.nav.summary'),
+    icon: 'file-text',
+  },
+])
+
 /* player ---------------------------------------------------------------- */
 const mediaEl = ref<HTMLAudioElement>()
 
@@ -315,13 +326,21 @@ async function remove() {
       </p>
     </div>
 
-    <!-- transcrição -->
-    <AppTranscriptView
-      v-if="video.status === 'ready' && video.transcript"
-      :text="video.transcript.text"
-      :segments="video.transcript.segments"
-      @seek="seekTo"
-    />
+    <!-- transcrição + IA -->
+    <template v-if="video.status === 'ready' && video.transcript">
+      <AppAiSectionNav v-model="activeSection" :sections="aiSections" />
+
+      <AppTranscriptView
+        v-if="activeSection === 'transcript'"
+        :text="video.transcript.text"
+        :segments="video.transcript.segments"
+        @seek="seekTo"
+      />
+      <AppAiSummarySection
+        v-else-if="activeSection === 'summary'"
+        :video-id="id"
+      />
+    </template>
 
     <!-- excluir -->
     <div class="flex justify-end border-t border-line pt-4">

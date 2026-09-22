@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "文字起こしが見つかりません",
   "videos.noTimestampsForSubtitles": "この文字起こしはタイムスタンプなしで作成されたため、字幕にできません。ファイルを再度文字起こしして SRT/VTT を生成してください。",
   "videos.invalidStatusForProcessing": "ステータス「{status}」では処理できません",
-  "videos.planLimitReached": "「{plan}」プランの月間上限に達しました。今月は利用可能な{limit}分のうち{used}分を既に使用しています。トランスクリプトを続けるにはアップグレードしてください。"
+  "videos.planLimitReached": "「{plan}」プランの月間上限に達しました。今月は利用可能な{limit}分のうち{used}分を既に使用しています。トランスクリプトを続けるにはアップグレードしてください。",
+  "videos.aiFeatureRequiresTranscript": "この機能を使うには、準備済みの文字起こしが必要です。"
 }

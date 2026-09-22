@@ -439,6 +439,28 @@
     "copyText": "Text kopieren",
     "label": "Transkription"
   },
+  "aiFeatures": {
+    "nav": {
+      "transcript": "Transkription",
+      "summary": "Zusammenfassung"
+    },
+    "common": {
+      "generating": "Wird generiert…",
+      "genericError": "Konnte nicht generiert werden. Versuchen Sie es erneut.",
+      "retry": "Erneut versuchen",
+      "regenerate": "Neu generieren",
+      "generatedAt": "Erstellt am {date}",
+      "copy": "Kopieren"
+    },
+    "summary": {
+      "short": "Kurz",
+      "medium": "Mittel",
+      "detailed": "Ausführlich",
+      "emptyTitle": "Dieses Video zusammenfassen",
+      "emptyDescription": "Erstellen Sie mit KI eine kurze, mittlere oder ausführliche Zusammenfassung der Transkription.",
+      "cta": "Zusammenfassung erstellen"
+    }
+  },
   "statusBadge": {
     "uploading": "Wird hochgeladen",
     "uploaded": "Wartet auf Bestätigung",

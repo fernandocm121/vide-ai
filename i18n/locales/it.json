@@ -439,6 +439,28 @@
     "copyText": "Copia testo",
     "label": "Trascrizione"
   },
+  "aiFeatures": {
+    "nav": {
+      "transcript": "Trascrizione",
+      "summary": "Riepilogo"
+    },
+    "common": {
+      "generating": "Generazione…",
+      "genericError": "Impossibile generare. Riprova.",
+      "retry": "Riprova",
+      "regenerate": "Rigenera",
+      "generatedAt": "Generato il {date}",
+      "copy": "Copia"
+    },
+    "summary": {
+      "short": "Breve",
+      "medium": "Medio",
+      "detailed": "Dettagliato",
+      "emptyTitle": "Riassumi questo video",
+      "emptyDescription": "Genera un riepilogo breve, medio o dettagliato della trascrizione con l'IA.",
+      "cta": "Genera riepilogo"
+    }
+  },
   "statusBadge": {
     "uploading": "Caricamento",
     "uploaded": "In attesa di conferma",

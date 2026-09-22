@@ -439,6 +439,28 @@
     "copyText": "Copy text",
     "label": "Transcription"
   },
+  "aiFeatures": {
+    "nav": {
+      "transcript": "Transcript",
+      "summary": "Summary"
+    },
+    "common": {
+      "generating": "Generating…",
+      "genericError": "Couldn't generate this. Try again.",
+      "retry": "Try again",
+      "regenerate": "Regenerate",
+      "generatedAt": "Generated on {date}",
+      "copy": "Copy"
+    },
+    "summary": {
+      "short": "Short",
+      "medium": "Medium",
+      "detailed": "Detailed",
+      "emptyTitle": "Summarize this video",
+      "emptyDescription": "Generate a short, medium, or detailed summary of the transcript with AI.",
+      "cta": "Generate summary"
+    }
+  },
   "statusBadge": {
     "uploading": "Uploading",
     "uploaded": "Awaiting confirmation",

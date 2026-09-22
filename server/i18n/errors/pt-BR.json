@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "Transcrição não encontrada",
   "videos.noTimestampsForSubtitles": "Esta transcrição foi feita sem timestamps e não pode virar legenda. Transcreva o arquivo novamente para gerar SRT/VTT.",
   "videos.invalidStatusForProcessing": "Não é possível processar no status \"{status}\"",
-  "videos.planLimitReached": "Limite mensal do plano \"{plan}\" atingido: você já usou {used} de {limit} minutos disponíveis este mês. Faça upgrade para continuar transcrevendo."
+  "videos.planLimitReached": "Limite mensal do plano \"{plan}\" atingido: você já usou {used} de {limit} minutos disponíveis este mês. Faça upgrade para continuar transcrevendo.",
+  "videos.aiFeatureRequiresTranscript": "É necessário ter uma transcrição pronta para usar este recurso."
 }

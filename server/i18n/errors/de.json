@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "Transkription nicht gefunden",
   "videos.noTimestampsForSubtitles": "Diese Transkription wurde ohne Zeitstempel erstellt und kann nicht in Untertitel umgewandelt werden. Transkribieren Sie die Datei erneut, um SRT/VTT zu erzeugen.",
   "videos.invalidStatusForProcessing": "Verarbeitung im Status „{status}“ nicht möglich",
-  "videos.planLimitReached": "Monatliches Limit des Plans „{plan}“ erreicht: Sie haben bereits {used} von {limit} verfügbaren Minuten in diesem Monat genutzt. Upgraden Sie, um weiter zu transkribieren."
+  "videos.planLimitReached": "Monatliches Limit des Plans „{plan}“ erreicht: Sie haben bereits {used} von {limit} verfügbaren Minuten in diesem Monat genutzt. Upgraden Sie, um weiter zu transkribieren.",
+  "videos.aiFeatureRequiresTranscript": "Für dieses Feature wird eine fertige Transkription benötigt."
 }

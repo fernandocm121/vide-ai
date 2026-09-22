@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "Transcription introuvable",
   "videos.noTimestampsForSubtitles": "Cette transcription a été faite sans horodatage et ne peut pas devenir des sous-titres. Retranscrivez le fichier pour générer du SRT/VTT.",
   "videos.invalidStatusForProcessing": "Impossible de traiter dans le statut « {status} »",
-  "videos.planLimitReached": "Limite mensuelle du forfait « {plan} » atteinte : vous avez déjà utilisé {used} des {limit} minutes disponibles ce mois-ci. Passez à un forfait supérieur pour continuer à transcrire."
+  "videos.planLimitReached": "Limite mensuelle du forfait « {plan} » atteinte : vous avez déjà utilisé {used} des {limit} minutes disponibles ce mois-ci. Passez à un forfait supérieur pour continuer à transcrire.",
+  "videos.aiFeatureRequiresTranscript": "Une transcription prête est nécessaire pour utiliser cette fonctionnalité."
 }

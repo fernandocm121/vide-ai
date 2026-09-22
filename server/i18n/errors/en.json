@@ -29,5 +29,6 @@
   "videos.transcriptNotFound": "Transcription not found",
   "videos.noTimestampsForSubtitles": "This transcription was made without timestamps and can't become subtitles. Transcribe the file again to generate SRT/VTT.",
   "videos.invalidStatusForProcessing": "Can't process in status \"{status}\"",
-  "videos.planLimitReached": "Monthly limit for the \"{plan}\" plan reached: you've already used {used} of {limit} available minutes this month. Upgrade to keep transcribing."
+  "videos.planLimitReached": "Monthly limit for the \"{plan}\" plan reached: you've already used {used} of {limit} available minutes this month. Upgrade to keep transcribing.",
+  "videos.aiFeatureRequiresTranscript": "You need a ready transcription to use this feature."
 }
