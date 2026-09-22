@@ -424,8 +424,13 @@
     "uploading": "Envoi… {progress}%",
     "dontClose": "Ne fermez pas cet onglet tant que ce n'est pas terminé.",
     "dropHint": "Glissez une vidéo ou un audio ici",
-    "chooseFile": "Choisir un fichier",
-    "acceptedFormats": "MP4 · MOV · WEBM (jusqu'à 2 Go) · MP3 · WAV · M4A · AAC (jusqu'à 25 Mo)"
+    "chooseFile": "Parcourir l'ordinateur",
+    "acceptedFormats": "MP4 · MOV · WEBM (jusqu'à 2 Go) · MP3 · WAV · M4A · AAC (jusqu'à 25 Mo)",
+    "ctaTitle": "Envoyez une vidéo ou un audio",
+    "ctaButton": "Transcrire les fichiers",
+    "modalTitle": "Nouvelle transcription",
+    "start": "Démarrer la transcription",
+    "changeFile": "Changer de fichier"
   },
   "transcriptView": {
     "fullText": "Texte intégral",
@@ -443,5 +448,9 @@
     "analyzing": "Analyse en cours",
     "ready": "Prêt",
     "failed": "Échec"
+  },
+  "transcriptionLanguage": {
+    "label": "Langue de l'audio",
+    "autoDetect": "Détection automatique"
   }
 }

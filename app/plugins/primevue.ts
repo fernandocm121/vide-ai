@@ -1,14 +1,18 @@
 import PrimeVue, { usePrimeVue } from 'primevue/config'
+import Dialog from 'primevue/dialog'
+import Dropdown from 'primevue/dropdown'
 import TabPanel from 'primevue/tabpanel'
 import TabView from 'primevue/tabview'
 import Toast from 'primevue/toast'
 import ToastService from 'primevue/toastservice'
 
 /**
- * O projeto só usa Toast + TabView/TabPanel do PrimeVue hoje (nenhum dos
- * dois lê `config.locale`), mas outros componentes da lib (Calendar,
- * DataTable paginado, MultiSelect...) leem essas strings — deixamos isso
- * pronto para acompanhar o idioma ativo assim que forem adotados.
+ * Componentes do PrimeVue em uso: Toast, TabView/TabPanel, Dialog (modal de
+ * nova transcrição) e Dropdown (seletor de idioma — chama-se `Dropdown` e
+ * não `Select` nesta versão 3.x da lib; a v4 renomeou). Nenhum lê
+ * `config.locale` ainda, mas outros componentes (Calendar, DataTable
+ * paginado, MultiSelect...) leem essas strings — deixamos isso pronto pra
+ * acompanhar o idioma ativo assim que forem adotados.
  */
 type PrimeVueLocale = {
   today: string
@@ -438,6 +442,8 @@ export default defineNuxtPlugin({
     nuxtApp.vueApp.component('Toast', Toast)
     nuxtApp.vueApp.component('TabView', TabView)
     nuxtApp.vueApp.component('TabPanel', TabPanel)
+    nuxtApp.vueApp.component('Dialog', Dialog)
+    nuxtApp.vueApp.component('Dropdown', Dropdown)
 
     // Locale do PrimeVue acompanhando o idioma ativo. `useI18n()` (Composition
     // API do vue-i18n) exige uma instância de componente ativa e lança "Must

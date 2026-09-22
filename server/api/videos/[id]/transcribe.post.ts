@@ -1,4 +1,5 @@
 import { and, eq } from 'drizzle-orm'
+import { z } from 'zod'
 import { jobs, videos } from '../../../db/schema'
 import { runExtraction } from '../../../transcription/extract'
 import { runTranscription } from '../../../transcription/run'
@@ -6,6 +7,20 @@ import { planLimitSeconds } from '../../../utils/plans'
 import { getMonthlyTranscriptionSeconds } from '../../../utils/usage'
 
 const STARTABLE = ['queued', 'failed'] as const
+
+// ISO-639-1/639-3 — a curadoria de opções fica só na UI (app/utils/
+// transcription-languages.ts); aqui só validamos formato pra não deixar
+// lixo (string vazia, texto arbitrário) chegar em `videos.language`.
+// Ausente/omitido = detecção automática do Scribe v2.
+const Body = z.object({
+  language: z
+    .string()
+    .trim()
+    .min(2)
+    .max(10)
+    .regex(/^[a-zA-Z-]+$/, 'validation.invalidRequest')
+    .optional(),
+})
 
 /**
  * Inicia o processamento do vídeo/áudio em background:
@@ -46,6 +61,26 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // corpo é opcional (retrocompatível com o antigo POST sem body nenhum) —
+  // `readBody` devolve `undefined` quando a requisição não manda payload
+  const rawBody = (await readBody(event).catch(() => undefined)) ?? {}
+  const parsed = Body.safeParse(rawBody)
+  if (!parsed.success) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: translateError(
+        locale,
+        parsed.error.issues[0]?.message ?? 'validation.invalidRequest',
+      ),
+    })
+  }
+  // sempre grava o que veio nesta chamada — inclusive limpando pra `null`
+  // quando omitido, senão um reprocessamento que troca pra "detecção
+  // automática" continuaria herdando o idioma manual escolhido da vez
+  // anterior (STARTABLE inclui 'failed': ver critério "reprocessar permite
+  // trocar o idioma").
+  const language = parsed.data.language ?? null
+
   const limitSeconds = planLimitSeconds(user.plan)
   const usedSeconds = await getMonthlyTranscriptionSeconds(user.id)
   if (usedSeconds >= limitSeconds) {
@@ -67,7 +102,7 @@ export default defineEventHandler(async (event) => {
 
     await db
       .update(videos)
-      .set({ status: 'queued', error: null })
+      .set({ status: 'queued', error: null, language })
       .where(eq(videos.id, id))
 
     // background — não bloqueia a resposta
@@ -82,7 +117,7 @@ export default defineEventHandler(async (event) => {
 
     await db
       .update(videos)
-      .set({ status: 'queued', error: null })
+      .set({ status: 'queued', error: null, language })
       .where(eq(videos.id, id))
 
     // background — não bloqueia a resposta

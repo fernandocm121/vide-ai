@@ -1,8 +1,23 @@
 <script setup lang="ts">
+import { dropdownPt } from '~/utils/dropdown-pt'
 import { IN_PROGRESS, formatDuration, type VideoStatus } from '~/utils/media'
+import {
+  AUTO_DETECT,
+  TRANSCRIPTION_LANGUAGES,
+} from '~/utils/transcription-languages'
 
 definePageMeta({ layout: 'app' })
 const { t } = useI18n()
+
+const languageOptions = computed(() => [
+  { code: AUTO_DETECT, name: t('transcriptionLanguage.autoDetect') },
+  ...TRANSCRIPTION_LANGUAGES.map((l) => ({
+    code: l.code,
+    name: t(
+      `common.languageSwitcher.names.${l.nameKey}` as 'common.languageSwitcher.names.en',
+    ),
+  })),
+])
 
 interface VideoDetail {
   id: string
@@ -73,11 +88,24 @@ const actionError = ref<string | null>(null)
 // mas o status ainda não saiu de `queued` (curta janela de corrida)
 const requested = ref(false)
 
+// idioma escolhido pro próximo disparo — inicializa com o que já estava
+// gravado (útil no retry: reprocessar reaparece com o idioma da tentativa
+// anterior, editável). Não é ligado por `watch` no `video` de propósito: o
+// polling abaixo chama `refresh()` a cada 3s enquanto `queued`, e isso
+// resetaria a escolha do usuário no meio da decisão se fosse reativo.
+const selectedLanguage = ref(video.value?.language || AUTO_DETECT)
+
 async function transcribe() {
   busy.value = true
   actionError.value = null
   try {
-    await $fetch(`/api/videos/${id}/transcribe`, { method: 'POST' })
+    await $fetch(`/api/videos/${id}/transcribe`, {
+      method: 'POST',
+      body:
+        selectedLanguage.value === AUTO_DETECT
+          ? {}
+          : { language: selectedLanguage.value },
+    })
     requested.value = true
     await refresh()
   } catch (e: unknown) {
@@ -169,6 +197,19 @@ async function remove() {
           }}
           {{ $t('app.videoDetail.estimatedCost', { cost: 'US$ 0,006' }) }}
         </p>
+        <div class="mt-3 flex flex-col gap-1.5 sm:max-w-xs">
+          <label for="video-language" class="text-sm font-medium text-ink">
+            {{ $t('transcriptionLanguage.label') }}
+          </label>
+          <Dropdown
+            v-model="selectedLanguage"
+            input-id="video-language"
+            :options="languageOptions"
+            option-label="name"
+            option-value="code"
+            :pt="dropdownPt"
+          />
+        </div>
         <BaseButton class="mt-3" :loading="busy" @click="transcribe">
           {{
             video.mediaKind === 'audio'
@@ -201,6 +242,19 @@ async function remove() {
         <p v-if="video.error" class="mt-1 text-xs text-ink-soft">
           {{ video.error }}
         </p>
+        <div class="mt-3 flex flex-col gap-1.5 sm:max-w-xs">
+          <label for="video-language" class="text-sm font-medium text-ink">
+            {{ $t('transcriptionLanguage.label') }}
+          </label>
+          <Dropdown
+            v-model="selectedLanguage"
+            input-id="video-language"
+            :options="languageOptions"
+            option-label="name"
+            option-value="code"
+            :pt="dropdownPt"
+          />
+        </div>
         <BaseButton
           variant="outline"
           class="mt-3"

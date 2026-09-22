@@ -424,8 +424,13 @@
     "uploading": "Enviando… {progress}%",
     "dontClose": "Não feche esta aba até concluir.",
     "dropHint": "Arraste um vídeo ou áudio aqui",
-    "chooseFile": "Escolher arquivo",
-    "acceptedFormats": "MP4 · MOV · WEBM (até 2 GB) · MP3 · WAV · M4A · AAC (até 25 MB)"
+    "chooseFile": "Procurar no computador",
+    "acceptedFormats": "MP4 · MOV · WEBM (até 2 GB) · MP3 · WAV · M4A · AAC (até 25 MB)",
+    "ctaTitle": "Envie um vídeo ou áudio",
+    "ctaButton": "Transcrever arquivos",
+    "modalTitle": "Nova transcrição",
+    "start": "Iniciar transcrição",
+    "changeFile": "Trocar arquivo"
   },
   "transcriptView": {
     "fullText": "Texto corrido",
@@ -443,5 +448,9 @@
     "analyzing": "Analisando",
     "ready": "Pronto",
     "failed": "Falhou"
+  },
+  "transcriptionLanguage": {
+    "label": "Idioma do áudio",
+    "autoDetect": "Detecção automática"
   }
 }

@@ -424,8 +424,13 @@
     "uploading": "Uploading… {progress}%",
     "dontClose": "Don't close this tab until it finishes.",
     "dropHint": "Drag a video or audio file here",
-    "chooseFile": "Choose file",
-    "acceptedFormats": "MP4 · MOV · WEBM (up to 2 GB) · MP3 · WAV · M4A · AAC (up to 25 MB)"
+    "chooseFile": "Browse computer",
+    "acceptedFormats": "MP4 · MOV · WEBM (up to 2 GB) · MP3 · WAV · M4A · AAC (up to 25 MB)",
+    "ctaTitle": "Upload a video or audio file",
+    "ctaButton": "Transcribe files",
+    "modalTitle": "New transcription",
+    "start": "Start transcription",
+    "changeFile": "Change file"
   },
   "transcriptView": {
     "fullText": "Full text",
@@ -443,5 +448,9 @@
     "analyzing": "Analyzing",
     "ready": "Ready",
     "failed": "Failed"
+  },
+  "transcriptionLanguage": {
+    "label": "Audio language",
+    "autoDetect": "Automatic detection"
   }
 }

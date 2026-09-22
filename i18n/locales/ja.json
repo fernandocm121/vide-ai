@@ -424,8 +424,13 @@
     "uploading": "アップロード中… {progress}%",
     "dontClose": "完了するまでこのタブを閉じないでください。",
     "dropHint": "動画や音声をここにドラッグ",
-    "chooseFile": "ファイルを選択",
-    "acceptedFormats": "MP4 · MOV · WEBM(2GBまで)· MP3 · WAV · M4A · AAC(25MBまで)"
+    "chooseFile": "コンピューターから探す",
+    "acceptedFormats": "MP4 · MOV · WEBM(2GBまで)· MP3 · WAV · M4A · AAC(25MBまで)",
+    "ctaTitle": "動画または音声をアップロード",
+    "ctaButton": "ファイルを文字起こし",
+    "modalTitle": "新しい文字起こし",
+    "start": "文字起こしを開始",
+    "changeFile": "ファイルを変更"
   },
   "transcriptView": {
     "fullText": "全文",
@@ -443,5 +448,9 @@
     "analyzing": "分析中",
     "ready": "完了",
     "failed": "失敗"
+  },
+  "transcriptionLanguage": {
+    "label": "音声の言語",
+    "autoDetect": "自動検出"
   }
 }
