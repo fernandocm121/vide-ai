@@ -1,0 +1,5 @@
+# Uma PR pode alterar os próprios workflows e o script/instruções do quality
+# gate de segurança. Para que ninguém afrouxe o gate na mesma PR que ele
+# deveria barrar, mudanças em .github/ exigem aprovação do mantenedor
+# (regra "Require review from Code Owners" no ruleset da main).
+/.github/ @fernandocm121
