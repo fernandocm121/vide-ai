@@ -28,10 +28,12 @@ aparece em **Security → Dependabot** e deve ser tratada à parte.
 ## Revisão por IA
 
 O workflow `security-ai-review.yml` roda a Action
-[`anthropics/claude-code-security-review`](https://github.com/anthropics/claude-code-security-review)
-com o modelo `claude-opus-5-5`. A IA só produz um JSON de achados. Quem decide
-aprovar ou reprovar é o script `.github/scripts/security-gate.mjs`, que é
-determinístico e tem testes (`security-gate.test.mjs`).
+[`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action)
+autenticada com a **assinatura do Claude** (não usa chave de API). O Claude lê
+o diff da PR, comenta nas linhas e devolve os achados como JSON validado por
+schema (`--json-schema`). Quem decide aprovar ou reprovar é o script
+`.github/scripts/security-gate.mjs`, que é determinístico e tem testes
+(`security-gate.test.mjs`).
 
 As instruções específicas do projeto ficam em `.github/security/`:
 
@@ -61,17 +63,24 @@ gh variable set AI_SECURITY_GATE_MODE --body enforce
 
 ### Requisitos e limites
 
-- **Chave da API:** secret `ANTHROPIC_API_KEY`, definido com
-  `gh secret set ANTHROPIC_API_KEY`. Sem ele a revisão não roda.
+- **Token da assinatura:** secret `CLAUDE_CODE_OAUTH_TOKEN`. Para criar, rode
+  `claude setup-token` (abre o navegador para login; planos Pro e Max) e
+  depois `gh secret set CLAUDE_CODE_OAUTH_TOKEN`, colando o token quando o
+  comando pedir. Sem esse secret a revisão não roda. O token expira: quando
+  isso acontecer, o check passa a avisar que a revisão não rodou; gere outro e
+  repita o `gh secret set`.
+- **Uso da assinatura:** a revisão roda a cada push na PR e consome o mesmo
+  limite de uso que o seu Claude Code. Para gastar menos, troque o modelo com
+  `gh variable set AI_SECURITY_REVIEW_MODEL --body claude-sonnet-5-5`
+  (o padrão é `claude-opus-5-5`). Cada revisão tem no máximo 40 turnos.
 - **PRs de fork:** o GitHub não entrega secrets a forks, então a revisão por IA
   não roda nessas PRs. No modo `enforce`, o check reprova e um mantenedor
   revisa manualmente.
-- **Custo:** a revisão roda a cada push na PR. Uma execução típica custa na
-  faixa de US$ 0,50–3, conforme o tamanho do diff.
-- **Injeção de prompt:** a Action não é protegida contra texto malicioso na
-  PR. Por isso ela nunca é a única barreira (os checks determinísticos não
-  dependem de IA), roda sem Bash nem edição e com token restrito, e mudanças em
-  `.github/` exigem aprovação do code owner.
+- **Injeção de prompt:** texto malicioso na PR pode tentar manipular a revisão.
+  Por isso ela nunca é a única barreira (os checks determinísticos não dependem
+  de IA). O prompt não inclui título nem descrição da PR, o Claude só pode ler
+  arquivos, ver o diff e comentar em linha, e mudanças em `.github/` exigem
+  aprovação do code owner.
 - **Resultado não determinístico:** a mesma PR pode gerar achados diferentes
   em execuções diferentes.
 

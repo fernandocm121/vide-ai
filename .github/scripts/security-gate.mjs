@@ -1,7 +1,7 @@
 // Decide se a revisão de segurança por IA aprova ou reprova a PR.
 //
-// A IA (anthropics/claude-code-security-review) só produz o JSON de achados;
-// quem decide é este script, de forma determinística:
+// A IA (anthropics/claude-code-action, com --json-schema) só produz o JSON de
+// achados; quem decide é este script, de forma determinística:
 //
 // - modo `enforce`: reprova se houver achado HIGH, ou se a revisão não rodou /
 //   deu erro (fail-closed: "não revisado" nunca vira "aprovado").
@@ -11,10 +11,7 @@
 //   GATE_MODE      advisory | enforce   (vars.AI_SECURITY_GATE_MODE)
 //   REVIEW_RAN     true | false         (a Action chegou a ser executada?)
 //   SKIP_REASON    fork | no-key | ''   (por que não rodou)
-//   RESULTS_PATH   caminho do claudecode-results.json
-//
-// Roda com o Node que estiver no PATH (a Action instala o 18), então evite
-// APIs muito novas aqui.
+//   RESULTS_PATH   caminho do JSON com { findings: [...] } (structured_output)
 
 import { appendFileSync, existsSync, readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
@@ -27,8 +24,8 @@ const SKIP_MESSAGES = {
     'PR vinda de fork: o GitHub não entrega secrets a forks, então a revisão ' +
     'por IA não rodou. Um mantenedor precisa revisar a segurança manualmente.',
   'no-key':
-    'O secret ANTHROPIC_API_KEY não está configurado no repositório, então a ' +
-    'revisão por IA não rodou.',
+    'O secret CLAUDE_CODE_OAUTH_TOKEN não está configurado no repositório, ' +
+    'então a revisão por IA não rodou (gere o token com `claude setup-token`).',
 }
 
 /**
