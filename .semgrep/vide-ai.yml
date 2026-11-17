@@ -39,6 +39,24 @@ rules:
               - pattern: $CP.exec($CMD, ...)
               - pattern: $CP.execSync($CMD, ...)
           - focus-metavariable: $CMD
+      # `const run = promisify(exec)` e depois `run(cmd)` — o padrão usado no
+      # projeto para chamar processos externos.
+      - patterns:
+          - pattern-either:
+              - pattern-inside: |
+                  $RUN = promisify(exec);
+                  ...
+              - pattern-inside: |
+                  $RUN = promisify($CP.exec);
+                  ...
+              - pattern-inside: |
+                  $RUN = $UTIL.promisify(exec);
+                  ...
+              - pattern-inside: |
+                  $RUN = $UTIL.promisify($CP.exec);
+                  ...
+          - pattern: $RUN($CMD, ...)
+          - focus-metavariable: $CMD
       - patterns:
           - pattern-either:
               - pattern: 'spawn($CMD, $ARGS, {..., shell: true, ...})'
