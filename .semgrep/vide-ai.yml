@@ -1,0 +1,94 @@
+# Regras Semgrep específicas do vide-ai.
+#
+# As regras públicas (p/nodejs, p/owasp-top-ten…) não reconhecem as funções do
+# h3/Nitro como entrada do usuário, então um `exec(\`... ${getQuery(e).x}\`)`
+# passa batido. Aqui ensinamos ao Semgrep quais são as fontes (entrada HTTP) e
+# os destinos perigosos (shell, SQL bruto, caminho de arquivo).
+
+rules:
+  - id: vide-ai.h3-input-to-shell
+    mode: taint
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: >-
+      Entrada HTTP (h3) chega a um comando de shell. Use `execFile`/`spawn`
+      com array de argumentos (sem `shell: true`) e valide o valor; nunca
+      interpole entrada do usuário em string de comando.
+    metadata:
+      category: security
+      cwe: 'CWE-78: OS Command Injection'
+    pattern-sources: &h3-sources
+      - pattern-either:
+          - pattern: getQuery(...)
+          - pattern: getValidatedQuery(...)
+          - pattern: readBody(...)
+          - pattern: readValidatedBody(...)
+          - pattern: readRawBody(...)
+          - pattern: readMultipartFormData(...)
+          - pattern: getRouterParam(...)
+          - pattern: getRouterParams(...)
+          - pattern: getHeader(...)
+          - pattern: getHeaders(...)
+          - pattern: getCookie(...)
+          - pattern: parseCookies(...)
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: exec($CMD, ...)
+              - pattern: execSync($CMD, ...)
+              - pattern: $CP.exec($CMD, ...)
+              - pattern: $CP.execSync($CMD, ...)
+          - focus-metavariable: $CMD
+      - patterns:
+          - pattern-either:
+              - pattern: 'spawn($CMD, $ARGS, {..., shell: true, ...})'
+              - pattern: 'execFile($CMD, $ARGS, {..., shell: true, ...}, ...)'
+          - focus-metavariable: [$CMD, $ARGS]
+
+  - id: vide-ai.h3-input-to-sql-raw
+    mode: taint
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: >-
+      Entrada HTTP (h3) chega a `sql.raw()`, que não parametriza o valor.
+      Use o template `sql\`... ${valor}\`` (parametrizado) ou os operadores do
+      Drizzle (`eq`, `and`, ...).
+    metadata:
+      category: security
+      cwe: 'CWE-89: SQL Injection'
+    pattern-sources: *h3-sources
+    pattern-sinks:
+      - pattern: sql.raw(...)
+
+  - id: vide-ai.h3-input-to-fs-path
+    mode: taint
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: >-
+      Entrada HTTP (h3) é usada como caminho de arquivo. Gere caminhos no
+      servidor (ids próprios, diretório temporário exclusivo) em vez de
+      aceitar nomes ou caminhos vindos do cliente (path traversal).
+    metadata:
+      category: security
+      cwe: 'CWE-22: Path Traversal'
+    pattern-sources: *h3-sources
+    pattern-sanitizers:
+      - pattern: path.basename(...)
+      - pattern: basename(...)
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: readFile($P, ...)
+              - pattern: readFileSync($P, ...)
+              - pattern: writeFile($P, ...)
+              - pattern: writeFileSync($P, ...)
+              - pattern: createReadStream($P, ...)
+              - pattern: createWriteStream($P, ...)
+              - pattern: unlink($P, ...)
+              - pattern: rm($P, ...)
+              - pattern: $FS.readFile($P, ...)
+              - pattern: $FS.writeFile($P, ...)
+              - pattern: $FS.createReadStream($P, ...)
+              - pattern: $FS.unlink($P, ...)
+              - pattern: $FS.rm($P, ...)
+          - focus-metavariable: $P

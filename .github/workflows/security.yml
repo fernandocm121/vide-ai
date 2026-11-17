@@ -50,7 +50,9 @@ jobs:
           persist-credentials: false
 
       # --baseline-commit faz o Semgrep reportar só achados novos em relação
-      # à base da PR (ou ao commit anterior ao push).
+      # à base da PR (ou ao commit anterior ao push). `.semgrep/` tem regras
+      # do projeto que ensinam ao Semgrep que getQuery/readBody/... do h3 são
+      # entrada do usuário (as regras públicas não sabem disso).
       - name: Semgrep
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
@@ -58,7 +60,8 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           set -- --metrics=off --error \
             --config p/javascript --config p/typescript --config p/nodejs \
-            --config p/owasp-top-ten --config p/secrets --config p/github-actions
+            --config p/owasp-top-ten --config p/secrets --config p/github-actions \
+            --config .semgrep/
           if [ -n "$BASE_SHA" ] && [ "$BASE_SHA" != "0000000000000000000000000000000000000000" ]; then
             set -- "$@" --baseline-commit "$BASE_SHA"
           fi

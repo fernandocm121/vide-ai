@@ -15,6 +15,12 @@ merge enquanto não passarem.
 | CodeQL (code scanning) | configuração padrão do GitHub | Alerta novo de severidade alta ou maior | Sim |
 | `lint · typecheck · build` | `ci.yml` | Lint, tipos, testes ou build quebrados | Sim |
 
+Além dos pacotes públicos, o Semgrep usa as regras do projeto em
+`.semgrep/vide-ai.yml`. Elas tratam `getQuery`, `readBody`, `getRouterParam` e
+as demais funções de entrada do h3 como dado do usuário, e reprovam quando esse
+dado chega a um comando de shell, a `sql.raw()` ou a um caminho de arquivo.
+As regras públicas não reconhecem essas funções do Nitro.
+
 Os checks determinísticos olham só o que a PR introduz. A dívida que já existe
 (por exemplo, as vulnerabilidades atuais do `npm audit`) não reprova PRs: ela
 aparece em **Security → Dependabot** e deve ser tratada à parte.
@@ -87,7 +93,8 @@ gh variable set AI_SECURITY_GATE_MODE --body enforce
 gitleaks git . --redact                                  # segredos no histórico
 docker run --rm -v "$PWD:/src" -w /src semgrep/semgrep \
   semgrep scan --config p/javascript --config p/typescript \
-  --config p/nodejs --config p/owasp-top-ten --metrics=off  # SAST
+  --config p/nodejs --config p/owasp-top-ten \
+  --config .semgrep/ --metrics=off                          # SAST
 npm audit --audit-level=high                              # dependências
 ```
 
