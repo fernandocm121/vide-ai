@@ -1,0 +1,79 @@
+name: Security AI Review
+
+# Camada semântica do quality gate de segurança: o Claude revisa o diff da PR
+# e o script .github/scripts/security-gate.mjs decide aprovar ou reprovar.
+#
+# Modo controlado pela variável de repositório AI_SECURITY_GATE_MODE:
+#   advisory (padrão) — comenta na PR e anota avisos, nunca reprova;
+#   enforce           — reprova com achado HIGH ou se a revisão não rodou.
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-ai-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: ai · security review
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write # comentários da revisão nas linhas da PR
+    env:
+      GATE_MODE: ${{ vars.AI_SECURITY_GATE_MODE || 'advisory' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      # Forks não recebem secrets; sem a chave a revisão não roda. O gate
+      # trata "não revisado" como reprovado no modo enforce.
+      - name: Pré-condições
+        id: pre
+        env:
+          HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+          IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+        run: |
+          if [ "$IS_FORK" = "true" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "reason=fork" >> "$GITHUB_OUTPUT"
+          elif [ "$HAS_KEY" != "true" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "reason=no-key" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # A Action engole erros da análise (reporta 0 achados); por isso
+      # continue-on-error aqui e a decisão fica no gate, que lê o JSON.
+      - name: Revisão de segurança (Claude)
+        if: steps.pre.outputs.run == 'true'
+        continue-on-error: true
+        uses: anthropics/claude-code-security-review@0c6a49f1fa56a1d472575da86a94dbc1edb78eda # main @ 2026-02-11
+        with:
+          claude-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude-model: claude-opus-5-5
+          comment-pr: true
+          # Sem isto a Action revisa só o primeiro commit da PR e pula os
+          # seguintes, o que deixaria pushes posteriores sem revisão.
+          run-every-commit: true
+          claudecode-timeout: 20
+          # Caminhos absolutos: a Action roda do próprio diretório e ignora
+          # em silêncio arquivos relativos que não encontra.
+          custom-security-scan-instructions: ${{ github.workspace }}/.github/security/ai-review-instructions.md
+          false-positive-filtering-instructions: ${{ github.workspace }}/.github/security/ai-review-false-positives.md
+
+      - name: Gate
+        if: always()
+        env:
+          REVIEW_RAN: ${{ steps.pre.outputs.run }}
+          SKIP_REASON: ${{ steps.pre.outputs.reason }}
+          RESULTS_PATH: ${{ github.workspace }}/claudecode-results.json
+        run: node .github/scripts/security-gate.mjs
